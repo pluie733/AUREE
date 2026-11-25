@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#f2f2f5">
+<title>AI 小手机</title>
+<style>
+:root{--glass:rgba(255,255,255,.62);--ink:#1c1c1e;--sub:#8a8a90;--red:#ff3b30;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+html,body{position:fixed;inset:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;
+font-family:-apple-system,"SF Pro Text","PingFang SC","Helvetica Neue",sans-serif;color:var(--ink);background:#f2f2f5}
+#bg{position:fixed;inset:0;background:
+radial-gradient(55% 38% at 15% 8%,#ffe1ea,transparent 70%),
+radial-gradient(50% 38% at 95% 28%,#d9e8ff,transparent 70%),
+radial-gradient(60% 45% at 25% 95%,#e0f5e6,transparent 70%),
+radial-gradient(40% 30% at 90% 85%,#efe3ff,transparent 70%),#f2f2f5}
+/* status bar */
+#sbar{position:fixed;left:0;right:0;top:var(--st);height:48px;padding:6px 30px 0 34px;display:flex;justify-content:space-between;align-items:center;z-index:5;font-size:16px;font-weight:600}
+.standalone #sbar{display:none}
+#sbar .r{display:flex;gap:6px;align-items:center}
+/* pages */
+#pages{position:absolute;inset:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#pages::-webkit-scrollbar{display:none}
+.page{flex:0 0 100%;scroll-snap-align:center;padding:calc(var(--st) + 56px) 18px 0;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:80px;row-gap:12px;align-content:start}
+.glass{background:var(--glass);-webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6);box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 8px 24px rgba(0,0,0,.06)}
+/* widgets */
+.w{border-radius:26px;position:relative;overflow:hidden;cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.w:active{transform:scale(.97)}
+#wide{grid-column:1/-1;grid-row:span 2;height:158px;align-self:start;padding:16px 18px}
+#wide .d{font-size:12.5px;font-weight:600;color:var(--red)}
+#wide .g{font-size:27px;font-weight:700;letter-spacing:-.5px;margin-top:2px}
+#wide .q{margin-top:8px;font-size:14px;color:#3a3a3c;transition:opacity .5s;min-height:20px}
+#wide .from{font-size:11.5px;color:var(--sub);margin-top:3px}
+#wide .chip{position:absolute;right:16px;top:14px;font-size:11px;font-weight:700;color:#fff;background:linear-gradient(135deg,#7c5cff,#38b6ff);border-radius:10px;padding:3px 8px}
+#wide .bar{position:absolute;left:18px;right:18px;bottom:14px;height:3px;border-radius:2px;background:rgba(0,0,0,.07);overflow:hidden}
+#wide .bar i{display:block;height:100%;width:0;background:rgba(0,0,0,.25);border-radius:2px}
+#ai{grid-column:span 2;grid-row:span 2;height:172px;align-self:start;margin-right:8px}
+#ai .orb{position:absolute;left:50%;top:30px;width:70px;height:70px;margin-left:-35px;border-radius:50%;background:conic-gradient(from 0deg,#7c5cff,#38b6ff,#5ee7c0,#ff9ad5,#7c5cff);filter:blur(7px);animation:spin 8s linear infinite,breathe 4s ease-in-out infinite}
+#ai .core{position:absolute;left:50%;top:38px;width:54px;height:54px;margin-left:-27px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,rgba(255,255,255,.35) 60%,rgba(255,255,255,.1));box-shadow:0 0 0 1px rgba(255,255,255,.6) inset;animation:breathe 4s ease-in-out infinite}
+#ai .t{position:absolute;left:16px;bottom:34px;font-size:16px;font-weight:700}
+#ai .s{position:absolute;left:16px;bottom:15px;font-size:12px;color:var(--sub)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes breathe{0%,100%{scale:.92}50%{scale:1.08}}
+/* icons */
+.app{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.ic{width:58px;height:58px;border-radius:14px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 4px 10px rgba(0,0,0,.12);transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.app:active .ic{transform:scale(.88)}
+.ic::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0) 50%);pointer-events:none}
+.ic svg{width:100%;height:100%}
+.app span{font-size:11.5px;font-weight:500;color:var(--ink)}
+.ch{font-size:26px;font-weight:700;color:#fff;font-family:-apple-system,"PingFang SC",sans-serif}
+.cal{background:#fff;flex-direction:column;gap:0}
+.cal b{font-size:10px;color:var(--red);font-weight:700;line-height:1;margin-top:2px}
+.cal i{font-style:normal;font-size:28px;font-weight:300;line-height:1.1}
+.soon{grid-column:1/-1;grid-row:span 2;height:150px;border:1.5px dashed rgba(0,0,0,.16);border-radius:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--sub);font-size:14px}
+.soon b{font-size:30px;font-weight:200;color:#b0b0b6}
+/* dots + dock */
+#dots{position:fixed;left:0;right:0;bottom:calc(var(--sb) + 124px);display:flex;justify-content:center;gap:9px;z-index:3}
+#dots i{width:7px;height:7px;border-radius:50%;background:rgba(0,0,0,.2);transition:.3s}
+#dots i.on{background:rgba(0,0,0,.75);transform:scale(1.15)}
+#dock{position:fixed;left:12px;right:12px;bottom:calc(var(--sb) + 12px);height:92px;border-radius:32px;display:flex;justify-content:space-around;align-items:center;padding:0 8px;z-index:4;background:rgba(255,255,255,.45)}
+#dock .app span{display:none}
+.orbic{background:radial-gradient(circle at 30% 25%,#fff,#c9b8ff 40%,#6aa8ff 75%,#5ee7c0)}
+/* banner */
+#bn{position:fixed;left:50%;top:calc(var(--st) + 8px);width:min(92%,380px);transform:translate(-50%,-160%);z-index:30;border-radius:24px;padding:12px 14px;display:flex;gap:10px;align-items:center;transition:transform .5s cubic-bezier(.2,1.1,.3,1);pointer-events:none;background:rgba(255,255,255,.8)}
+#bn.s{transform:translate(-50%,0)}
+#bn .ic{width:36px;height:36px;border-radius:9px;flex:none}
+#bn .a{font-size:13px;font-weight:600}#bn .b{font-size:13px;color:#555;margin-top:1px}
+/* edit mode */
+.edit .app .ic{animation:jig .28s ease-in-out infinite alternate}
+.edit .app:nth-child(even) .ic{animation-delay:-.14s}
+@keyframes jig{from{transform:rotate(-2.2deg)}to{transform:rotate(2.2deg)}}
+#done{position:fixed;right:20px;top:calc(var(--st) + 14px);z-index:6;font-size:15px;font-weight:600;padding:6px 14px;border-radius:16px;display:none}
+.edit #done{display:block}
+@media (min-width:500px){body{display:flex;justify-content:center}#bg,#pages,#sbar,#dock,#dots{left:50%;right:auto;width:420px;transform:translateX(-50%)}#pages{inset:0 auto 0 50%}#dock{left:50%;margin-left:0}}
+.app{position:relative}
+.ic{border-radius:13px}
+.badge{position:absolute;top:-7px;left:calc(50% + 12px);min-width:21px;height:21px;padding:0 6px;border-radius:11px;background:#ff3b30;color:#fff;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:2}
+.app span{white-space:nowrap}
+#bn .ic{width:36px;height:36px;border-radius:9px}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+
+<div id="sbar"><span id="clock">00:26</span>
+<span class="r">
+<svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#1c1c1e"/><rect x="5" y="5" width="3" height="7" rx="1" fill="#1c1c1e"/><rect x="10" y="2.5" width="3" height="9.5" rx="1" fill="#1c1c1e"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#1c1c1e"/></svg>
+<svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 11.5l-2.2-2.4a3.1 3.1 0 0 1 4.4 0zM3.7 6.7a6.8 6.8 0 0 1 9.6 0l-1.4 1.5a4.8 4.8 0 0 0-6.8 0zM.8 3.6a10.9 10.9 0 0 1 15.4 0l-1.4 1.5a8.9 8.9 0 0 0-12.6 0z" fill="#1c1c1e"/></svg>
+<svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.8" fill="none" stroke="#1c1c1e" opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2.6" fill="#1c1c1e"/><path d="M25 4.5v4c.8-.3 1.5-1 1.5-2s-.7-1.7-1.5-2z" fill="#1c1c1e" opacity=".45"/></svg>
+</span></div>
+<div id="done" class="glass">完成</div>
+
+<div id="pages">
+ <!-- 第 1 页 -->
+ <section class="page">
+  <div class="w glass" id="wide" data-n="每日一句">
+    <div class="d" id="date">8月17日 星期一</div>
+    <div class="g" id="hi">晚上好</div>
+    <div class="q" id="q"></div>
+    <div class="from" id="from">每日一句</div>
+    <div class="chip">AI</div>
+    <div class="bar"><i id="prog"></i></div>
+  </div>
+  <div class="w glass" id="ai" data-n="AI 聊天">
+    <div class="orb"></div><div class="core"></div>
+    <div class="t">嗨，我在</div><div class="s">点一下，开始聊天</div>
+  </div>
+  <div class="app" data-n="网易云音乐"><div class="ic" style=""><svg viewBox="0 0 64 64"><defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff2f0f"/><stop offset="1" stop-color="#f2260b"/></linearGradient></defs><rect width="64" height="64" fill="url(#g1)"/><g fill="none" stroke="#ffd2c8" stroke-width="4.5" stroke-linecap="round"><circle cx="32" cy="36" r="15"/><path d="M33 34c-1-9-1-14 8-17 4-1 7 1 7 4"/><path d="M33 34c-4-3-9 0-6 4 2 3 7 1 6-4" stroke="#fff"/></g></svg></div><span>NetEase Music</span></div><div class="app" data-n="支付宝"><div class="badge">9</div><div class="ic" style=""><svg viewBox="0 0 64 64"><defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e86f8"/><stop offset="1" stop-color="#1a6af0"/></linearGradient></defs><rect width="64" height="64" fill="url(#g2)"/><text x="32" y="43" text-anchor="middle" font-size="40" font-weight="700" fill="#fff" font-family="PingFang SC,sans-serif">支</text><rect y="49" width="64" height="15" fill="#1558d8"/><text x="32" y="61" text-anchor="middle" font-size="12" font-weight="800" font-style="italic" fill="#b9d0ff" font-family="Arial">AI</text></svg></div><span>Alipay</span></div><div class="app" data-n="番茄小说"><div class="ic" style=""><svg viewBox="0 0 64 64"><rect width="64" height="64" fill="#fff"/><path d="M0 40Q32 24 64 40V64H0z" fill="#e8461f"/><path d="M0 40Q32 24 64 40V46Q32 30 0 46z" fill="#ef5a2a"/><path d="M36 0h13v22l-6.5-5L36 22z" fill="#ec4c24"/><g fill="#fff"><ellipse cx="16" cy="52" rx="5" ry="2.8" transform="rotate(20 16 52)"/><ellipse cx="30" cy="45" rx="2.5" ry="4" transform="rotate(-15 30 45)"/><ellipse cx="49" cy="49" rx="5" ry="3" transform="rotate(-25 49 49)"/><ellipse cx="40" cy="58" rx="2.5" ry="4"/></g></svg></div><span>番茄小说</span></div><div class="app" data-n="小红书"><div class="ic" style=""><svg viewBox="0 0 64 64"><rect width="64" height="64" fill="#ff2744"/><text x="32" y="42" text-anchor="middle" font-size="25" font-weight="900" fill="#fff" font-family="PingFang SC,sans-serif" textLength="52" lengthAdjust="spacingAndGlyphs">小红书</text></svg></div><span>rednote</span></div><div class="app" data-n="QQ"><div class="ic" style="background:linear-gradient(#4cc3ff,#1677ff)"><svg viewBox="0 0 64 64"><text x="32" y="46" text-anchor="middle" font-size="42" font-weight="800" fill="#fff" font-family="-apple-system,Helvetica Neue,Arial,sans-serif">Q</text></svg></div><span>QQ</span></div><div class="app" data-n="微信"><div class="ic" style=""><svg viewBox="0 0 64 64"><defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0fd36a"/><stop offset="1" stop-color="#05c05b"/></linearGradient></defs><rect width="64" height="64" fill="url(#g3)"/><ellipse cx="26" cy="27" rx="17" ry="14.5" fill="#d4f6e2"/><path d="M14 36l-2 8 9-4z" fill="#d4f6e2"/><ellipse cx="41" cy="38" rx="15" ry="12.5" fill="#bdeed3" stroke="#0fd36a" stroke-width="2.5"/><path d="M50 46l4 6-9-3z" fill="#bdeed3"/><g fill="#0fd36a" opacity=".9"><circle cx="20" cy="24" r="2.3"/><circle cx="31" cy="24" r="2.3"/></g><g fill="#fff"><circle cx="36" cy="37" r="2.1"/><circle cx="46" cy="37" r="2.1"/></g></svg></div><span>WeChat</span></div><div class="app" data-n="QQ音乐"><div class="ic" style="background:#fff;box-shadow:inset 0 0 0 1px #e8e8e8"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="#ffe21a"/><path d="M33 12h10c-1 6-6 8-6 14v18a11 11 0 1 1-6-9.7z" fill="#22b96a" transform="translate(-2 2)"/><path d="M38 20c4-2 8-5 9-9-4 0-8 1-10 4z" fill="#22b96a" opacity="0"/></svg></div><span>QQMusic</span></div><div class="app" data-n="企业微信"><div class="ic" style="background:#fff;box-shadow:inset 0 0 0 1px #e8e8e8"><svg viewBox="0 0 64 64"><path d="M32 14c-11 0-19 6-19 14 0 5 3 9 8 11l-2 7 8-5c2 0 3 1 5 1 11 0 19-6 19-14S43 14 32 14z" fill="none" stroke="#1e88e5" stroke-width="3.5" stroke-linejoin="round" transform="translate(-4 -2) scale(.95)"/><circle cx="50" cy="35" r="3.6" fill="#29c76f"/><circle cx="43" cy="42" r="3.6" fill="#f7b500"/><circle cx="51" cy="47" r="3.6" fill="#ff7043"/><circle cx="44" cy="33" r="3" fill="#7ac943" opacity="0"/><circle cx="52" cy="29" r="3.2" fill="#2d9cf0"/></svg></div><span>WeCom</span></div>
+ </section>
+ <!-- 第 2 页 -->
+ <section class="page">
+  <div class="soon" data-n="更多应用"><b>+</b>更多应用，即将到来</div>
+ </section>
+</div>
+
+<div id="dots"><i class="on"></i><i></i></div>
+
+<div id="dock" class="glass"><div class="app" data-n="电话"><div class="ic" style=""><svg viewBox="0 0 64 64"><defs><linearGradient id="g4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5df06f"/><stop offset="1" stop-color="#2cc84a"/></linearGradient></defs><rect width="64" height="64" fill="url(#g4)"/><g transform="translate(14 14) scale(1.5)"><path fill="#e6fbe9" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></g></svg></div><span>电话</span></div><div class="app" data-n="信息"><div class="ic" style=""><svg viewBox="0 0 64 64"><rect width="64" height="64" fill="url(#g4)"/><ellipse cx="32" cy="30" rx="23" ry="18" fill="#e6fbe9"/><path d="M14 44c3-1 6-3 7-6l6 5c-4 3-9 3-13 1z" fill="#e6fbe9"/></svg></div><span>信息</span></div><div class="app" data-n="设置"><div class="badge">1</div><div class="ic" style=""><svg viewBox="0 0 64 64"><defs><linearGradient id="g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9d9da2"/><stop offset="1" stop-color="#6e6e73"/></linearGradient></defs><rect width="64" height="64" fill="url(#g5)"/><circle cx="32" cy="32" r="22" fill="none" stroke="#d7d7da" stroke-width="7" stroke-dasharray="3.6 3.6"/><circle cx="32" cy="32" r="19" fill="none" stroke="#d7d7da" stroke-width="3.5"/><circle cx="32" cy="32" r="14.5" fill="#85858a" stroke="#cfcfd2" stroke-width="2"/><g stroke="#e4e4e6" stroke-width="3.6" stroke-linecap="round"><path d="M32 32L22 21M32 32L46 25M32 32V47"/></g></svg></div><span>设置</span></div></div>
+
+<div id="bn" class="glass"><div id="bic" style="flex:none;width:36px;height:36px"></div><div><div class="a" id="bt">AI 小手机</div><div class="b">待开发 · 敬请期待</div></div></div>
+
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)},de=document.documentElement;
+  if(navigator.standalone||matchMedia('(display-mode: standalone)').matches)de.classList.add('standalone');
+  var wk=['日','一','二','三','四','五','六'];
+  // 时间 / 问候 / 日期
+  function tick(){
+    var d=new Date(),h=d.getHours(),m=('0'+d.getMinutes()).slice(-2);
+    $('clock').textContent=('0'+h).slice(-2)+':'+m;
+    $('hi').textContent=h<5?'夜深了':h<11?'早上好':h<14?'中午好':h<18?'下午好':'晚上好';
+    $('date').textContent=(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+wk[d.getDay()];
+    $('wk').textContent='周'+wk[d.getDay()];$('dn').textContent=d.getDate();
+  }
+  tick();setInterval(tick,15000);
+  // 每日一句轮播
+  var qs=[['快乐的秘诀是停止胡思乱想！','来自村民 SHErLOckMxX 的评论'],['慢一点，也是在向前。','每日一句'],['今天也要好好吃饭。','每日一句'],['先喝口水，再慢慢想。','每日一句']],qi=0,q=$('q'),f=$('from'),pg=$('prog');
+  function show(){
+    q.style.opacity=0;
+    setTimeout(function(){q.textContent=qs[qi][0];f.textContent=qs[qi][1];q.style.opacity=1;
+      pg.style.transition='none';pg.style.width='0';
+      requestAnimationFrame(function(){requestAnimationFrame(function(){pg.style.transition='width 6s linear';pg.style.width='100%'})});
+      qi=(qi+1)%qs.length},350);
+  }
+  q.textContent=qs[0][0];f.textContent=qs[0][1];qi=1;requestAnimationFrame(function(){requestAnimationFrame(function(){pg.style.transition='width 6s linear';pg.style.width='100%'})});setInterval(show,6400);
+  // 页面圆点
+  var pages=$('pages'),dots=document.querySelectorAll('#dots i');
+  pages.addEventListener('scroll',function(){
+    var i=Math.round(pages.scrollLeft/pages.clientWidth);
+    dots.forEach(function(d,k){d.classList.toggle('on',k===i)});
+  },{passive:true});
+  dots.forEach(function(d,k){d.addEventListener('click',function(){pages.scrollTo({left:k*pages.clientWidth,behavior:'smooth'})})});
+  // 横幅提示
+  var bn=$('bn'),tm,editing=false;
+  function banner(name,el){
+    $('bt').textContent=name;
+    var ic=el&&el.querySelector('.ic');$('bic').innerHTML=ic?ic.outerHTML:'<div class="ic orbic"></div>';
+    bn.classList.add('s');clearTimeout(tm);
+    tm=setTimeout(function(){bn.classList.remove('s')},1800);
+    if(navigator.vibrate)navigator.vibrate(8);
+  }
+  // 点击 / 长按编辑
+  var lp;
+  document.querySelectorAll('[data-n]').forEach(function(el){
+    el.addEventListener('click',function(){if(editing)return;banner(el.getAttribute('data-n'),el)});
+    el.addEventListener('touchstart',function(){clearTimeout(lp);lp=setTimeout(function(){editing=true;de.classList.add('edit')},550)},{passive:true});
+    ['touchend','touchmove','touchcancel'].forEach(function(e){el.addEventListener(e,function(){clearTimeout(lp)},{passive:true})});
+  });
+  function exit(){editing=false;de.classList.remove('edit')}
+  $('done').addEventListener('click',exit);
+  $('bg').addEventListener('click',exit);
+  pages.addEventListener('click',function(e){if(editing&&e.target.classList.contains('page'))exit()});
+})();
+</script>
+</body>
+</html>
