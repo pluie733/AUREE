@@ -82,6 +82,10 @@ radial-gradient(40% 30% at 90% 85%,#efe3ff,transparent 70%),#f2f2f5}
 .badge{position:absolute;top:-7px;left:calc(50% + 12px);min-width:21px;height:21px;padding:0 6px;border-radius:11px;background:#ff3b30;color:#fff;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:2}
 .app span{white-space:nowrap}
 #bn .ic{width:36px;height:36px;border-radius:9px}
+#bg{inset:-80px 0 -200px 0}
+.standalone .page{padding-top:calc(var(--st) + 12px)}
+#bn{transform:translate(-50%,-300%);opacity:0;visibility:hidden;transition:transform .5s cubic-bezier(.2,1.1,.3,1),opacity .3s,visibility 0s .5s}
+#bn.s{transform:translate(-50%,0);opacity:1;visibility:visible;transition:transform .5s cubic-bezier(.2,1.1,.3,1),opacity .3s,visibility 0s}
 </style>
 </head>
 <body>
