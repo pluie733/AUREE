@@ -173,7 +173,8 @@ body{background:transparent!important}
 .edit .wg{touch-action:none;outline:2px dashed rgba(0,0,0,.28);outline-offset:6px;border-radius:14px}
 .wg.drag{z-index:6;transition:none;opacity:.9}
 #wsz label{display:flex;align-items:center;gap:12px;font-size:13px;color:#8a8a90;margin-bottom:8px}
-#wsz input{flex:1;accent-color:#858585}
+#wsz input{flex:1;accent-color:#858585;min-width:0}
+#wsz output{width:42px;text-align:right;color:#555;font-size:13px;font-variant-numeric:tabular-nums}
 </style>
 <style id="wcss3">
 .page.p1{padding-top:calc(var(--st) + 56px + 270px)}
@@ -187,6 +188,15 @@ body{background:transparent!important}
 .ghostel{opacity:.94;filter:drop-shadow(0 12px 22px rgba(0,0,0,.22))}
 .ghostel.app{transform:scale(1.12)}
 .ghostel .ic{animation:none!important}
+</style>
+<style id="bottom-blank-fix">
+/* 修复 iOS 添加到主屏幕后底部出现白色空白：让背景层延伸到视口底部之外 */
+html,body{min-height:100%;background-color:#f2f2f5!important}
+#bg{position:fixed!important;inset:-80px 0 -320px 0!important;background:
+radial-gradient(55% 38% at 15% 8%,#ffe1ea,transparent 70%),
+radial-gradient(50% 38% at 95% 28%,#d9e8ff,transparent 70%),
+radial-gradient(60% 45% at 25% 95%,#e0f5e6,transparent 70%),
+radial-gradient(40% 30% at 90% 85%,#efe3ff,transparent 70%),#f2f2f5!important}
 </style>
 </head>
 <body>
@@ -686,6 +696,10 @@ document.querySelectorAll('[data-go]').forEach(function(el){
 #appsheet .btns{display:flex;gap:10px;margin-top:16px}
 #appsheet .btns>*{flex:1;height:42px;border-radius:12px;border:0;background:#f3f3f5;color:#444;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 #appsheet .btns .ok{background:#858585;color:#fff}
+
+/* Pure white app background */
+html, body { background: #fff !important; }
+#bg { background: #fff !important; }
 </style>
 <div id="appsheet"><div class="box"><h4>编辑应用</h4><div class="row"><div class="pv ic" id="asPv"></div><input class="nm" id="asName" maxlength="12" placeholder="应用名称"></div><div class="lab">选择图标</div><div class="pre" id="asPre"></div><div class="btns"><label>从相册选择<input type="file" accept="image/*" style="position:absolute;inset:0;width:100%;height:100%;opacity:0" id="asFile"></label><button id="asReset">恢复默认</button><button class="ok" id="asOk">完成</button></div></div></div>
 <script>
@@ -741,7 +755,7 @@ apps.forEach(a=>{
  <div class="wtitle" id="wtitle">编辑组件</div>
  <div id="wfields"></div>
  <div class="wrow"><label class="wbtn" id="wpick">更换照片<input type="file" id="wfile" accept="image/*" hidden></label><button class="wbtn ghost" id="wrm">移除照片</button></div>
- <div id="wsz"><label>组件大小<input type="range" id="ws" min="0.6" max="1.6" step="0.02"></label></div>
+ <div id="wsz"><label>组件大小<input type="range" id="ws" min="0.5" max="1.8" step="0.02"><output id="wsv">100%</output></label></div>
  <div id="wadj"><label>缩放<input type="range" id="wz" min="1" max="3" step="0.02"></label><label>左右<input type="range" id="wx" min="-50" max="50" step="1"></label><label>上下<input type="range" id="wy" min="-50" max="50" step="1"></label></div>
  <div class="wrow"><button class="wbtn ghost" id="wreset">恢复默认</button><button class="wbtn main" id="wdone">完成</button></div>
 </div></div>
@@ -954,7 +968,7 @@ apps.forEach(a=>{
  function sync(){
   var d=st[cur],has=!!d.photo;
   $('wrm').classList.toggle('on',has);$('wadj').classList.toggle('on',has);
-  $('wz').value=d.z;$('wx').value=d.x;$('wy').value=d.y;$('ws').value=d.s;
+  $('wz').value=d.z;$('wx').value=d.x;$('wy').value=d.y;$('ws').value=d.s;$('wsv').textContent=Math.round(d.s*100)+'%';
  }
  function lift(on){
   if(!cur)return;var el=EL[cur];
@@ -1002,7 +1016,7 @@ apps.forEach(a=>{
   $(p[0]).addEventListener('input',function(){if(!cur)return;st[cur][p[1]]=parseFloat(this.value);render();save()});
  });
  $('ws').addEventListener('input',function(){
-  if(!cur)return;var id=cur;st[id].s=parseFloat(this.value);
+  if(!cur)return;var id=cur;st[id].s=parseFloat(this.value);$('wsv').textContent=Math.round(st[id].s*100)+'%';
   var p=curPos(id);st[id].fx=p.x/EL[id].parentNode.clientWidth;st[id].py=p.y;
   place(id);save();lift(true);
  });
