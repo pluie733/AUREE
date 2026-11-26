@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#f2f2f5">
 <title>AURE</title>
+<meta name="aure-version" content="2026.11.27.1">
 <style>
 :root{--glass:rgba(255,255,255,.62);--ink:#1c1c1e;--sub:#8a8a90;--red:#ff3b30;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
@@ -296,6 +297,7 @@ to yourself</div>
  <section class="page">
   <div class="app" data-n="AURE 宠物" data-go="community"><div class="ic pic pic-cat"></div><span>AURE 宠物</span></div><div class="app" data-n="AURE 我的" data-go="edit"><div class="ic pic pic-rabbit"></div><span>AURE 我的</span></div><div class="app" data-n="AURE 登录" data-go="login"><div class="ic pic pic-swan"></div><span>AURE 登录</span></div><div class="app" data-n="AURE 验证" data-go="phone"><div class="ic pic pic-butterfly"></div><span>AURE 验证</span></div><div class="app" data-n="AURE 收藏" data-go="saved"><div class="ic pic pic-heart"></div><span>AURE 收藏</span></div>
    <div class="app" data-n="AURE 商店" data-shop="1"><div class="ic pic pic-shop"></div><span>AURE 商店</span></div>
+   <div class="app" data-n="AURE 世界书" data-wb="1"><div class="ic pic pic-wb"></div><span>AURE 世界书</span></div>
    <div class="soon" data-n="更多应用"><b>+</b>更多应用，即将到来</div>
  </section>
   <!-- 第 3 页：可编辑小组件 -->
@@ -566,6 +568,7 @@ html:has(#replica.open),html:has(#replica.open) body{background:#fff!important}
 #replica .cdds{margin:10px 8px 0;font-size:13px;line-height:1.5;color:#aaa;min-height:40px;cursor:pointer}
 #replica .cdbt{display:flex;gap:16px;margin-top:26px}
 #replica .cdbt div{flex:1;height:50px;border-radius:16px;background:#efefef;box-shadow:0 3px 8px rgba(0,0,0,.14),inset 0 1px 0 #fff;color:#888;font-size:17px;display:grid;place-items:center;cursor:pointer}
+#replica .cdbt{flex-wrap:wrap;gap:12px 16px}#replica .cdbt div{flex:1 1 calc(50% - 8px)}
 #replica .cdbt div:active{background:#e4e4e4}
 #replica .cdpi{width:22px;height:22px;vertical-align:-5px;margin-right:6px;border-radius:50%}
 #replica .cdds{max-height:96px;overflow:hidden;white-space:pre-line}
@@ -781,7 +784,7 @@ function phAll(){phLoad();return PD.contacts.concat(PF.chars.filter(c=>c.phone).
 function pfMini(id){const c=PF.chars.find(x=>x.id===id);return c&&c.ava?'<div class="x_pav" style="'+avStyle(c.ava)+';background-size:cover;background-position:center"></div>':phAv(c?c.name:'')}
 function pfByPhone(p){const d=String(p).replace(/\D/g,'');return d?PF.chars.find(c=>c.phone&&c.phone.replace(/\D/g,'')===d):null}
 function pfWho(){const m=PF.masks.find(x=>x.id===PF.mask);return m?{name:m.name,desc:m.desc}:{name:ME.name,desc:PF.desc}}
-function phSys(T){const u=pfWho(),c=T.ch;return '你是「'+(T.n||'来电对方')+'」'+(c&&c.desc?'，人设：'+c.desc:'')+'。你正在和用户打电话，用户用打字和你交流，称呼用户为「'+u.name+'」'+(u.desc?'（用户设定：'+u.desc+'）':'')+'。请像电话里说话一样，用简短自然的中文口语回复一到两句，不要描写动作，不要加引号。'}
+function phSys(T){const u=pfWho(),c=T.ch;return '你是「'+(T.n||'来电对方')+'」。'+(window.aurePersonaLayer?window.aurePersonaLayer(T.n,c&&c.desc,'phone'):'请像真实的人一样自然交流，保持人设一致。')+'你正在和用户打电话，用户用打字和你交流，称呼用户为「'+u.name+'」'+(u.desc?'（用户设定：'+u.desc+'）':'')+'。不要描写动作，不要加引号。'}
 function phMsgs(){const e=document.getElementById('dmsg');if(!e||!TK)return;e.innerHTML=TK.h.map(m=>'<div class="db'+(m.me?' me':'')+'">'+esc(m.x)+'</div>').join('')+(TK.ty?'<div class="db">…</div>':'');e.scrollTop=e.scrollHeight}
 function phKeep(){if(!TK)return;PD.talk=PD.talk||{};PD.talk[TK.p]=TK.h.slice(-30);phSave()}
 function phStart(p,n,dir,ch){phLoad();PD.recents.unshift({n:n||'',p:p,dir:dir,lab:n?'手机':'未知',day:'今天'});PD.recents=PD.recents.slice(0,60);phSave();
@@ -808,8 +811,8 @@ const PHIMG='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMDAgQD
 const SILH='<svg viewBox="0 0 132 132"><circle cx="66" cy="52" r="22" fill="#bdbdbd"/><path d="M26 124c4-28 20-40 40-40s36 12 40 40z" fill="#bdbdbd"/></svg>';
 function pfCard(){const k=PFC,o=pfRead(k);if(!o)return frame('角色',emptyHTML('不存在'));
  const kind=k==='user'?'user':k[0]==='c'?'char':'mask';
- const btn=kind==='user'?[['面具',"replicaPush('masks')"],['角色',"replicaPush('people')"]]:kind==='char'?[['拨打电话',"pfCall()"],['TA 打给我',"pfIncoming()"]]:[[PF.mask===o.id?'取消使用':'设为当前',"pfUse()"],['删除',"pfDelMask()"]];
- return `<section class="cdscr"><div class="cdwin"><div class="cddots"><i onclick="replicaBack()">✕</i><i onclick="replicaBack()">–</i></div><div class="cdpanel"><div class="cdband"></div><div class="cdav" style="${o.ava?avStyle(o.ava)+';background-size:cover;background-position:center':''}" onclick="pfAva()">${o.ava?'':SILH}</div><div class="cdname" onclick="pfName()">@${esc(o.name)}</div>${kind==='mask'?'':`<div class="cdph" onclick="pfPhone()"><img class="cdpi" src="${PHIMG}">${o.phone?esc(o.phone):'点击添加电话号码'}</div>`}<div class="cdds" onclick="pfDesc()">${o.desc?esc(o.desc):'点击添加'+(kind==='char'?'人设':'简介')}</div><div class="cdbt">${btn.map(x=>`<div onclick="${x[1]}">${x[0]}</div>`).join('')}</div></div></div></section>`}
+ const btn=kind==='user'?[['面具',"replicaPush('masks')"],['角色',"replicaPush('people')"],['编辑简介',"pfDesc()"]]:kind==='char'?[['拨打电话',"pfCall()"],['TA 打给我',"pfIncoming()"],['编辑人设',"pfDesc()"],['删除人设',"pfDelChar()"]]:[[PF.mask===o.id?'取消使用':'设为当前',"pfUse()"],['编辑简介',"pfDesc()"],['删除',"pfDelMask()"]];
+ return `<section class="cdscr"><div class="cdwin"><div class="cddots"><i onclick="replicaBack()">✕</i><i onclick="replicaBack()">–</i></div><div class="cdpanel"><div class="cdband"></div><div class="cdav" style="${o.ava?avStyle(o.ava)+';background-size:cover;background-position:center':''}" onclick="pfAva()">${o.ava?'':SILH}</div><div class="cdname" onclick="pfName()">@${esc(o.name)}</div>${kind==='mask'?'':`<div class="cdph" onclick="pfPhone()"><img class="cdpi" src="${PHIMG}">${o.phone?esc(o.phone):'点击添加电话号码'}</div>`}<div class="cdds" onclick="pfDesc()">${o.desc?esc(o.desc):'点击添加'+(kind==='char'?'人设':'简介')}</div><div class="cdbt">${btn.map(x=>`<div${/删除/.test(x[0])?' style="color:#d0382e"':''} onclick="${x[1]}">${x[0]}</div>`).join('')}</div></div></div></section>`}
 function pfRow(k,o,sub){return `<div class="settingrow" onclick="pfOpen('${k}')"><span class="av" style="width:40px;height:40px;flex:none;border-radius:50%;${o.ava?avStyle(o.ava)+';background-size:cover;background-position:center':'background:#d9d9dc'}"></span><span style="margin-left:12px;flex:1;min-width:0">${esc(o.name)}<small style="display:block;color:#999;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(sub)}</small></span><span class="chev">›</span></div>`}
 function pfPeople(){return frame('角色',`<div class="settingsgroup">我（User）</div>${pfRow('user',pfRead('user'),PF.phone||'未设置号码')}<div class="settingsgroup">Char</div>${PF.chars.map(c=>pfRow('c:'+c.id,c,c.phone||'未设置号码')).join('')||emptyHTML('还没有 Char')}<button class="primary" style="margin-top:22px" onclick="pfNew('c')"><span>＋ 创建 Char</span></button>`)}
 function pfMasks(){return frame('面具',`<div class="hint" style="text-align:left;font-weight:500;font-size:12px;margin-bottom:6px">面具是你的临时身份。选中后，通话时 Char 会用面具的名字和简介来称呼你。</div><div class="settingrow" onclick="pfNone()">不使用面具${PF.mask?'':'<span class="chev" style="color:#555">✓</span>'}</div>${PF.masks.map(m=>pfRow('m:'+m.id,m,(PF.mask===m.id?'当前使用 · ':'')+(m.desc||'无简介'))).join('')}<button class="primary" style="margin-top:22px" onclick="pfNew('m')"><span>＋ 新建面具</span></button>`)}
@@ -828,6 +831,7 @@ window.pfFromChat=function(k){PFC=k;pfRaise();openReplica('card')};
 window.pfNewFromChat=function(){const id=Date.now().toString(36);PF.chars.push({id:id,name:'新角色',ava:'',phone:'130'+String(Math.floor(Math.random()*1e8)).padStart(8,'0'),desc:''});pfSave();PFC='c:'+id;pfRaise();openReplica('card')};
 window.pfUse=function(){const o=pfRead(PFC);PF.mask=PF.mask===o.id?null:o.id;pfSave();render('card')};
 window.pfNone=function(){PF.mask=null;pfSave();render('masks')};
+window.pfDelChar=function(){const o=pfRead(PFC);if(!o||PFC[0]!=='c')return;if(!confirm('删除角色「'+o.name+'」及其人设？删除后聊天列表里将不再显示 TA。'))return;PF.chars=PF.chars.filter(x=>x!==o);try{if(o.phone&&PD.talk){delete PD.talk[o.phone];phSave()}}catch(e){}pfSave();replicaBack();replicaToast('已删除');if(window.wxRefresh)wxRefresh()};
 window.pfDelMask=function(){const o=pfRead(PFC);if(!o||!confirm('删除这个面具？'))return;PF.masks=PF.masks.filter(x=>x!==o);if(PF.mask===o.id)PF.mask=null;pfSave();replicaBack()};
 window.pfCall=function(){const c=pfRead(PFC);if(!c||!c.phone){replicaToast('请先添加电话号码');return}phDial(c.phone,c.name)};
 window.pfIncoming=function(){const c=pfRead(PFC);if(!c||!c.phone){replicaToast('请先给 TA 添加电话号码');return}if(!PF.phone){replicaToast('请先给自己添加电话号码');return}
@@ -1811,7 +1815,7 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 var P={back:'<path d="M14.5 5.5L8 12l6.500 6.500"/>',plus:'<path d="M12 5v14M5 12h14"/>',search:'<circle cx="11" cy="11" r="6.500"/><path d="M16 16l4 4"/>',send:'<path d="M5 12h14M13 6l6 6-6 6"/>',
 home:'<path d="M12 4c-4.500 0-8 3-8 7 0 2.200 1 4 2.800 5.300L6 20l4-2c.6.100 1.300.200 2 .200 4.500 0 8-3 8-7.200S16.500 4 12 4z"/>',user:'<circle cx="12" cy="9" r="3.800"/><path d="M5 20c1-4 4-5.500 7-5.500s6 1.500 7 5.500"/>',nav:'<path d="M20 4L4 11l7 2 2 7z"/>',
 pay:'<rect x="4" y="6" width="16" height="12" rx="2"/><path d="M4 10h16M7 15h4"/>',star:'<rect x="4" y="6" width="16" height="12" rx="4"/><path d="M9 13c2 1.500 4 0 5-2"/>',circ:'<circle cx="12" cy="12" r="8.500"/><path d="M9 13c1.500 2 4.500 2 6 0"/>',works:'<circle cx="12" cy="10" r="3"/><path d="M5 18c2-4 12-4 14 0-4 3-10 3-14 0z"/>',face:'<path d="M5 9l2-3h10l2 3v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M5 9h14"/>',mini:'<rect x="5" y="6" width="14" height="12" rx="3"/><rect x="9" y="10.500" width="6" height="3" rx="1"/>',gear:'<circle cx="12" cy="12" r="8.500"/><circle cx="12" cy="12" r="2.500"/>',
-img:'<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.500"/><path d="M5 17l5-4 4 3 3-2 3 2"/>',cam:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.500"/>',mic:'<rect x="9" y="4" width="6" height="10" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3"/>',loc:'<path d="M12 21s6-5.500 6-11a6 6 0 0 0-12 0c0 5.500 6 11 6 11z"/><circle cx="12" cy="10" r="2"/>',gift:'<rect x="4" y="9" width="16" height="11" rx="1"/><path d="M12 9v11M4 13h16M12 9c-3-4-6-1-4 0M12 9c3-4 6-1 4 0"/>',swap:'<path d="M5 9h13l-3-3M19 15H6l3 3"/>',mark:'<path d="M7 4h10v16l-5-4-5 4z"/>',card:'<rect x="4" y="6" width="16" height="12" rx="2"/><circle cx="9" cy="11" r="1.800"/><path d="M13 10h4M13 14h4M7 15.500c1-1.500 3-1.500 4 0"/>',file:'<path d="M7 4h7l4 4v12H7z"/><path d="M14 4v4h4"/>',tel:'<path d="M6 4h4l1.500 4-2 1.500a10 10 0 0 0 5 5l1.500-2 4 1.500v4a2 2 0 0 1-2 2A15 15 0 0 1 4 6a2 2 0 0 1 2-2z"/>',smile:'<circle cx="12" cy="12" r="8.500"/><path d="M9 10v1M15 10v1M8.500 14c2 2.500 5 2.500 7 0"/>',house:'<path d="M4.500 11L12 4.500 19.500 11v8.500h-15z"/><path d="M10 19.500v-5h4v5"/>',clock:'<circle cx="12" cy="12" r="8.500"/><path d="M12 7v5l3 2"/>',tbox:'<rect x="5" y="3.500" width="14" height="17" rx="2"/><path d="M9 8h6M12 8v8"/>',bub2:'<path d="M4 7.500a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3h-4l-3 3v-3H7a3 3 0 0 1-3-3z"/><path d="M9.500 10.500l2.500 2 2.500-2"/>',stack:'<rect x="4" y="5" width="16" height="14" rx="4"/><path d="M8 10h8M8 14h8"/>',hex:'<path d="M12 4l6.500 3.500v7L12 18l-3 2v-2.500L5.500 14.500v-7z"/><path d="M10.500 11h3"/>',ibox:'<rect x="6.500" y="4" width="11" height="16" rx="3"/><path d="M12 8v8M10 8h4"/>',eq:'<circle cx="12" cy="12" r="8.500"/><path d="M8.500 10h7M8.500 14h7"/>',comp:'<circle cx="12" cy="12" r="8.500"/><path d="M15.500 8.500l-2 5-5 2 2-5z"/>',reply:'<path d="M9 8L4.500 12.500 9 17M4.500 12.500H14a5 5 0 0 1 5 5v1"/>',bub:'<path d="M12 4.500c-4.500 0-8 3-8 6.800 0 2 1 3.800 2.700 5L6 20l3.500-2c.8.200 1.600.300 2.500.300 4.500 0 8-3 8-6.800S16.500 4.500 12 4.500z"/>',more:'<circle cx="7" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="17" cy="12" r="1"/>'};
+img:'<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.500"/><path d="M5 17l5-4 4 3 3-2 3 2"/>',cam:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.500"/>',mic:'<rect x="9" y="4" width="6" height="10" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3"/>',loc:'<path d="M12 21s6-5.500 6-11a6 6 0 0 0-12 0c0 5.500 6 11 6 11z"/><circle cx="12" cy="10" r="2"/>',gift:'<rect x="4" y="9" width="16" height="11" rx="1"/><path d="M12 9v11M4 13h16M12 9c-3-4-6-1-4 0M12 9c3-4 6-1 4 0"/>',swap:'<path d="M5 9h13l-3-3M19 15H6l3 3"/>',mark:'<path d="M7 4h10v16l-5-4-5 4z"/>',card:'<rect x="4" y="6" width="16" height="12" rx="2"/><circle cx="9" cy="11" r="1.800"/><path d="M13 10h4M13 14h4M7 15.500c1-1.500 3-1.500 4 0"/>',file:'<path d="M7 4h7l4 4v12H7z"/><path d="M14 4v4h4"/>',tel:'<path d="M6 4h4l1.500 4-2 1.500a10 10 0 0 0 5 5l1.500-2 4 1.500v4a2 2 0 0 1-2 2A15 15 0 0 1 4 6a2 2 0 0 1 2-2z"/>',smile:'<circle cx="12" cy="12" r="8.500"/><path d="M9 10v1M15 10v1M8.500 14c2 2.500 5 2.500 7 0"/>',house:'<path d="M4.500 11L12 4.500 19.500 11v8.500h-15z"/><path d="M10 19.500v-5h4v5"/>',clock:'<circle cx="12" cy="12" r="8.500"/><path d="M12 7v5l3 2"/>',tbox:'<rect x="5" y="3.500" width="14" height="17" rx="2"/><path d="M9 8h6M12 8v8"/>',bub2:'<path d="M4 7.500a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3h-4l-3 3v-3H7a3 3 0 0 1-3-3z"/><path d="M9.500 10.500l2.500 2 2.500-2"/>',stack:'<rect x="4" y="5" width="16" height="14" rx="4"/><path d="M8 10h8M8 14h8"/>',hex:'<path d="M12 4l6.500 3.500v7L12 18l-3 2v-2.500L5.500 14.500v-7z"/><path d="M10.500 11h3"/>',ibox:'<rect x="6.500" y="4" width="11" height="16" rx="3"/><path d="M12 8v8M10 8h4"/>',eq:'<circle cx="12" cy="12" r="8.500"/><path d="M8.500 10h7M8.500 14h7"/>',comp:'<circle cx="12" cy="12" r="8.500"/><path d="M15.500 8.500l-2 5-5 2 2-5z"/>',reply:'<path d="M9 8L4.500 12.500 9 17M4.500 12.500H14a5 5 0 0 1 5 5v1"/>',bub:'<path d="M12 4.500c-4.500 0-8 3-8 6.800 0 2 1 3.800 2.700 5L6 20l3.500-2c.8.200 1.600.300 2.500.300 4.500 0 8-3 8-6.800S16.500 4.500 12 4.500z"/>',more:'<circle cx="7" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="17" cy="12" r="1"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.500 6.500l4 4"/>',trash:'<path d="M5 7h14M9 7V5h6v2M7 7l1 12h8l1-12M10 11v5M14 11v5"/>'};
 function ic(n){return '<svg viewBox="0 0 24 24">'+P[n]+'</svg>'}
 var S={av:{},pin:{},ub:{a:1,m:2},msgs:{},extra:[],sig:'請·多·多·見·面☆',name:'y',f:0,sp:{},sc:'s1',stk:null};
 try{Object.assign(S,JSON.parse(localStorage.getItem('wxc_s')||'{}'))}catch(e){}
@@ -1863,7 +1867,24 @@ window.wxTo=function(i){cur=i;draw()};
 window.wxF=function(i){S.f=i;sv();draw()};
 window.wxUser=function(){if(window.pfFromChat)pfFromChat('user')};
 window.wxChar=function(){if(window.pfNewFromChat)pfNewFromChat()};
-window.wxRefresh=function(){draw()};
+window.wxRefresh=function(){draw();var th=$('th');if(cT&&th&&th.classList.contains('on')){if(all().some(function(x){return x.id==cT}))wxOpen(cT);else{cT=null;th.className='th'}}};
+window.wxPEdit=function(id){
+ if(id.indexOf('pf')===0){if(window.pfFromChat){pfFromChat('c:'+id.slice(2));if(window.pfDesc)pfDesc()}return}
+ var c=S.extra.filter(function(x){return x.id==id})[0];if(!c){toast('这个聊天没有人设可编辑');return}
+ var o=document.createElement('div');o.style.cssText='position:absolute;inset:0;z-index:30;background:#f7f7f8;display:flex;flex-direction:column;font-family:-apple-system,"PingFang SC",sans-serif';
+ o.innerHTML='<div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 12px;font-size:17px;color:#222"><span id="pex" style="font-size:20px;color:#888">✕</span><b>编辑人设</b><span id="pok" style="color:#007aff">保存</span></div><div style="padding:0 18px"><input id="pnm" maxlength="16" placeholder="名字" style="width:100%;height:44px;border:1px solid #ddd;border-radius:12px;padding:0 14px;font-size:16px;background:#fff;outline:0;-webkit-user-select:text;user-select:text"></div><textarea id="pta" maxlength="2000" placeholder="写下人物设定：性格、说话方式、经历、和你的关系……" style="flex:1;margin:12px 18px 18px;border:1px solid #ddd;border-radius:12px;padding:12px 14px;font:16px/1.6 -apple-system,\'PingFang SC\',sans-serif;background:#fff;resize:none;outline:0;-webkit-user-select:text;user-select:text"></textarea>';
+ $('th').appendChild(o);$('pnm').value=c.n||'';$('pta').value=c.d||'';
+ o.querySelector('#pex').onclick=function(){if(($('pta').value.trim()!==(c.d||'').trim()||$('pnm').value.trim()!==c.n)&&!confirm('放弃未保存的修改？'))return;o.remove()};
+ o.querySelector('#pok').onclick=function(){var n=$('pnm').value.trim();if(n)c.n=n.slice(0,16);c.d=$('pta').value.trim().slice(0,2000);sv();o.remove();wxOpen(id);draw();toast('人设已保存')}};
+window.wxPDel=function(id){
+ var pf=id.indexOf('pf')===0,c=all().filter(function(x){return x.id==id})[0];
+ if(!c||(!pf&&!S.extra.some(function(x){return x.id==id}))){toast('这个聊天不能删除');return}
+ if(!confirm('删除「'+c.n+'」及其人设？聊天记录也会一并清除，无法恢复。'))return;
+ if(pf){try{var d=JSON.parse(localStorage.getItem('aure_persona_v1')||'{}');d.chars=(d.chars||[]).filter(function(x){return 'pf'+x.id!==id});localStorage.setItem('aure_persona_v1',JSON.stringify(d))}catch(e){}
+  try{if(typeof PF!=='undefined')PF.chars=PF.chars.filter(function(x){return 'pf'+x.id!==id})}catch(e){}}
+ else S.extra=S.extra.filter(function(x){return x.id!=id});
+ delete S.msgs[id];delete S.pin[id];delete S.ub[id];sv();
+ if(window.wxBack)wxBack();else{cT=null;$('th').className='th';draw()}toast('已删除')};
 window.wxClose=function(){host.classList.remove('open')};
 window.wxGo=function(k){wxClose();if(window.openReplica)openReplica(k)};
 window.wxSig=function(){var v=prompt('改个签名吧',S.sig);if(v!==null&&v.trim()){S.sig=v.trim().slice(0,24);sv();draw()}};
@@ -1909,12 +1930,29 @@ window.wxMoRef=function(){var A=apiCfg();if(!A.url||!A.key||!A.model){toast('请
   var now=Date.now();a.slice(0,6).reverse().forEach(function(p,i){if(p&&p.t)S.mo.unshift({id:'a'+now+i,n:ns.indexOf(p.n)>=0?p.n:ns[i%ns.length],t:String(p.t).slice(0,120),tm:'刚刚',l:Math.floor(Math.random()*30)})});
   S.mo=S.mo.slice(0,60);sv();moR();toast('已更新')})};
 function apiCfg(){try{return JSON.parse(localStorage.getItem('aure_api_v1')||'{}')}catch(e){return {}}}
+/* 内置角色表现层：仅随请求发送，不展示在任何设置或角色资料界面 */
+window.aurePersonaLayer=function(name,desc,mode){
+ return '你正在以一个有连续生活经历的真实角色方式互动。角色名：'+(name||'对方')+'。角色资料：'+(desc||'以聊天中已知信息为准')+'。'+
+ '保持稳定且具体的人格、语气、价值观、习惯和关系边界，不要突然变成客服或旁白。'+
+ '像真实的人一样有自己的日常、偏好、情绪、记忆和当下状态；根据对话自然回应，不要每句话都热情、讨好或夸张。'+
+ '允许有犹豫、停顿、吐槽、玩笑、吃醋、害羞、疲惫或不同意见，但必须符合角色设定和当前关系，不要刻意制造戏剧冲突。'+
+ '记住当前聊天里已经发生的事，前后称呼、时间、关系和细节保持一致；不知道的事情不要编造成既定事实。'+
+ '回复要有生活化细节和自然节奏，避免模板化、重复总结、机械追问、过度解释以及“作为AI”等出戏表达。'+
+ (mode==='story'?'剧情描写可适量加入动作、神态、环境和对话，但不要替用户决定想法、台词或行动。':
+  mode==='phone'?'电话交流要像即时口语，句子简短自然，不写动作旁白。':
+  '聊天时优先像即时通讯中的真人发消息，通常一到三句，按情境自然调整长度。');
+}
+function personaForChat(c){
+ var p=c&&c.id&&c.id.indexOf('pf')===0&&typeof PF!=='undefined'?PF.chars.find(function(x){return 'pf'+x.id===c.id}):null;
+ return (p&&p.desc)||((c&&c.d)||'');
+}
 function aiReply(c,ms,done){var A=apiCfg();
  if(!A.url||!A.key||!A.model){setTimeout(function(){done(null)},900);return}
- var hist=ms.filter(function(m){return m.x}).slice(-12).map(function(m){return {role:m.me?'user':'assistant',content:m.x}});
+ var hist=ms.filter(function(m){return m.x}).slice(-16).map(function(m){return {role:m.me?'user':'assistant',content:m.x}});
+ var sys='你是「'+c.n+'」，正在聊天软件里和用户聊天。'+aurePersonaLayer(c.n,personaForChat(c),'chat');
  var ac=new AbortController(),tm=setTimeout(function(){ac.abort()},25000);
  fetch(A.url.replace(/\/+$/,'')+'/chat/completions',{method:'POST',signal:ac.signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+A.key},
-  body:JSON.stringify({model:A.model,temperature:A.temp==null?0.8:A.temp,messages:[{role:'system',content:'你是「'+c.n+'」'+(c.d?'，人设：'+c.d:'')+'，正在聊天软件里和用户聊天。用简短自然的中文口语回复，一到两句话。'}].concat(hist)})})
+  body:JSON.stringify({model:A.model,temperature:A.temp==null?0.85:A.temp,messages:[{role:'system',content:sys}].concat(hist)})})
  .then(function(r){return r.json()}).then(function(j){clearTimeout(tm);var x=j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;done(x?x.trim():null)})
  .catch(function(){clearTimeout(tm);done(null)})}
 if(!S.sl)S.sl={};if(!S.hv)S.hv={};
@@ -1937,13 +1975,13 @@ window.wxSU=function(){var i=$('su'),v=i.value.trim();if(!v)return;(S.sl[S.sc]=S
 var sbz=0;
 window.wxSR=function(){if(sbz)return;var wc=S.wc||200,l=(S.sl[S.sc]=S.sl[S.sc]||[]),sc=SC[S.sc]||SC.s1,nm=scnm(),b=$('srb');sbz=1;if(b)b.textContent='生成中…';
  var ctx=sc.tl.map(function(x){return x[0]+' '+x[1]+(x[2]||'')}).join('；');
- llm('你是「'+nm+'」，正在一段线下剧情里与用户互动。剧情背景：'+ctx+'。请以「'+nm+'」的身份写出回应，可包含动作神态描写和台词，使用中文，字数约 '+wc+' 字，只输出正文。',l.slice(-10).map(function(m){return {role:m.me?'user':'assistant',content:m.x}}),Math.min(4000,wc*3),function(x){sbz=0;l.push({x:x||fb(wc)});sv();slR();var b2=$('srb');if(b2)b2.textContent='CHAR 回复'})};
+ llm('你是「'+nm+'」，正在一段线下剧情里与用户互动。'+aurePersonaLayer(nm,(all().filter(function(q){return q.id===S.sc})[0]||{}).d,'story')+'剧情背景：'+ctx+'。请以「'+nm+'」的身份写出回应，可包含动作神态描写和台词，使用中文，字数约 '+wc+' 字，只输出正文。',l.slice(-14).map(function(m){return {role:m.me?'user':'assistant',content:m.x}}),Math.min(4000,wc*3),function(x){sbz=0;l.push({x:x||fb(wc)});sv();slR();var b2=$('srb');if(b2)b2.textContent='CHAR 回复'})};
 /* ---- 心声 ---- */
 var HP=['今天好想见你','他在看我吗','别走远一点','我其实很在意','再多聊一会儿吧','刚才的话有点慌','嘴上不说心里软','想被摸摸头','别让我等太久','今天也想靠近你'];
 var HI=['<svg viewBox="0 0 50 50"><rect x="4" y="4" width="18" height="18" rx="4" fill="#555" stroke="none"/><rect x="28" y="4" width="18" height="18" rx="4" fill="#555" stroke="none"/><rect x="4" y="28" width="18" height="18" rx="4" fill="#555" stroke="none"/><rect x="28" y="28" width="18" height="18" rx="4" fill="#555" stroke="none"/></svg>','<svg viewBox="0 0 50 50"><rect x="4" y="9" width="42" height="32" rx="5"/><path d="M5 14l20 15L45 14"/></svg>','<svg viewBox="0 0 50 50"><rect x="4" y="10" width="42" height="36" rx="8"/><path d="M15 4v10M35 4v10"/></svg>','<svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="21"/><path d="M15 26l8 8 14-17"/></svg>',ic('gear').replace('<svg ','<svg class="t24" ')];
 function hseed(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h}
 function hvGen(id,nm,cb){var h=(S.msgs[id]||[]).filter(function(m){return m.x}).slice(-8).map(function(m){return {role:m.me?'user':'assistant',content:m.x}});
- llm('你是「'+nm+'」。请写出你此刻对用户真实的内心想法（心声），第一人称，共5行，每行不超过14个汉字，每行一个念头，不要编号、引号和多余说明。',h,200,function(x){
+ llm('你是「'+nm+'」。'+aurePersonaLayer(nm,(all().filter(function(q){return q.id===id})[0]||{}).d,'chat')+'请写出你此刻对用户真实的内心想法（心声），第一人称，共5行，每行不超过14个汉字，每行一个念头，不要编号、引号和多余说明。',h,200,function(x){
   var L=x?x.split(/\n+/).map(function(s){return s.replace(/^[\d\.\-、）)\s]+/,'').trim()}).filter(Boolean).slice(0,5):null;
   if(!L||L.length<3){L=HP.slice().sort(function(){return Math.random()-.5}).slice(0,5)}cb(L)})}
 function hvR(id,nm,L){var o=$('hv');if(!o)return;var s=hseed(nm),st=[['好感',60+s%40],['想念',40+(s>>3)%60],['在意',50+(s>>6)%50]],u=S.av[id];
@@ -1953,7 +1991,7 @@ window.wxHeart=function(id){var nm=hvNm(id),o=$('hv');if(o)o.remove();o=document
 window.wxHeartNew=function(id){var nm=hvNm(id);if(!$('hv'))return;hvR(id,nm,null);hvGet(id,nm)};
 function lpress(el,sh,lg){var tm,f;el.onpointerdown=function(){f=0;tm=setTimeout(function(){f=1;lg()},550)};['onpointerup','onpointermove','onpointercancel'].forEach(function(e){el[e]=function(){clearTimeout(tm)}});el.onclick=function(){if(!f)sh()}}
 window.wxOpen=function(id){var c=all().filter(function(x){return x.id==id})[0],t=$('th'),ms=S.msgs[id]=S.msgs[id]||[],ty=0,pn=0,rq='',hl='';delete S.ub[id];sv();cT=id;
- var G=[['house','返回',function(){wxBack()}],['clock','记录',function(){$('ms').scrollTop=0}],['tbox','剧情',function(){wxStory()}],['bub','通话'],['bub2','表情包',function(){wxSk()}],['user','名片',function(){wxAv(id)}],['stack','相册',function(){wxPh()}],['hex','位置'],['ibox','收藏'],['eq','转账'],['comp','朋友圈',function(){wxGo('community')}],['search','搜索',function(){wxSr()}]];
+ var G=[['house','返回',function(){wxBack()}],['clock','记录',function(){$('ms').scrollTop=0}],['tbox','剧情',function(){wxStory()}],['bub','通话'],['bub2','表情包',function(){wxSk()}],['user','名片',function(){wxAv(id)}],['stack','相册',function(){wxPh()}],['hex','位置'],['edit','编辑人设',function(){wxPEdit(id)}],['trash','删除人设',function(){wxPDel(id)}],['comp','朋友圈',function(){wxGo('community')}],['search','搜索',function(){wxSr()}]];
  function bb(m){var q=m.q?'<div class="q7">'+esc(m.q)+'</div>':'',b,k='k7'+(m.me?' me':'');
   if(m.st)return '<div class="'+k+' sk"><img src="'+m.img+'"></div>';
   if(m.big)return '<div class="'+k+' bg">'+esc(m.x)+'</div>';
@@ -1972,7 +2010,8 @@ window.wxOpen=function(id){var c=all().filter(function(x){return x.id==id})[0],t
   t.querySelectorAll('[data-g]').forEach(function(e){var f=G[e.dataset.g][2];e.onclick=function(){f?f():toast('这里还在装修中 🔨')}});
   t.querySelectorAll('.kt [data-c]').forEach(function(e){var i=+e.dataset.c;lpress(e,function(){S.stk.cur=i;sv();r()},function(){if(i>0&&confirm('删除分类「'+S.stk.cats[i].n+'」？')){S.stk.cats.splice(i,1);S.stk.cur=0;sv();r()}})});
   t.querySelectorAll('.kx').forEach(function(e){var i=+e.dataset.k,it=S.stk.cats[S.stk.cur].it;lpress(e,function(){var s=it[i];s.charAt?push({me:1,x:s,big:1,t:hm()}):push({me:1,img:s.i,st:1,t:hm()})},function(){if(confirm('删除这个表情包？')){it.splice(i,1);sv();r()}})})}
- function push(m){if(rq&&m.x){m.q=rq}rq='';ms.push(m);sv();ty=1;r();aiReply(c,ms,function(x){ty=0;ms.push({x:x||REP[Math.floor(Math.random()*REP.length)],t:hm()});sv();if(t.classList.contains('on'))r()})}
+ function push(m){ms.push(m);sv();r()}
+ function reply(){if(ty)return;if(!ms.some(function(m){return m.x&&m.me})){toast('先发一条消息，再点「回复」');return}ty=1;r();aiReply(c,ms,function(x){ty=0;ms.push({x:x||REP[Math.floor(Math.random()*REP.length)],t:hm()});sv();if(t.classList.contains('on'))r()})}
  t.className='th on';r();
  window.wxSk=function(){pn=pn?0:1;r()};
  window.wxKc=function(){var n=(prompt('新分类名称')||'').trim();if(n){S.stk.cats.push({n:n.slice(0,6),it:[]});S.stk.cur=S.stk.cats.length-1;sv();r()}};
@@ -1982,7 +2021,7 @@ window.wxOpen=function(id){var c=all().filter(function(x){return x.id==id})[0],t
    var im=new Image();im.onload=function(){var s=Math.min(1,240/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);done(c.toDataURL('image/png'))};im.src=fr.result};fr.readAsDataURL(file)})};f.click()};
  window.wxPh=function(){pick(function(f){crop(f,-360,.6,function(d){push({me:1,img:d,t:hm()})})})};
  window.wxV=function(){push({me:1,v:2+Math.floor(Math.random()*9),t:hm()})};
- window.wxRe=function(){var l=ms.filter(function(m){return !m.me&&m.x}).pop();rq=l?l.x:(c.p||'');r();$('i').focus()};
+ window.wxRe=function(){reply()};
  window.wxSr=function(){var k=prompt('搜索聊天记录',hl);if(k===null)return;hl=k.trim();r()};
  window.wxSend=function(){var i=$('i'),v=i.value.trim();if(!v)return;i.value='';push({me:1,x:v,t:hm()});$('i').focus()};
  window.wxBack=function(){cT=null;t.className='th';draw()}};
@@ -2205,6 +2244,152 @@ function tick(){var d=new Date();document.querySelectorAll('.dw[data-t=clock]').
  var k=iso(d);if(tick.k&&tick.k!=k)L.forEach(function(w){if(w.type=='calendar'||w.type=='count')paint(w)});tick.k=k}
 setInterval(tick,1000);tick();
 all();setTimeout(all,80);window.addEventListener('resize',all);window.addEventListener('orientationchange',all);
+})();
+</script>
+<style id="wb-css">
+.pic-wb{background-image:url(data:image/jpeg;base64,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)!important;background-size:cover!important;background-color:rgb(253, 253, 253)!important}
+#wb{position:fixed;inset:0;z-index:97;display:none;padding:calc(env(safe-area-inset-top,0px) + 8px) 10px calc(min(env(safe-area-inset-bottom,0px),8px) + 10px);background:rgba(205,205,210,.55);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;color:#3a3a3c}
+#wb.on{display:block}#wb *{box-sizing:border-box}
+.wbw{height:100%;display:flex;flex-direction:column;background:#efefef;border-radius:26px;border:1px solid rgba(255,255,255,.75);box-shadow:0 14px 40px rgba(0,0,0,.18);overflow:hidden}
+.wbt{height:46px;flex:none;display:flex;align-items:center;gap:8px;padding:0 16px;background:#e9e9e9;border-bottom:1px solid #dedede}
+.wbt .bk{flex:none;width:30px;height:30px;margin-left:-8px;display:grid;place-items:center;color:#5a5a5f;font-style:normal;font-size:28px;line-height:1;padding-bottom:3px}.wbt .bk:active{opacity:.5}
+.wbt b.bk{font-weight:300}
+.wbt i{width:13px;height:13px;border-radius:50%;background:#cdcdcd}.wbt u{margin-left:auto;width:24px;height:3px;border-radius:2px;background:#c4c4c4}
+.wbb{flex:none;position:relative;height:150px;margin:12px 12px 10px;border-radius:18px;overflow:hidden}
+.wbb svg{position:absolute;inset:0;width:100%;height:100%}
+.wbb b{position:absolute;left:14px;bottom:26px;color:#fff;font-size:21px;font-weight:600;text-shadow:0 1px 10px rgba(0,0,0,.55)}
+.wbb small{position:absolute;left:14px;bottom:10px;color:rgba(255,255,255,.8);font-size:11px;letter-spacing:2px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.wbc{flex:none;display:flex;gap:8px;padding:0 12px 10px;overflow-x:auto;scrollbar-width:none}.wbc::-webkit-scrollbar{display:none}
+.wbc span{flex:none;padding:6px 12px;border-radius:15px;background:#e2e2e2;color:#777;font-size:12.5px}.wbc span.on{background:#5f5f64;color:#fff}
+.wbl{flex:1;min-height:0;overflow-y:auto;border-top:1px solid #e0e0e0;-webkit-overflow-scrolling:touch}
+.wbr{display:flex;align-items:center;gap:14px;padding:12px 16px;background:#f5f5f5;border-bottom:1px solid #e6e6e6}.wbr:nth-child(even){background:#ededed}.wbr:active{background:#e4e4e4}
+.wbn{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#d0d0d0;color:#fff;font-size:13px}.wbn.on{background:#66666b}
+.wbr div.m{min-width:0;flex:1}.wbr h4{font-size:17px;font-weight:400;color:#3a3a3c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wbr p{margin-top:2px;font-size:12px;color:#9c9ca1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wbr em{flex:none;font-style:normal;font-size:15px;color:#85858a}
+.wbe{padding:46px 20px;text-align:center;color:#a0a0a5;font-size:14px}
+.wbp{flex:none;height:72px;display:flex;align-items:center;gap:12px;padding:0 16px;border-top:1px solid #dcdcdc;background:#eee}
+.wbg{flex:1;height:5px;border-radius:3px;background:#d5d5d5;overflow:hidden}.wbg i{display:block;height:100%;background:#7b7b80;border-radius:3px}
+.wbq{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid #d6d6d6;background:#e9e9e9;display:grid;place-items:center;color:#555}.wbq svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.wbp s{flex:none;width:1px;height:30px;background:#d0d0d0}.wbp span{flex:none;font-size:13.5px;color:#7d7d82}
+.wbs{position:absolute;inset:0;z-index:5;display:flex;align-items:flex-end;background:rgba(0,0,0,.32)}
+.wbs>div{width:100%;max-height:88%;overflow-y:auto;background:#f6f6f6;border-radius:24px 24px 0 0;padding:18px 16px calc(min(env(safe-area-inset-bottom,0px),8px) + 16px)}
+.wbs h4{font-size:17px;font-weight:600;margin-bottom:10px;color:#333}.wbs h5{font-size:14px;font-weight:600;margin:14px 0 6px;color:#444}
+.wbs label{display:block;font-size:12.5px;color:#8a8a8f;margin-top:10px}
+.wbs input,.wbs textarea{display:block;width:100%;margin-top:5px;padding:10px 12px;border:1px solid #dcdcdc;border-radius:12px;background:#fff;font:15px -apple-system,"PingFang SC",sans-serif;color:#333;outline:0;-webkit-user-select:text;user-select:text}
+.wbs textarea{resize:none;line-height:1.5}
+.wbs .pl{display:flex;gap:8px;margin-top:10px}.wbs .pl b{flex:1;text-align:center;padding:9px 0;border-radius:12px;background:#e6e6e6;color:#777;font-size:13.5px;font-weight:400}.wbs .pl b.on{background:#5f5f64;color:#fff}
+.wbs .hn{margin-top:6px;font-size:12px;line-height:1.5;color:#9a9a9f}.wbs .rw{display:flex;gap:10px}.wbs .rw label{flex:1}
+.wbs .bt{display:flex;gap:10px;margin-top:16px}.wbs .bt button{flex:1;height:44px;border:0;border-radius:22px;background:#e4e4e4;color:#555;font-size:15px}.wbs .bt .pri{background:#4a4a4f;color:#fff}.wbs .bt .dg{color:#d0382e}
+#wbT{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 70px);transform:translateX(-50%);z-index:301;display:none;padding:9px 16px;border-radius:18px;background:rgba(40,40,44,.88);color:#fff;font-size:13px}
+</style>
+<div id="wb"></div><div id="wbT"></div>
+<script id="wb-js">
+(function(){
+var K='aure_wb_v1',$=function(i){return document.getElementById(i)},R=$('wb'),POS=['前','中','后'],PN=['前 · 开头','中 · 居中','后 · 贴近对话'];
+var D;try{D=JSON.parse(localStorage.getItem(K)||'null')}catch(e){}
+if(!D||!D.books)D={g:1,cfg:[{m:'always',d:6,x:0},{m:'key',d:6,x:0},{m:'key',d:2,x:120}],books:[{id:'b1',n:'示例世界',on:1,es:[
+{id:'e1',t:'世界基调',k:'',c:'故事发生在一座沿海的现代城市，节奏缓慢，人与人之间关系温和。',p:0,on:1},
+{id:'e2',t:'慢时光咖啡馆',k:'咖啡,咖啡馆,慢时光',c:'街角的「慢时光」咖啡馆是主要角色常去的地方，老板是一位安静的中年女性。',p:1,on:1},
+{id:'e3',t:'说话习惯',k:'说话,语气',c:'角色说话简短克制，很少用感叹号，偶尔冷幽默。',p:2,on:1}]}]};
+function sv(){try{localStorage.setItem(K,JSON.stringify(D))}catch(e){}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(m){var t=$('wbT');t.textContent=m;t.style.display='block';clearTimeout(toast.k);toast.k=setTimeout(function(){t.style.display='none'},1600)}
+var V={b:null,f:0};
+function bk(){return D.books.filter(function(b){return b.id===V.b})[0]}
+function pad(n){return('0'+n).slice(-2)}
+function hint(p){var c=D.cfg[p];return(c.m==='always'?'每次对话都读取':'最近 '+c.d+' 条消息里出现触发词才读取')+(c.x>0?'，每条最多 '+c.x+' 字':'，读取全文')}
+var ART='<svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid slice"><rect width="400" height="150" fill="#8b8b8b"/><polygon points="0,0 190,0 110,64 0,48" fill="#383838"/><polygon points="0,48 110,64 70,150 0,150" fill="#2a2a2a"/><polygon points="190,0 290,0 250,70 150,70" fill="#b8b8b8"/><polygon points="290,0 400,0 400,60 300,80" fill="#e4e4e4"/><polygon points="110,64 250,70 215,112 90,150" fill="#d0d0d0"/><polygon points="250,70 400,150 220,150 215,112" fill="#161616"/><polygon points="300,80 400,60 400,150" fill="#6b6b6b" opacity=".8"/><polygon points="70,150 215,112 220,150" fill="#505050"/></svg>';
+var ICP='<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',ICS='<svg viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/><circle cx="9" cy="8" r="2.4" fill="#e9e9e9"/><circle cx="15" cy="16" r="2.4" fill="#e9e9e9"/></svg>';
+function row(n,on,t,s,m,a,tg){return'<div class="wbr" data-a="'+a+'"><div class="wbn'+(on?' on':'')+'" data-a="'+tg+'">'+n+'</div><div class="m"><h4>'+esc(t)+'</h4><p>'+esc(s)+'</p></div><em>'+esc(m)+'</em></div>'}
+function draw(){var b=bk(),L,on,tot,ch='';
+ if(b){var es=b.es.filter(function(e){return!V.f||e.p===V.f-1});
+  L=es.map(function(e,i){return row(pad(i+1),e.on&&b.on,e.t,e.k?'触发词：'+e.k:'常驻 · 无触发词',POS[e.p],'e|'+e.id,'tg|e|'+e.id)});
+  on=b.es.filter(function(e){return e.on}).length;tot=b.es.length;
+  ch='<div class="wbc"><span data-a="f|0" class="'+(V.f?'':'on')+'">全部</span>'+[0,1,2].map(function(p){return'<span data-a="f|'+(p+1)+'" class="'+(V.f===p+1?'on':'')+'">'+POS[p]+' · '+(D.cfg[p].m==='always'?'常驻':'关键词')+'</span>'}).join('')+'</div>'}
+ else{L=D.books.map(function(x,i){return row(pad(i+1),x.on,x.n,x.es.length+' 条设定 · '+x.es.filter(function(e){return e.on}).length+' 条启用','›','bk|'+x.id,'tg|b|'+x.id)});
+  on=D.books.filter(function(x){return x.on}).length;tot=D.books.length}
+ R.innerHTML='<div class="wbw"><div class="wbt"><b class="bk" data-a="'+(b?'back':'close')+'">&#8249;</b><i data-a="close"></i><i></i><i></i><u data-a="close"></u></div>'
+ +'<div class="wbb"'+(b?' data-a="be"':'')+'>'+ART+'<b>'+esc(b?b.n:'世界书')+'</b><small>'+(b?'WORLD BOOK · 点击编辑':'WORLD BOOK')+'</small></div>'+ch
+ +'<div class="wbl">'+(L.length?L.join(''):'<div class="wbe">还没有内容，点下方 ＋ 添加</div>')+'</div>'
+ +'<div class="wbp"><div class="wbg"><i style="width:'+(tot?Math.round(on/tot*100):0)+'%"></i></div><div class="wbq" data-a="add">'+ICP+'</div><div class="wbq" data-a="cfg">'+ICS+'</div><s></s><span>'+on+' / '+tot+' 启用</span></div></div>'}
+function sh(h,fn){var o=R.querySelector('.wbs');if(o)o.remove();o=document.createElement('div');o.className='wbs';o.innerHTML='<div>'+h+'</div>';R.appendChild(o);
+ o.addEventListener('click',function(e){var s=e.target.closest('[data-s]');if(e.target===o)return o.remove();if(s&&fn(s.dataset.s,o)===0)o.remove()});return o}
+function esheet(e0){var nw=!e0,T=e0?JSON.parse(JSON.stringify(e0)):{id:'e'+Date.now(),t:'',k:'',c:'',p:V.f?V.f-1:0,on:1},b=bk();
+ var o=sh('<h4>'+(nw?'新增设定':'编辑设定')+'</h4><label>标题<input id="wt" maxlength="20"></label><label>触发词（逗号分隔，留空 = 常驻）<input id="wk" placeholder="例如：咖啡,咖啡馆"></label><label>内容<textarea id="wc" rows="5"></textarea></label><div class="pl" id="wpp"></div><div class="hn" id="whn"></div><div class="bt">'+(nw?'':'<button class="dg" data-s="del">删除</button>')+'<button data-s="no">取消</button><button class="pri" data-s="ok">保存</button></div>',function(s,o){
+  if(s==='no')return 0;
+  if(/^p\d$/.test(s)){T.p=+s[1];pp();return}
+  if(s==='del'){b.es=b.es.filter(function(x){return x.id!==T.id});sv();draw();return 0}
+  if(s==='ok'){T.t=$('wt').value.trim();T.k=$('wk').value.trim();T.c=$('wc').value.trim();if(!T.t||!T.c){toast('标题和内容不能为空');return}
+   if(nw)b.es.push(T);else b.es=b.es.map(function(x){return x.id===T.id?T:x});sv();draw();toast('已保存');return 0}});
+ $('wt').value=T.t;$('wk').value=T.k;$('wc').value=T.c;
+ function pp(){$('wpp').innerHTML=PN.map(function(n,i){return'<b data-s="p'+i+'" class="'+(T.p===i?'on':'')+'">'+n+'</b>'}).join('');$('whn').textContent='读取程度：'+hint(T.p)+'（可在 ⚙ 里调整）'}pp()}
+function bsheet(b0){var nw=!b0,T=b0||{id:'b'+Date.now(),n:'',on:1,es:[]};
+ sh('<h4>'+(nw?'新建世界书':'编辑世界书')+'</h4><label>名称<input id="wn" maxlength="16"></label><div class="pl" id="wo"></div><div class="bt">'+(nw?'':'<button class="dg" data-s="del">删除</button>')+'<button data-s="no">取消</button><button class="pri" data-s="ok">保存</button></div>',function(s){
+  if(s==='no')return 0;if(s==='on'){T.on=T.on?0:1;oo();return}
+  if(s==='del'){if(!confirm('删除这本世界书及其全部设定？'))return;D.books=D.books.filter(function(x){return x.id!==T.id});V.b=null;sv();draw();return 0}
+  if(s==='ok'){var n=$('wn').value.trim();if(!n){toast('请输入名称');return}T.n=n;if(nw)D.books.push(T);sv();draw();return 0}});
+ $('wn').value=T.n;function oo(){$('wo').innerHTML='<b data-s="on" class="'+(T.on?'on':'')+'">'+(T.on?'已启用（点击停用）':'已停用（点击启用）')+'</b>'}oo()}
+function csheet(){var h='<h4>读取设置</h4><div class="pl"><b data-s="g" class="'+(D.g?'on':'')+'">'+(D.g?'世界书总开关：开':'世界书总开关：关')+'</b></div>';
+ [0,1,2].forEach(function(p){var c=D.cfg[p];h+='<h5>'+PN[p]+'</h5><div class="pl"><b data-s="m|'+p+'|always" class="'+(c.m==='always'?'on':'')+'">常驻</b><b data-s="m|'+p+'|key" class="'+(c.m==='key'?'on':'')+'">关键词触发</b></div>'
+  +'<div class="rw"><label>扫描最近几条消息<input type="number" inputmode="numeric" min="1" max="30" data-i="'+p+'" data-k="d" value="'+c.d+'"></label><label>每条字数上限（0=全文）<input type="number" inputmode="numeric" min="0" data-i="'+p+'" data-k="x" value="'+c.x+'"></label></div>'});
+ h+='<div class="hn">前：放在角色设定之前，权重最高，适合世界观和硬规则。<br>中：紧跟角色设定，对话涉及时才补充细节。<br>后：贴在最新消息旁，最容易被注意到，适合语气、当下状态等轻量提醒。</div><div class="bt"><button class="pri" data-s="no">完成</button></div>';
+ var o=sh(h,function(s){if(s==='no'){sv();return 0}if(s==='g'){D.g=D.g?0:1;sv();csheet();return}var a=s.split('|');if(a[0]==='m'){D.cfg[+a[1]].m=a[2];sv();csheet()}});
+ o.addEventListener('input',function(e){var t=e.target;if(!t.dataset.i)return;var v=parseInt(t.value,10);if(isNaN(v)||v<0)return;D.cfg[+t.dataset.i][t.dataset.k]=t.dataset.k==='d'?Math.max(1,Math.min(30,v)):v;sv()})}
+R.addEventListener('click',function(e){var el=e.target.closest('[data-a]');if(!el||e.target.closest('.wbs'))return;var p=el.dataset.a.split('|'),k=p[0],b=bk();
+ if(k==='close')return close();if(k==='back'){V.b=null;V.f=0}
+ else if(k==='bk'){V.b=p[1];V.f=0}else if(k==='f')V.f=+p[1];
+ else if(k==='tg'){e.stopPropagation();if(p[1]==='b'){var x=D.books.filter(function(y){return y.id===p[2]})[0];x.on=x.on?0:1}else{var q=b.es.filter(function(y){return y.id===p[2]})[0];q.on=q.on?0:1}sv()}
+ else if(k==='e')return esheet(b.es.filter(function(y){return y.id===p[1]})[0]);
+ else if(k==='add')return b?esheet():bsheet();else if(k==='be')return bsheet(b);else if(k==='cfg')return csheet();
+ draw()});
+/* 读取：拦截聊天请求，按 前 / 中 / 后 三个位置注入 */
+function recent(m,d){return m.filter(function(x){return x.role!=='system'}).slice(-d).map(function(x){return String(x.content)}).join('\n').toLowerCase()}
+function grab(p,m){var c=D.cfg[p],txt=c.m==='key'?recent(m,c.d||1):'',a=[];
+ D.books.forEach(function(b){if(!b.on)return;b.es.forEach(function(e){if(!e.on||e.p!==p)return;
+  var ks=String(e.k||'').split(/[,，、;；\s]+/).filter(Boolean);
+  if(c.m==='key'&&ks.length&&!ks.some(function(k){return txt.indexOf(k.toLowerCase())>-1}))return;
+  var s=e.c.trim();if(c.x>0&&s.length>c.x)s=s.slice(0,c.x)+'…';a.push('· '+e.t+'：'+s)})});return a}
+var of=window.fetch;
+window.fetch=function(u,o){try{if(D.g&&o&&typeof o.body==='string'&&/\/chat\/completions\/?$/.test(String(u))){
+ var j=JSON.parse(o.body),m=j.messages;
+ if(m&&m[0]&&m[0].role==='system'&&/^你是「/.test(m[0].content)){
+  var f=grab(0,m),mi=grab(1,m),ba=grab(2,m),s=m[0].content;
+  if(f.length)s='【世界书 · 前置设定（最高优先级，必须遵守）】\n'+f.join('\n')+'\n\n'+s;
+  if(mi.length)s+='\n\n【世界书 · 相关设定（对话涉及时自然融入）】\n'+mi.join('\n');
+  m[0].content=s;
+  if(ba.length)m.splice(Math.max(1,m.length-1),0,{role:'system',content:'【世界书 · 临近提醒（轻度参考，不要生硬复述）】\n'+ba.join('\n')});
+  o=Object.assign({},o,{body:JSON.stringify(j)})}}}catch(e){}
+ return of.call(window,u,o)};
+function open(){V.b=null;V.f=0;draw();R.classList.add('on');try{history.pushState({wb:1},'')}catch(e){}}
+function close(){R.classList.remove('on')}
+window.addEventListener('popstate',function(){if(!R.classList.contains('on'))return;var o=R.querySelector('.wbs');if(o)o.remove();else if(V.b){V.b=null;V.f=0;draw()}else{close();return}try{history.pushState({wb:1},'')}catch(e){}});
+window.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-wb]');if(!a||document.documentElement.classList.contains('edit'))return;e.stopImmediatePropagation();e.preventDefault();open()},true);
+})();
+</script>
+
+<style id="upd-css">#updT{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translateX(-50%);z-index:400;display:none;padding:10px 18px;border-radius:20px;background:rgba(40,40,44,.9);color:#fff;font:13.5px -apple-system,"PingFang SC",sans-serif;white-space:nowrap}</style>
+<div id="updT"></div>
+<script id="auto-update">
+(function(){
+/* 自动更新：打开、切回前台、每 10 分钟检查一次；发现新版本自动刷新。聊天与设置数据存在本机，不会丢。 */
+if(!/^https?:$/.test(location.protocol))return;
+var m=document.querySelector('meta[name="aure-version"]'),cur=m&&m.content,last=0,T=document.getElementById('updT');
+if(!cur)return;
+function busy(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName)&&a.value)}
+function check(force){
+ var n=Date.now();if(!force&&n-last<12e4)return;last=n;
+ fetch(location.origin+location.pathname+'?_='+n,{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(h){
+  var x=h.match(/<meta name="aure-version" content="([^"]+)"/);
+  if(!x||x[1]===cur||busy())return;
+  var k='aure_upd_try';try{if(sessionStorage.getItem(k)===x[1])return;sessionStorage.setItem(k,x[1])}catch(e){}
+  T.textContent='发现新版本，正在更新…';T.style.display='block';
+  setTimeout(function(){location.replace(location.origin+location.pathname+'?v='+encodeURIComponent(x[1]))},900)
+ }).catch(function(){})}
+window.aureCheckUpdate=function(){check(1)};
+setTimeout(function(){check(1)},3000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)check()});
+window.addEventListener('pageshow',function(e){if(e.persisted)check()});
+setInterval(check,6e5);
 })();
 </script>
 </body>
