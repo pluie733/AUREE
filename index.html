@@ -215,7 +215,7 @@ body{background:transparent!important}
     <div class="txt" data-f="t">be kind
 to yourself</div>
    </div>
-  <div class="app" data-n="AURE Music"><div class="ic pic pic-x1"></div><span>AURE Music</span></div><div class="app" data-n="AURE Pay"><div class="badge">6</div><div class="ic pic pic-x2"></div><span>AURE Pay</span></div><div class="app" data-n="AURE Books"><div class="ic pic pic-x3"></div><span>AURE Books</span></div><div class="app" data-n="AURE Notes"><div class="ic pic pic-x4"></div><span>AURE Notes</span></div><div class="app" data-n="AURE Chat" data-chat="1"><div class="ic pic pic-x5"></div><span>AURE Chat</span></div><div class="app" data-n="AURE Talk"><div class="ic pic pic-x6"></div><span>AURE Talk</span></div><div class="app" data-n="AURE Radio"><div class="ic pic pic-x7"></div><span>AURE Radio</span></div><div class="app" data-n="AURE Work"><div class="ic pic pic-x8"></div><span>AURE Work</span></div>
+  <div class="app" data-n="AURE Music"><div class="ic pic pic-x1"></div><span>AURE Music</span></div><div class="app" data-n="AURE Pay" data-go="pay"><div class="badge">6</div><div class="ic pic pic-x2"></div><span>AURE Pay</span></div><div class="app" data-n="AURE Books"><div class="ic pic pic-x3"></div><span>AURE Books</span></div><div class="app" data-n="AURE Notes"><div class="ic pic pic-x4"></div><span>AURE Notes</span></div><div class="app" data-n="AURE Chat" data-chat="1"><div class="ic pic pic-x5"></div><span>AURE Chat</span></div><div class="app" data-n="AURE Talk"><div class="ic pic pic-x6"></div><span>AURE Talk</span></div><div class="app" data-n="AURE Radio"><div class="ic pic pic-x7"></div><span>AURE Radio</span></div><div class="app" data-n="AURE Work"><div class="ic pic pic-x8"></div><span>AURE Work</span></div>
  </section>
  <!-- 第 2 页 -->
  <section class="page">
@@ -448,7 +448,34 @@ html:has(#replica.open),html:has(#replica.open) body{background:#fff!important}
 #replica .thbar input{flex:1;min-width:0;height:36px;border:1px solid #cfcfd4;border-radius:19px;padding:0 14px;font-size:16px;outline:0}
 #replica .thbar button{width:34px;height:34px;border-radius:50%;border:0;background:#007aff;color:#fff;font-size:18px;flex:none}
 </style>
-<style>#replica .apiin{border:0;outline:0;background:transparent;flex:1;min-width:0;width:100%;font-size:14px;color:#332b40;font-family:inherit}#replica .ph{position:static;overflow:visible;background:none;inset:auto}#replica select.apiin{-webkit-appearance:none;appearance:none}</style>
+<style>#replica .apiin{border:0;outline:0;background:transparent;flex:1;min-width:0;width:100%;font-size:14px;color:#332b40;font-family:inherit}#replica .ph{position:static;overflow:visible;background:none;inset:auto}#replica select.apiin{-webkit-appearance:none;appearance:none}
+#replica .screen.py-bg{background:#4f4d52;color:#fff;padding:calc(env(safe-area-inset-top,0px) + 8px) 21px calc(env(safe-area-inset-bottom,0px) + 40px)}
+#replica .py-bk{width:44px;height:44px;margin-left:-3px;display:flex;align-items:center;cursor:pointer}
+#replica .py-tt{margin:3px 0 23px;padding-left:9px;font-size:29px;line-height:40px;font-weight:600;color:#fff;display:flex;align-items:baseline}
+#replica .py-tt small{font-size:15px;font-weight:500;margin-left:11px}
+#replica .py-cd{position:relative;height:126px;border-radius:20px;background:#fff;margin-bottom:32px}
+#replica .py-lg{position:absolute;left:26px;top:26px;width:32px;height:32px}
+#replica .py-nm{position:absolute;left:73px;top:19px;max-width:190px;font-size:19px;line-height:26px;font-weight:500;color:#4a4a4a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#replica .py-nm.f{max-width:126px}
+#replica .py-im{position:absolute;left:206px;top:25px;width:31px;height:25px}
+#replica .py-ty{position:absolute;left:74px;top:48px;max-width:200px;font-size:12px;line-height:16px;font-weight:500;color:#6b6b6b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#replica .py-ds{position:absolute;left:74px;top:72px;width:15px;height:4px;border-radius:1px;background:#b3b3b3}
+#replica .py-no{position:absolute;left:75px;top:84px;font-size:21px;line-height:28px;color:#4f4f4f;white-space:nowrap}
+#replica .py-no b{font-weight:400;position:relative;top:4px}
+#replica .py-mn{position:absolute;right:11.5px;top:8px;width:44px;height:30px;display:flex;align-items:center;justify-content:center;gap:4.5px;cursor:pointer}
+#replica .py-mn i{width:6px;height:6px;border-radius:50%;background:#555}
+#replica .py-ad{margin-top:34px;height:50px;border-radius:25px;border:1.5px dashed rgba(255,255,255,.78);display:flex;align-items:center;justify-content:center;gap:16px;font-size:21px;font-weight:600;color:#fff;cursor:pointer}
+#replica .py-ad:active{background:rgba(255,255,255,.08)}
+#replica .py-em{padding:40px 0 8px;text-align:center;color:rgba(255,255,255,.55);font-size:15px}
+#replica .py-dg{position:absolute;inset:0;z-index:60;background:rgba(20,20,22,.5);display:flex;align-items:center;justify-content:center}
+#replica .py-d{width:min(86%,340px);background:#fff;border-radius:24px;padding:22px 20px 18px;color:#333}
+#replica .py-d h3{display:block;width:100%;font-size:19px;text-align:center!important;margin:0 0 6px;padding:0}
+#replica .py-d label{display:block;font-size:12px;color:#888;margin:12px 4px 6px}
+#replica .py-d input{width:100%;height:46px;border:0;border-radius:14px;background:#f2f2f3;padding:0 14px;font-size:16px;outline:0;color:#333}
+#replica .py-b{display:flex;gap:10px;margin-top:20px}
+#replica .py-b span{flex:1;height:46px;border-radius:23px;display:grid;place-items:center;font-size:16px;font-weight:600;background:#ececed;color:#555;cursor:pointer}
+#replica .py-b span.ok{background:#4f4d52;color:#fff}
+</style>
 <div id="replica" aria-live="polite"></div>
 <script>
 (function(){
@@ -538,6 +565,7 @@ function render(which){
   messages(){return frame('我的消息',emptyHTML('还没有消息'),{nav:'messages'})},
    api(){return frame('API 配置',apiHTML())},
   settings(){return frame('设置',`<div class="settingsgroup">账户</div>${[['▣','个人信息','edit'],['⬡','安全','login'],['♙','隐私','settings'],['♧','通知','settings'],['✉','支持中心','settings']].map(x=>`<div class="settingrow" onclick="replicaPush('${x[2]}')"><span class="settingicon">${x[0]}</span>${x[1]}<span class="chev">›</span></div>`).join('')}<div class="settingsgroup">发布</div><div class="settingrow" onclick="replicaPush('saved')"><span class="settingicon">▣</span>收藏<span class="chev">›</span></div><div class="settingrow" onclick="replicaPush('profile')"><span class="settingicon">♥</span>我的发帖<span class="chev">›</span></div><div class="settingsgroup">其他</div><div class="settingrow" onclick="replicaPush('api')"><span class="settingicon">⚙</span>API 配置<span class="chev">›</span></div><div class="settingrow"><span class="settingicon">文</span>语言<span class="chev">›</span></div><div class="settingrow"><span class="settingicon">⚑</span>条款与条件<span class="chev">›</span></div>`)},
+  pay(){return payHTML()},
   call(){return `<section class="screen" style="padding:0"><div class="callbg"><div class="calltile" style="background-image:var(--i-cat)"></div><div class="calltime">3 : 47</div><div class="callcontrols"><button onclick="replicaToast('摄像头已切换')">▣</button><button style="background:#e5534b" onclick="replicaBack()">☎</button><button onclick="replicaToast('扬声器已切换')">◖))</button></div></div></section>`}
  };
  root.innerHTML=(b[which]||b.settings)();
@@ -548,6 +576,25 @@ window.replicaBack=function(){if(screenStack.length)render(screenStack.pop());el
 window.replicaPush=function(next){screenStack.push(root.dataset.current);render(next)};
 window.pcPush=window.replicaPush;
 window.pcGo=function(k){screenStack=[];render(k)};
+/* ---- 银行卡 ---- */
+let payCards=null;
+function payLoad(){try{payCards=JSON.parse(localStorage.getItem('aure_cards_v1')||'null')}catch(e){payCards=null}
+ if(!Array.isArray(payCards))payCards=[1,2,3].map(function(i){return {id:i,n:'AURE 银行',t:'理财通卡',h:'6214',e:'8899'}})}
+function paySave(){try{localStorage.setItem('aure_cards_v1',JSON.stringify(payCards))}catch(e){}}
+function payHTML(){if(!payCards)payLoad();
+ const LG='<svg class="py-lg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14.6" fill="none" stroke="#bcbcbc" stroke-width="1.6"/><g fill="#bcbcbc"><ellipse cx="16" cy="9.4" rx="2.4" ry="4.4" transform="rotate(45 16 16)"/><ellipse cx="16" cy="9.4" rx="2.4" ry="4.4" transform="rotate(135 16 16)"/><ellipse cx="16" cy="9.4" rx="2.4" ry="4.4" transform="rotate(225 16 16)"/><ellipse cx="16" cy="9.4" rx="2.4" ry="4.4" transform="rotate(315 16 16)"/></g><circle cx="16" cy="16" r="2.2" fill="#fff" stroke="#bcbcbc" stroke-width="1.2"/></svg>';
+ const IM='<svg class="py-im" viewBox="0 0 31 25"><rect width="31" height="25" rx="3" fill="#b3b3b3"/><circle cx="10" cy="8" r="3" fill="#fff"/><path d="M2 23l9-9 5 5 5-6 8 10z" fill="#fff"/></svg>';
+ const cs=payCards.map(function(c,i){return '<div class="py-cd">'+LG+'<div class="py-nm'+(i?'':' f')+'">'+esc(c.n)+'</div>'+(i?'':IM)+'<div class="py-ty">'+esc(c.t)+'</div><i class="py-ds"></i><div class="py-no">'+esc(c.h)+' <b>****</b> <b>****</b> '+esc(c.e)+'</div><div class="py-mn" onclick="payMenu('+c.id+')"><i></i><i></i><i></i></div></div>'}).join('');
+ return '<section class="screen py-bg"><div class="py-bk" onclick="replicaBack()"><svg width="12" height="20" viewBox="0 0 12 20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2L2.5 10 10 18"/></svg></div><div class="py-tt">银行卡<small>('+payCards.length+')</small></div>'+(cs||'<div class="py-em">还没有银行卡</div>')+'<div class="py-ad" onclick="payAdd()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M8 1v14M1 8h14"/></svg>添加银行卡</div></section>'}
+window.payAdd=function(){var o=document.createElement('div');o.className='py-dg';
+ o.innerHTML='<div class="py-d"><h3>添加银行卡</h3><label>银行名称</label><input id="py_n" maxlength="14" placeholder="例如 AURE 银行"><label>卡片类型</label><input id="py_t" maxlength="8" value="储蓄卡" placeholder="例如 储蓄卡"><label>卡号</label><input id="py_c" inputmode="numeric" maxlength="23" placeholder="请输入银行卡号"><div class="py-b"><span onclick="payX()">取消</span><span class="ok" onclick="payOk()">添加</span></div></div>';
+ o.onclick=function(e){if(e.target===o)o.remove()};root.appendChild(o)};
+window.payX=function(){var o=root.querySelector('.py-dg');if(o)o.remove()};
+window.payOk=function(){var n=root.querySelector('#py_n').value.trim(),t=root.querySelector('#py_t').value.trim(),c=root.querySelector('#py_c').value.replace(/\D/g,'');
+ if(!n){replicaToast('请输入银行名称');return}
+ if(c.length<12||c.length>19){replicaToast('请输入 12–19 位卡号');return}
+ if(!payCards)payLoad();payCards.push({id:Date.now(),n:n,t:t||'储蓄卡',h:c.slice(0,4),e:c.slice(-4)});paySave();render('pay')};
+window.payMenu=function(id){if(!confirm('删除这张银行卡？'))return;payCards=payCards.filter(function(c){return c.id!==id});paySave();render('pay')};
 window.replicaToast=function(t){const n=document.createElement('div');n.textContent=t;n.style.cssText='position:absolute;z-index:99;left:50%;top:46%;transform:translate(-50%,-50%);background:rgba(60,60,60,.88);color:#fff;padding:10px 18px;border-radius:14px;font-size:14px;white-space:nowrap';root.appendChild(n);setTimeout(()=>n.remove(),1400)};
 function keepScroll(fn){const s=root.querySelector('.screen'),y=s?s.scrollTop:0;fn();const s2=root.querySelector('.screen');if(s2)s2.scrollTop=y}
 
@@ -1430,7 +1477,7 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 .sbar{position:sticky;bottom:0;margin:14px -24px -40px;padding:10px 24px calc(env(safe-area-inset-bottom,0px) + 12px);background:#f4f4f3;border-top:1px solid #ccc;display:flex;gap:8px;align-items:center}.sbar input{flex:1;min-width:0;height:40px;border:1px solid #333;background:#fff;padding:0 12px;font-size:15px;outline:0;border-radius:0;font-family:-apple-system,"PingFang SC",sans-serif;-webkit-user-select:text;user-select:text}.sbar button{height:40px;border:1px solid #333;background:#fff;padding:0 12px;font-size:12px;letter-spacing:1px;font-family:ui-monospace,Menlo,monospace;color:#333}.sbar button.cr2{background:#333;color:#fff}.sbar button:active{opacity:.7}
 .hv{position:absolute;inset:0;z-index:30;display:grid;place-items:center;--c:calc(min(86vw,352px,42vh)/716);background:#dcdcdc repeating-linear-gradient(0deg,rgba(255,255,255,.4) 0 2px,transparent 2px 9px),repeating-linear-gradient(90deg,rgba(255,255,255,.4) 0 2px,transparent 2px 9px);animation:fi .25s}
 .hc{position:relative;width:716k;height:1543k;border-radius:58k;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,.12)}
-.hav{position:absolute;left:50%;top:95k;width:215k;height:215k;margin-left:-107.5k;border-radius:50%;background:#444 center/cover;border:6k solid #fff;box-shadow:0 0 0 1px #e2e2e2,0 0 70k rgba(0,0,0,.08)}
+.hav{position:absolute;left:250.5k;top:95k;width:215k;height:215k;border-radius:50%;background:#444 center/cover;border:6k solid #fff;box-shadow:0 0 0 1px #e2e2e2,0 0 70k rgba(0,0,0,.08)}
 .hn{position:absolute;left:0;right:0;top:372k;text-align:center;font-size:52k;line-height:66k;font-weight:700;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 40k}
 .hs{position:absolute;left:0;right:0;top:449k;text-align:center;font-size:30k;line-height:36k;color:#aaa;letter-spacing:1px}
 .hst{position:absolute;left:0;right:0;top:550k;display:grid;grid-template-columns:repeat(3,1fr);text-align:center}.hst b{display:block;font-size:46k;line-height:56k;font-weight:700;color:#111;letter-spacing:2px}.hst span{display:block;margin-top:11k;font-size:24k;line-height:28k;color:#aaa;letter-spacing:1px}
@@ -1491,7 +1538,7 @@ function ic(n){return '<svg viewBox="0 0 24 24">'+P[n]+'</svg>'}
 var S={av:{},pin:{},ub:{a:1,m:2},msgs:{},extra:[],sig:'請·多·多·見·面☆',name:'y',f:0,sp:{},sc:'s1',stk:null};
 try{Object.assign(S,JSON.parse(localStorage.getItem('wxc_s')||'{}'))}catch(e){}
 function sv(){try{localStorage.setItem('wxc_s',JSON.stringify(S))}catch(e){}}
-var chats=[{id:'a',n:'a',p:'[视频通话]',t:'17:44'},{id:'g1',n:'毛孩子群',p:'今天去公园吗',t:'12:08',g:1},{id:'m',n:'月',p:'[自动发卡成功] 接收者: kun…',t:'15:29'},{id:'y',n:'y',p:'[动画表情]',t:'星期六'},{id:'xyhb',n:'xyhb',p:'测试',t:'星期六'},{id:'xykf',n:'xykf',p:'测试',t:'星期六'}];
+var chats=[{id:'g1',n:'毛孩子群',p:'今天去公园吗',t:'12:08',g:1}];
 var CT={A:['阿栗','Aki','安安'],B:['白团子','Bella'],C:['橙子'],D:['豆包','Daisy'],L:['栗子小雀','Luna'],M:['喵喵酱','Momo'],Y:['云朵','月']};
 var TIPS=[['摸摸猫咪','熬夜撸猫'],['晒晒太阳','空腹逗狗'],['拍张合照','乱喂零食'],['梳梳毛','忘记换水'],['去公园','吓唬兔兔'],['陪它发呆','抢它的窝'],['整理玩具','错过饭点']];
 var REP=['喵~','收到！','摸摸头','好耶','我也这么觉得','明天一起去晒太阳吧','先喝口水再说','今天也辛苦啦','嘿嘿'];
@@ -1517,7 +1564,7 @@ return top('消息',0,'<div class="rb" onclick="wxNew()">'+ic('plus')+'</div>')+
 '<div class="em0" style="padding:16px 0 0;font-size:11px">长按聊天可置顶 · 点头像可更换头像</div>'}
 function p1(){return top('朋友',0,'<div class="rb" onclick="wxNew()">'+ic('plus')+'</div>')+srch()+Object.keys(CT).map(function(k){return '<div class="grp">'+k+'</div>'+CT[k].map(function(x){return '<div class="cr" onclick="wxFind(\''+x+'\')">'+av('n_'+x,'',1)+'<div class="m"><div class="n">'+esc(x)+'</div></div></div>'}).join('')}).join('')}
 function p2(){return top('发现')+rw('circ','朋友圈',"wxMoments()")+rw('circ','宠物朋友圈',"wxGo('community')")+rw('tbox','线下剧情',"wxStory()")+rw('nav','附近的人')+'<div class="gap"></div>'+rw('mini','小程序')+rw('search','搜一搜')+rw('face','表情')}
-function p3(){return top('我')+'<div class="card pf">'+av('me','xl',1)+'<div class="pn" onclick="wxName()">'+esc(S.name)+'</div><p onclick="wxSig()">'+esc(S.sig)+' ✎</p></div>'+rw('pay','支付与服务')+'<div class="gap"></div>'+rw('star','收藏',"wxGo('saved')")+rw('circ','朋友圈',"wxMoments()")+rw('circ','宠物朋友圈',"wxGo('community')")+rw('works','作品',"wxGo('profile')")+rw('face','表情')+rw('mini','小程序')+rw('gear','设置',"wxGo('settings')")+rw('gear','API 配置',"wxGo('api')")+rw('user','登录宠物世界',"wxGo('login')")}
+function p3(){return top('我')+'<div class="card pf">'+av('me','xl',1)+'<div class="pn" onclick="wxName()">'+esc(S.name)+'</div><p onclick="wxSig()">'+esc(S.sig)+' ✎</p></div>'+rw('pay','支付与服务',"wxGo('pay')")+'<div class="gap"></div>'+rw('star','收藏',"wxGo('saved')")+rw('circ','朋友圈',"wxMoments()")+rw('circ','宠物朋友圈',"wxGo('community')")+rw('works','作品',"wxGo('profile')")+rw('face','表情')+rw('mini','小程序')+rw('gear','设置',"wxGo('settings')")+rw('gear','API 配置',"wxGo('api')")+rw('user','登录宠物世界',"wxGo('login')")}
 function draw(){
  app.innerHTML=[p0,p1,p2,p3].map(function(f,i){return '<div class="pg'+(i==cur?' on':'')+'">'+f()+'</div>'}).join('')+
  '<div class="bar"><div class="fab" onclick="wxNew()"><i>'+ic('plus')+'</i></div>'+['首页','朋友','发现','我'].map(function(t,i){return '<div class="'+(i==cur?'on':'')+'" onclick="wxTo('+i+')">'+ic(['home','user','nav','user'][i])+t+'</div>'}).join('')+'</div><div class="th" id="th"></div>';
