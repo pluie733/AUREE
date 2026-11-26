@@ -1272,5 +1272,11 @@ $('lf').addEventListener('change',function(e){var fs=[].slice.call(e.target.file
 #replica .smsfade{height:calc(var(--sbc) + 90px)}#replica .smsscr{padding-bottom:100px!important}
 #replica .thbar{padding-bottom:14px}
 </style>
+<style id="pages-shift-down">
+/* 整个桌面页面整体下移 */
+:root{--shift:56px}
+#pages{top:var(--shift)}
+@media (min-width:500px){#pages{top:var(--shift)}}
+</style>
 </body>
 </html>
