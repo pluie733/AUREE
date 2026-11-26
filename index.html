@@ -190,23 +190,6 @@ body{background:transparent!important}
 .ghostel.app{transform:scale(1.12)}
 .ghostel .ic{animation:none!important}
 </style>
-<style id="bottom-blank-fix">
-/* 修复 iOS 添加到主屏幕后底部出现白色空白：让背景层延伸到视口底部之外 */
-html,body{min-height:100%;background-color:#f2f2f5!important}
-#bg{position:fixed!important;inset:-80px 0 -320px 0!important;background:
-radial-gradient(55% 38% at 15% 8%,#ffe1ea,transparent 70%),
-radial-gradient(50% 38% at 95% 28%,#d9e8ff,transparent 70%),
-radial-gradient(60% 45% at 25% 95%,#e0f5e6,transparent 70%),
-radial-gradient(40% 30% at 90% 85%,#efe3ff,transparent 70%),#f2f2f5!important}
-</style>
-
-<style id="layout-lowered-fix">
-/* 整体布局下移，填补底部留白 */
-#pages{top:52px;bottom:-52px}
-#dots{bottom:calc(var(--sb) + 72px)}
-#dock{bottom:calc(var(--sb) - 40px)}
-@media (min-width:500px){#pages{top:52px;bottom:-52px}}
-</style>
 </head>
 <body>
 <div id="bg"></div>
@@ -331,7 +314,7 @@ to yourself</div>
 /* AURE screens (compact) */
 #replica{position:fixed;inset:0;z-index:50;background:#fff;display:none;color:#30283c;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;overflow:hidden}
 #replica.open{display:block}
-#replica{top:0;bottom:auto;height:100vh;height:100lvh;min-height:100%}
+#replica{top:0;bottom:0;height:auto}
 html:has(#replica.open),html:has(#replica.open) body{background:#fff!important}
 @media (min-width:500px){#replica{left:50%;right:auto;width:420px;transform:translateX(-50%)}}
 #replica input,#replica textarea{-webkit-user-select:text;user-select:text;font-family:inherit}
@@ -1041,7 +1024,7 @@ apps.forEach(a=>{
 #dock .app{transform:translateY(0px)}
 </style>
 <style id="music-css">
-#music{--sbp:8px;--tb:calc(48px + var(--sbp));position:fixed;left:0;right:0;top:0;height:100vh;height:100lvh;z-index:60;background:#fff;display:none;color:#222;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;overflow:hidden}
+#music{--sbp:8px;--tb:calc(48px + var(--sbp));position:fixed;left:0;right:0;top:0;bottom:0;height:auto;z-index:60;background:#fff;display:none;color:#222;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;overflow:hidden}
 #music.open{display:block}
 @media(min-width:500px){#music{left:50%;right:auto;width:420px;transform:translateX(-50%)}}
 #music input,#music button{font-family:inherit}#music input{-webkit-user-select:text;user-select:text}:where(#music) button{cursor:pointer;border:0;background:none;color:inherit}
@@ -1280,7 +1263,7 @@ $('lf').addEventListener('change',function(e){var fs=[].slice.call(e.target.file
 <style id="bars-compact">
 /* 所有底栏压矮：安全区最多算 20px */
 :root{--sbc:min(env(safe-area-inset-bottom,0px),20px)}
-#dock{height:76px;bottom:auto;top:calc(100vh - 82px);top:calc(100lvh - 82px)}#dots{bottom:auto;top:calc(100vh - 105px);top:calc(100lvh - 105px)}
+#dock{height:76px;top:auto;bottom:calc(var(--sbc) + 10px)}#dots{top:auto;bottom:calc(var(--sbc) + 10px + 76px + 14px)}
 #replica .bottomnav{height:56px;padding-bottom:8px}
 #replica .bottomnav .n,#replica .bottomnav .center{width:40px;height:40px}
 #replica .screen{padding-bottom:calc(var(--sbc) + 24px)}
