@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#f2f2f5">
 <title>AURE</title>
-<meta name="aure-version" content="2026.11.27.4">
+<meta name="aure-version" content="2026.11.27.6">
 <style>
 :root{--glass:rgba(255,255,255,.62);--ink:#1c1c1e;--sub:#8a8a90;--red:#ff3b30;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
@@ -1798,7 +1798,7 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 .o7 b{position:absolute;left:22u;top:15u;height:35u;line-height:35u;padding:0 12u;border-radius:10u;font-size:20u;font-weight:400;background:#fff;z-index:1}.o7 small{position:absolute;left:34u;top:57u;color:#fff;font-size:17u;text-decoration:underline;z-index:1}
 .o7 s{position:absolute;width:10u;height:10u;margin:-5u 0 0 -5u;background:#fff;border:1px solid #999;z-index:1}
 .ln{flex:none;height:0;border-top:1px solid #9a9a9a}.l1{margin-top:65u}.l2{width:321u;margin-top:46u;border-color:#aaa}.l3{width:369u;margin-top:12u;border-color:#aaa}.l4{margin-top:25u;border-color:#bbb}.sp8{flex:none;height:48u}.l5{margin:52u 64u 0 70u}
-.k7{position:relative;max-width:72%;min-height:64u;padding:12u 28u;border-radius:32u;background:#ebebeb;font-size:30u;line-height:40u;align-self:flex-start;margin:0 0 43u 0;word-break:break-all;-webkit-user-select:text;user-select:text;animation:fi .2s;flex:none}
+.k7{position:relative;max-width:72%;min-height:64u;padding:12u 28u;border-radius:32u;background:#ebebeb;font-size:30u;line-height:40u;align-self:flex-start;margin:0 0 43u 0;word-break:break-all;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;animation:fi .2s;flex:none}
 .k7:after{content:"";position:absolute;left:-5u;bottom:0;width:18u;height:16u;background:#ebebeb;clip-path:polygon(100% 0,0 100%,100% 100%)}
 .k7.me{align-self:flex-end;background:#404040;color:#fff;box-shadow:0 6u 14u rgba(0,0,0,.25)}.k7.me:after{left:auto;right:-5u;background:#404040;clip-path:polygon(0 0,100% 100%,0 100%)}
 .k7.im{padding:6u}.k7.im img{display:block;max-width:300u;max-height:380u;border-radius:28u}
@@ -1962,6 +1962,8 @@ function splitMsg(x){var out=[];String(x).replace(/\r/g,'').split(/\n+/).forEach
  out=out.map(function(s){return s.replace(/[。；;，,、]+$/,'').trim()}).filter(Boolean);
  if(out.length>6){out=out.slice(0,5).concat([out.slice(5).join('')])}
  return out.length?out:[String(x).trim()]}
+function stkList(){var o=[];try{S.stk.cats.forEach(function(k){k.it.forEach(function(x){o.push(x)})})}catch(e){}return o}
+function stkPrompt(){var L=stkList().slice(0,30);return '【引用与表情包】想回应用户说过的某句话时，可在那一行最前面写 [引:用户原话开头几个字]，再接你的回复。你可以使用用户的表情包库：单独一行写 [表情:编号] 就会发送；如果觉得用户的某个表情包有趣想「盗走」，就写 [盗:编号]。'+(L.length?'可用表情包：'+L.map(function(x,i){return (i+1)+'='+(x.charAt?x:'(图片)')}).join(' ')+'。':'')+'这些只在合适时偶尔用，不要每次都用，一次最多一个。'}
 function userNote(c){try{var u=window.aureWho&&aureWho(c.id);if(!u||!u.name)return '';return '你正在对话的用户称为「'+u.name+'」'+(u.desc?'，用户设定：'+u.desc:'')+'。请按这个称呼和身份与TA互动。'}catch(e){return ''}}
 function timeNote(ms){var now=Date.now(),us=ms.filter(function(m){return m.me&&m.ts}),cs=ms.filter(function(m){return !m.me&&m.ts}),lu=us[us.length-1],lc=cs[cs.length-1],n='',pv=null;
  if(lu){for(var j=ms.lastIndexOf(lu)-1;j>=0;j--)if(ms[j].ts){pv=ms[j];break}}
@@ -1971,8 +1973,8 @@ function timeNote(ms){var now=Date.now(),us=ms.filter(function(m){return m.me&&m
  return n?'【对话时间线】'+n+'请据此自然体现时间感（比如隔了很久会问候或感慨，刚聊过则直接接话），不要生硬报时。':''}
 function aiReply(c,ms,done){var A=apiCfg();
  if(!A.url||!A.key||!A.model){setTimeout(function(){done(null)},900);return}
- var hist=ms.filter(function(m){return m.x}).slice(-16).map(function(m){return {role:m.me?'user':'assistant',content:m.x}});
- var sys='你是「'+c.n+'」，正在聊天软件里和用户聊天。'+aurePersonaLayer(c.n,personaForChat(c),'chat')+userNote(c)+timeNote(ms)+'【发消息格式】像真人发即时消息一样，一句一句地发：每句单独占一行（用换行分隔），每句尽量不超过20个字，一次回复2到5句；绝对不要把话写成一大段，也不要用括号写动作旁白。';
+ var hist=ms.filter(function(m){return m.x||m.st||m.img||m.v}).slice(-16).map(function(m){var t=m.x||(m.st?(m.me?'[用户发送了一个表情包]':'[你发送了一个表情包]'):m.img?'[用户发送了一张图片]':'[用户发送了一条语音]');if(m.q)t='（引用：'+String(m.q).slice(0,30)+'）'+t;return {role:m.me?'user':'assistant',content:t}});
+ var sys='你是「'+c.n+'」，正在聊天软件里和用户聊天。'+aurePersonaLayer(c.n,personaForChat(c),'chat')+userNote(c)+timeNote(ms)+'【发消息格式】像真人发即时消息一样，一句一句地发：每句单独占一行（用换行分隔），每句尽量不超过20个字，一次回复2到5句；绝对不要把话写成一大段，也不要用括号写动作旁白。'+stkPrompt();
  var ac=new AbortController(),tm=setTimeout(function(){ac.abort()},25000);
  fetch(A.url.replace(/\/+$/,'')+'/chat/completions',{method:'POST',signal:ac.signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+A.key},
   body:JSON.stringify({model:A.model,temperature:A.temp==null?0.85:A.temp,messages:[{role:'system',content:sys}].concat(hist)})})
@@ -2004,38 +2006,83 @@ var HP=['今天好想见你','他在看我吗','别走远一点','我其实很�
 var HI=['<svg viewBox="0 0 50 50"><rect x="4" y="4" width="18" height="18" rx="4" fill="#555" stroke="none"/><rect x="28" y="4" width="18" height="18" rx="4" fill="#555" stroke="none"/><rect x="4" y="28" width="18" height="18" rx="4" fill="#555" stroke="none"/><rect x="28" y="28" width="18" height="18" rx="4" fill="#555" stroke="none"/></svg>','<svg viewBox="0 0 50 50"><rect x="4" y="9" width="42" height="32" rx="5"/><path d="M5 14l20 15L45 14"/></svg>','<svg viewBox="0 0 50 50"><rect x="4" y="10" width="42" height="36" rx="8"/><path d="M15 4v10M35 4v10"/></svg>','<svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="21"/><path d="M15 26l8 8 14-17"/></svg>',ic('gear').replace('<svg ','<svg class="t24" ')];
 function hseed(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h}
 function hvGen(id,nm,cb){var h=(S.msgs[id]||[]).filter(function(m){return m.x}).slice(-8).map(function(m){return {role:m.me?'user':'assistant',content:m.x}});
- llm('你是「'+nm+'」。'+aurePersonaLayer(nm,(all().filter(function(q){return q.id===id})[0]||{}).d,'chat')+'请写出你此刻对用户真实的内心想法（心声），第一人称，共5行，每行不超过14个汉字，每行一个念头，不要编号、引号和多余说明。',h,200,function(x){
+ llm('你是「'+nm+'」。'+aurePersonaLayer(nm,(all().filter(function(q){return q.id===id})[0]||{}).d,'chat')+'请根据刚才的聊天内容，写出你此刻对用户真实的内心想法（心声），要紧扣最近几句对话里发生的事，第一人称，共5行，每行不超过14个汉字，每行一个念头，不要编号、引号和多余说明。',h,200,function(x){
   var L=x?x.split(/\n+/).map(function(s){return s.replace(/^[\d\.\-、）)\s]+/,'').trim()}).filter(Boolean).slice(0,5):null;
   if(!L||L.length<3){L=HP.slice().sort(function(){return Math.random()-.5}).slice(0,5)}cb(L)})}
 function hvR(id,nm,L){var o=$('hv');if(!o)return;var s=hseed(nm),st=[['好感',60+s%40],['想念',40+(s>>3)%60],['在意',50+(s>>6)%50]],u=S.av[id];
  o.innerHTML='<div class="hc" onclick="event.stopPropagation()"><div class="hav"'+(u?' style="background-image:url('+u+')"':'')+'></div><div class="hn">'+esc(nm)+'</div><div class="hs">此刻的心声</div><div class="hst">'+st.map(function(x){return '<div><b>'+x[1]+'</b><span>'+x[0]+'</span></div>'}).join('')+'</div><div class="hb" onclick="wxHeartNew(\''+id+'\')">'+(L?'刷新心声':'正在听…')+'</div><div class="hl">'+(L||['…','…','…','…','…']).map(function(x,i){return '<div class="hr'+(i==0?' on':'')+'">'+HI[i]+'<span>'+esc(x)+'</span></div>'}).join('')+'</div></div>'}
-function hvGet(id,nm){hvGen(id,nm,function(L){S.hv[id]=L;sv();hvR(id,nm,L)})}
-window.wxHeart=function(id){var nm=hvNm(id),o=$('hv');if(o)o.remove();o=document.createElement('div');o.className='hv';o.id='hv';o.onclick=function(){o.remove()};app.appendChild(o);hvR(id,nm,S.hv[id]||null);if(!S.hv[id])hvGet(id,nm)};
+var hvB={};
+setInterval(function(){var n=Date.now(),l=S.rem||[],d=l.filter(function(x){return x.at<=n});if(!d.length)return;S.rem=l.filter(function(x){return x.at>n});sv();d.forEach(function(x){alert('⏰ 提醒（'+x.n+'）：'+x.x)})},15000);
+function hvCnt(id){return (S.msgs[id]||[]).filter(function(m){return m.x}).length}
+function hvGet(id,nm){if(hvB[id])return;hvB[id]=1;var n=hvCnt(id);hvGen(id,nm,function(L){hvB[id]=0;S.hv[id]=L;(S.hvn=S.hvn||{})[id]=n;sv();hvR(id,nm,L)})}
+window.wxHeart=function(id){var nm=hvNm(id),o=$('hv');if(o)o.remove();o=document.createElement('div');o.className='hv';o.id='hv';o.onclick=function(){o.remove()};app.appendChild(o);hvR(id,nm,S.hv[id]||null);if(!S.hv[id]||(S.hvn||{})[id]!==hvCnt(id))hvGet(id,nm)};
 window.wxHeartNew=function(id){var nm=hvNm(id);if(!$('hv'))return;hvR(id,nm,null);hvGet(id,nm)};
 function lpress(el,sh,lg){var tm,f;el.onpointerdown=function(){f=0;tm=setTimeout(function(){f=1;lg()},550)};['onpointerup','onpointermove','onpointercancel'].forEach(function(e){el[e]=function(){clearTimeout(tm)}});el.onclick=function(){if(!f)sh()}}
 window.wxOpen=function(id){var c=all().filter(function(x){return x.id==id})[0],t=$('th'),ms=S.msgs[id]=S.msgs[id]||[],ty=0,pn=0,rq='',hl='';delete S.ub[id];sv();cT=id;
  var G=[['house','返回',function(){wxBack()}],['clock','记录',function(){$('ms').scrollTop=0}],['tbox','剧情',function(){wxStory()}],['bub','通话'],['bub2','表情包',function(){wxSk()}],['user','名片',function(){wxAv(id)}],['stack','相册',function(){wxPh()}],['hex','位置'],['edit','编辑人设',function(){wxPEdit(id)}],['trash','删除人设',function(){wxPDel(id)}],['comp','朋友圈',function(){wxGo('community')}],['search','搜索',function(){wxSr()}]];
- function bb(m){var q=m.q?'<div class="q7">'+esc(m.q)+'</div>':'',b,k='k7'+(m.me?' me':'');
+ function bb(m){if(m.sys)return '<div class="tm">'+esc(m.sys)+'</div>';var q=m.q?'<div class="q7">'+esc(m.q)+'</div>':'',b,k='k7'+(m.me?' me':'');
   if(m.st)return '<div class="'+k+' sk"><img src="'+m.img+'"></div>';
   if(m.big)return '<div class="'+k+' bg">'+esc(m.x)+'</div>';
   if(m.img)return '<div class="'+k+' im"><img src="'+m.img+'"></div>';
-  if(m.v)b=ic('mic')+'<span class="vb"><i></i><i></i><i></i><i></i><i></i></span>'+m.v+'"';else b=esc(m.x);
+  if(m.v)b=ic('mic')+'<span class="vb"><i></i><i></i><i></i><i></i><i></i></span>'+m.v+'"';else b=esc(m.x)+(m.tr?'<div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(128,128,128,.3);font-size:.86em;opacity:.8">'+esc(m.tr)+'</div>':'');
   return '<div class="'+k+(hl&&m.x&&m.x.indexOf(hl)>=0?' hl':'')+'">'+q+b+'</div>'}
  function skp(){var K=S.stk,cat=K.cats[K.cur];return '<div class="k8"><div class="kt">'+K.cats.map(function(x,i){return '<span class="'+(i==K.cur?'on':'')+'" data-c="'+i+'">'+esc(x.n)+'</span>'}).join('')+'<span class="kn" onclick="wxKc()">＋ 分类</span></div><div class="kg"><div class="ka" onclick="wxKu()">＋<small>导入</small></div>'+cat.it.map(function(x,i){return '<div class="kx" data-k="'+i+'">'+(x.charAt?x:'<img src="'+x.i+'">')+'</div>'}).join('')+'</div></div>'}
  function r(){var v=$('i')?$('i').value:'',hs=[[0,0],[50,0],[100,0],[0,50],[100,50],[0,100],[50,100],[100,100]];
   t.innerHTML='<div class="h7"><div class="c7" onclick="wxSr()">'+ic('search')+'</div><div class="p7"><div class="i7">'+av('me','x1')+av(id,'x2',0).replace('class="av','onclick="wxHeart(\''+id+'\')" class="av')+av('me','x3')+'<span>'+esc(c.n)+(ty?' · 正在输入…':'')+'</span></div></div></div>'+
   '<div class="m7" id="ms"><div class="o7" onclick="wxStory()"><b>OPTION SELECT</b><small>CHOOSE ONE</small>'+hs.map(function(h){return '<s style="left:'+h[0]+'%;top:'+h[1]+'%"></s>'}).join('')+'</div>'+
   '<div class="ln l1"></div><div class="ln l2"></div><div class="ln l3"></div><div class="ln l4"></div><div class="sp8"></div>'+
-  (ms.length?'':(c.p?'<div class="k7">'+esc(c.p)+'</div>':''))+ms.map(function(m,i){return (i==0||m.t!=ms[i-1].t?'<div class="tm">'+m.t+'</div>':'')+bb(m)}).join('')+'</div>'+
+  (ms.length?'':(c.p?'<div class="k7">'+esc(c.p)+'</div>':''))+ms.map(function(m,i){return (i==0||m.t!=ms[i-1].t?'<div class="tm">'+m.t+'</div>':'')+mk(bb(m),i)}).join('')+'</div>'+
   '<div class="r7"><div class="mw"><div class="c7 l" onclick="wxV()">'+ic('mic')+'</div><small>语音</small></div><div class="f7"><div class="e" onclick="wxSk()">'+ic('smile')+'</div><input id="i" placeholder="'+(rq?'回复：'+esc(rq.slice(0,12)):'')+'"><div class="e" onclick="wxRe()">'+ic('reply')+'</div><small class="a">表情包</small><small class="z">回复</small></div><div class="c7 s" onclick="wxSend()">'+ic('send')+'</div></div><div class="ln l5"></div>'+
   (pn?skp():'<div class="g7">'+G.map(function(x,i){return '<div data-g="'+i+'">'+ic(x[0])+x[1]+'</div>'}).join('')+'</div>');
   $('i').value=v;var m=$('ms');if(!hl)m.scrollTop=m.scrollHeight;else{var h=m.querySelector('.hl');if(h)h.scrollIntoView({block:'center'})}$('i').onkeydown=function(e){if(e.key=='Enter')wxSend()};
-  t.querySelectorAll('[data-g]').forEach(function(e){var f=G[e.dataset.g][2];e.onclick=function(){f?f():toast('这里还在装修中 🔨')}});
+  msBind();t.querySelectorAll('[data-g]').forEach(function(e){var f=G[e.dataset.g][2];e.onclick=function(){f?f():toast('这里还在装修中 🔨')}});
   t.querySelectorAll('.kt [data-c]').forEach(function(e){var i=+e.dataset.c;lpress(e,function(){S.stk.cur=i;sv();r()},function(){if(i>0&&confirm('删除分类「'+S.stk.cats[i].n+'」？')){S.stk.cats.splice(i,1);S.stk.cur=0;sv();r()}})});
   t.querySelectorAll('.kx').forEach(function(e){var i=+e.dataset.k,it=S.stk.cats[S.stk.cur].it;lpress(e,function(){var s=it[i];s.charAt?push({me:1,x:s,big:1,t:hm()}):push({me:1,img:s.i,st:1,t:hm()})},function(){if(confirm('删除这个表情包？')){it.splice(i,1);sv();r()}})})}
- function push(m){m.ts=Date.now();ms.push(m);sv();r()}
- function reply(){if(ty)return;if(!ms.some(function(m){return m.x&&m.me})){toast('先发一条消息，再点「回复」');return}ty=1;r();aiReply(c,ms,function(x){var ps=x?splitMsg(x):[REP[Math.floor(Math.random()*REP.length)]],i=0;
-  (function nx(){ms.push({x:ps[i],t:hm(),ts:Date.now()});i++;sv();if(i<ps.length){ty=1;if(t.classList.contains('on'))r();setTimeout(nx,500+Math.min(1100,ps[i].length*70))}else{ty=0;if(t.classList.contains('on'))r()}})()})}
+ function push(m){if(rq&&m.x)m.q=rq;rq='';m.ts=Date.now();ms.push(m);sv();r()}
+ var sel=null,MP={cp:'<path d="M8 3h9a2 2 0 0 1 2 2v11h-2V5H8zM5 7h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"/>',fw:'<path d="M14 5l7 6-7 6v-4c-5 0-8 1.5-10 5 .5-5 3.5-9 10-9z"/>',fv:'<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12L3 7M12 12v10" stroke="#4c4c4c" stroke-width="1.6" fill="none"/>',dl:'<path d="M9 3h6l1 2h4v2H4V5h4zM6 9h12l-1 11a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z"/>',ml:'<path d="M3 5h10v2H3zM3 11h10v2H3zM3 17h6v2H3zM21 7l-6 8-3-3 1.5-1.5 1.5 1.5 4.5-6z"/>',qt:'<circle cx="12" cy="12" r="10"/><path d="M8 9h3v3.5a2 2 0 0 1-2 2H8zM13 9h3v3.5a2 2 0 0 1-2 2h-1z" fill="#4c4c4c"/>',rm:'<path d="M12 2a6 6 0 0 0-6 6v4l-2 3v1h16v-1l-2-3V8a6 6 0 0 0-6-6zM10 19a2 2 0 0 0 4 0z"/>',rd:'<path d="M3 9h3l4-3v12l-4-3H3z"/><path d="M14 8a5 5 0 0 1 0 8M17 5.5a9 9 0 0 1 0 13" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>',tr:'<path d="M3 3h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M11 9h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H11a1 1 0 0 1-1-1V10a1 1 0 0 1 1-1z" fill="#fff" stroke="#4c4c4c" stroke-width="1.5"/>',sr:'<path d="M12 2v6M12 16v6M2 12h6M16 12h6M5 5l4 4M15 15l4 4M19 5l-4 4M9 15l-4 4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" fill="none"/>'};
+ function mk(h,i){return h.replace('<div class="','<div data-mi="'+i+'" class="'+(sel&&sel[i]?'ms1 ':''))}
+ function cpy(x){try{navigator.clipboard.writeText(x)}catch(e){var a=document.createElement('textarea');a.value=x;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e2){}a.remove()}}
+ function msBind(){t.querySelectorAll('[data-mi]').forEach(function(e){var i=+e.dataset.mi;e.oncontextmenu=function(ev){ev.preventDefault()};lpress(e,function(){if(sel){sel[i]=!sel[i];r()}},function(){if(!sel)msMenu(i)})});
+  if(!sel)return;var ks=function(){return Object.keys(sel).filter(function(k){return sel[k]}).map(Number).sort(function(a,b){return a-b})},b=document.createElement('div');b.className='mbar';b.innerHTML='<span>已选 '+ks().length+' 条</span><b data-x="cp">复制</b><b data-x="dl">删除</b><b data-x="no">取消</b>';t.appendChild(b);
+  b.onclick=function(e){var x=e.target.dataset.x;if(!x)return;var k=ks();if(x=='no'){sel=null;r();return}if(!k.length){toast('请先选择消息');return}
+   if(x=='cp'){cpy(k.map(function(i){return ms[i].x||''}).filter(Boolean).join('\n'));toast('已复制')}else{k.reverse().forEach(function(i){ms.splice(i,1)});sv();toast('已删除')}sel=null;r()}}
+ function msMenu(i){var m=ms[i];if(!m)return;var tx=!!m.x&&!m.st,
+  it=[['复制',tx,'cp'],['转发',tx,'fw'],['收藏',!m.sys,'fv'],['删除',1,'dl'],['多选',1,'ml'],['引用',tx,'qt'],['提醒',tx,'rm'],['连续朗读',tx,'rd'],['翻译',tx,'tr'],['搜一搜',tx,'sr']].filter(function(x){return x[1]}),
+  o=document.createElement('div'),cols=Math.min(5,it.length);o.className='mm';
+  o.innerHTML='<div class="mp" style="visibility:hidden"><div class="mg" style="--c:'+cols+'">'+it.map(function(x){return '<div data-x="'+x[2]+'"><svg viewBox="0 0 24 24" fill="#fff">'+MP[x[2]]+'</svg>'+x[0]+'</div>'}).join('')+'</div><i class="ar"></i></div>';
+  t.appendChild(o);
+  var p=o.firstChild,e=t.querySelector('[data-mi="'+i+'"]'),tr=t.getBoundingClientRect(),sc=(tr.width/t.offsetWidth)||1,W=t.offsetWidth,H=t.offsetHeight,pw=Math.min(W-20,cols*82);
+  p.style.width=pw+'px';var ph=p.offsetHeight,L,T,ax=pw/2,dn=0;
+  if(e){var br=e.getBoundingClientRect(),bl=(br.left-tr.left)/sc,bt=(br.top-tr.top)/sc,bw=br.width/sc,bh=br.height/sc;
+   L=m.me?bl+bw-pw:bl;L=Math.max(10,Math.min(W-pw-10,L));ax=Math.max(18,Math.min(pw-34,bl+bw/2-L-8));
+   T=bt-ph-12;if(T<70){T=bt+bh+12;dn=1}if(T+ph>H-10){T=Math.max(70,H-ph-10)}}
+  else{L=(W-pw)/2;T=(H-ph)/2}
+  p.style.left=L+'px';p.style.top=T+'px';p.querySelector('.ar').style.left=ax+'px';if(dn)p.classList.add('dn');p.style.visibility='visible';
+  o.onclick=function(ev){var x=ev.target.closest('[data-x]');o.remove();if(x)act(x.dataset.x,i)}}
+ function act(k,i){var m=ms[i];if(!m)return;
+  if(k=='cp'){cpy(m.x);toast('已复制')}
+  else if(k=='fw'){if(navigator.share)navigator.share({text:m.x}).catch(function(){});else{cpy(m.x);toast('已复制，可粘贴转发')}}
+  else if(k=='fv'){(S.fv=S.fv||[]).unshift({x:m.x||(m.st?'[表情包]':'[图片]'),n:c.n,ts:Date.now()});sv();toast('已收藏')}
+  else if(k=='dl'){ms.splice(i,1);sv();r()}
+  else if(k=='ml'){sel={};sel[i]=true;r()}
+  else if(k=='qt'){rq=m.x;r();$('i').focus()}
+  else if(k=='rm'){var n=parseInt(prompt('多少分钟后提醒你？','10'),10);if(n>0){(S.rem=S.rem||[]).push({at:Date.now()+n*6e4,x:m.x.slice(0,60),n:c.n});sv();toast(n+' 分钟后提醒你')}}
+  else if(k=='rd'){var sy=window.speechSynthesis;if(!sy){toast('当前浏览器不支持朗读');return}if(sy.speaking){sy.cancel();toast('已停止朗读');return}
+   ms.slice(i).filter(function(q){return q.x&&!q.st}).forEach(function(q){var u=new SpeechSynthesisUtterance(q.x);u.lang='zh-CN';sy.speak(u)});toast('开始连续朗读，再点一次停止')}
+  else if(k=='tr'){toast('翻译中…');llm('你是翻译器。如果给你的文字是中文就翻译成英文，否则翻译成简体中文。只输出译文，不要任何解释。',[{role:'user',content:m.x}],500,function(x){m.tr=x||'（翻译失败，请检查 API）';sv();r()})}
+  else if(k=='sr'){window.open('https://www.baidu.com/s?wd='+encodeURIComponent(m.x.slice(0,60)),'_blank')}}
+ function mkItems(x){var L=stkList(),us=ms.filter(function(m){return m.me&&m.x}),out=[];
+  String(x).replace(/\r/g,'').split(/\n+/).forEach(function(l){l=l.trim();if(!l)return;
+   var sts=[];l=l.replace(/\[(表情|盗)[:：]\s*(\d+)\s*\]/g,function(_,k,n){sts.push([k,+n]);return ''}).trim();
+   var pushSt=function(){sts.forEach(function(a){var s=L[a[1]-1];if(s){if(a[0]=='盗')out.push({sys:'TA 盗用了你的表情包'});out.push(s.charAt?{x:s,big:1}:{img:s.i,st:1})}})};
+   if(!l){pushSt();return}
+   var q=null,b=l.match(/^\[引[:：]([^\]]*)\]\s*(.*)$/);
+   if(b){var k=b[1].trim(),f=us.filter(function(m){return k&&m.x.indexOf(k)>-1}).pop()||(k?null:us[us.length-1]);q=String(f?f.x:k).slice(0,40);l=b[2]}
+   splitMsg(l).forEach(function(p){p=p.replace(/\[(?:表情|盗|引)[:：][^\]]*\]/g,'').trim();if(!p)return;var o={x:p};if(q){o.q=q;q=null}out.push(o)});pushSt()});
+  return out.length?out:[{x:String(x).trim()}]}
+ function reply(){if(ty)return;if(!ms.some(function(m){return m.x&&m.me})){toast('先发一条消息，再点「回复」');return}ty=1;r();aiReply(c,ms,function(x){var ps,i=0;if(x)ps=mkItems(x);else{ps=[{x:REP[Math.floor(Math.random()*REP.length)]}];var uq=ms.filter(function(q){return q.me&&q.x&&!q.st});if(uq.length&&Math.random()<.5)ps[0].q=String(uq[uq.length-1].x).slice(0,40);var SL=stkList();if(SL.length&&Math.random()<.4){var sp=SL[Math.floor(Math.random()*SL.length)];ps.push({sys:'TA 盗用了你的表情包'},sp.charAt?{x:sp,big:1}:{img:sp.i,st:1})}}
+  
+  (function nx(){var o=ps[i];o.t=hm();o.ts=Date.now();ms.push(o);i++;sv();if(i<ps.length){ty=1;if(t.classList.contains('on'))r();setTimeout(nx,500+Math.min(1100,(ps[i].x?ps[i].x.length:8)*70))}else{ty=0;if(t.classList.contains('on'))r();hvGet(id,c.n)}})()})}
  t.className='th on';r();
  window.wxSk=function(){pn=pn?0:1;r()};
  window.wxKc=function(){var n=(prompt('新分类名称')||'').trim();if(n){S.stk.cats.push({n:n.slice(0,6),it:[]});S.stk.cur=S.stk.cats.length-1;sv();r()}};
@@ -2393,6 +2440,20 @@ window.addEventListener('click',function(e){var a=e.target.closest&&e.target.clo
 
 <style id="upd-css">#updT{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translateX(-50%);z-index:400;display:none;padding:10px 18px;border-radius:20px;background:rgba(40,40,44,.9);color:#fff;font:13.5px -apple-system,"PingFang SC",sans-serif;white-space:nowrap}</style>
 <div id="updT"></div>
+<style id="mm-css">
+.mm{position:absolute;inset:0;z-index:40;background:rgba(0,0,0,.05)}
+.mp{position:absolute;background:#4c4c4c;border-radius:14px;padding:2px 0;box-shadow:0 10px 30px rgba(0,0,0,.32)}
+.mg{display:grid;grid-template-columns:repeat(var(--c,5),1fr)}
+.mg div{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 0 9px;color:#fff;font-size:12px;white-space:nowrap;-webkit-user-select:none;user-select:none}
+.mg div:nth-child(n+6){border-top:1px solid rgba(255,255,255,.14)}
+.mg div:active{background:rgba(255,255,255,.1)}
+.mg svg{width:24px;height:24px;fill:#fff;stroke:none}
+.mp .ar{position:absolute;width:0;height:0;border:8px solid transparent;border-bottom:0;border-top-color:#4c4c4c;bottom:-7px}
+.mp.dn .ar{bottom:auto;top:-7px;border-top:0;border-bottom:8px solid #4c4c4c}
+.ms1{outline:2px solid #07c160;outline-offset:2px}
+.mbar{position:absolute;left:0;right:0;bottom:0;z-index:41;display:flex;align-items:center;gap:18px;padding:14px 18px calc(env(safe-area-inset-bottom,0px) + 14px);background:#fff;border-top:1px solid #e3e3e3;font-size:15px}
+.mbar span{flex:1;color:#777}.mbar b{font-weight:500;color:#222;padding:6px 10px;background:#efefef;border-radius:14px}
+</style>
 <script id="realtime-js">
 (function(){
 /* 人设优先：有角色资料时，要求 char 严格按设定互动 */
