@@ -1826,8 +1826,8 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 .k8{flex:none;height:40%;min-height:420u;padding:12u 40u calc(env(safe-area-inset-bottom,0px) + 10u) 48u;display:flex;flex-direction:column}
 .kt{display:flex;align-items:center;gap:12u;overflow-x:auto;padding-bottom:14u;scrollbar-width:none;flex:none}.kt::-webkit-scrollbar{display:none}.kt span{flex:none;padding:8u 22u;border-radius:24u;background:#ececed;font-size:22u;white-space:nowrap}.kt span.on{background:#404040;color:#fff}.kt span.kn{background:none;border:1px dashed #aaa;color:#777}.kt span.ki{margin-left:auto;background:#404040;border:0;color:#fff}
 .kg{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:repeat(5,1fr);gap:10u;align-content:start;scrollbar-width:none;padding-bottom:6u}.kg::-webkit-scrollbar{display:none}
-.kg>div{aspect-ratio:1;display:grid;place-items:center;font-size:56u;line-height:1;border-radius:20u;background:#efeff0;overflow:hidden}.kg>div:active{background:#dcdcde}.kg img{width:100%;height:100%;object-fit:contain;padding:6u}
-.kg>.ke{grid-column:1/-1;aspect-ratio:auto;background:none;font-size:22u;color:#999;padding:60u 0;text-align:center}.kh{flex:none;text-align:center;font-size:19u;color:#aaa;padding-top:8u}
+.kg>div{position:relative;height:0;padding:0 0 100%;border-radius:20u;background:#efeff0;overflow:hidden}.kg>div:active{background:#dcdcde}.kg>div>i{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:56u;line-height:1}.kg>div>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:8u;box-sizing:border-box;pointer-events:none}
+.kg>.ke{grid-column:1/-1;height:auto;background:none;font-size:22u;color:#999;padding:60u 0;text-align:center}.kh{flex:none;text-align:center;font-size:19u;color:#aaa;padding-top:8u}
 .sy{position:absolute;inset:0;z-index:12;background:#f4f4f3;overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 14px) 24px 40px;font-family:ui-monospace,"SF Mono",Menlo,monospace;color:#333;scrollbar-width:none}
 .sx{font-size:11px;letter-spacing:1px;color:#999;margin-bottom:10px;cursor:pointer}.sh{display:flex;align-items:center;gap:10px;letter-spacing:4px;font-size:15px}.sh b{font-weight:500}.sh i{flex:1;height:1px;background:#333}.sh span{font-size:12px;letter-spacing:3px}
 .sm2{font-size:11px;letter-spacing:1.5px;color:#666;line-height:1.6;margin:8px 0 18px}.sb{display:flex;gap:10px}.sf{position:relative;flex:none;width:62%;padding:10px;cursor:pointer}.sf img{display:block;width:100%;aspect-ratio:690/754;object-fit:cover}
@@ -2046,7 +2046,7 @@ window.wxOpen=function(id){var c=all().filter(function(x){return x.id==id})[0],t
   if(m.img)return '<div class="'+k+' im"><img src="'+m.img+'"></div>';
   if(m.v)b=ic('mic')+'<span class="vb"><i></i><i></i><i></i><i></i><i></i></span>'+m.v+'"';else b=esc(m.x)+(m.tr?'<div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(128,128,128,.3);font-size:.86em;opacity:.8">'+esc(m.tr)+'</div>':'');
   return '<div class="'+k+(hl&&m.x&&m.x.indexOf(hl)>=0?' hl':'')+'">'+q+b+'</div>'}
- function skp(){var K=S.stk,cat=K.cats[K.cur];return '<div class="k8"><div class="kt">'+K.cats.map(function(x,i){return '<span class="'+(i==K.cur?'on':'')+'" data-c="'+i+'">'+esc(x.n)+'</span>'}).join('')+'<span class="kn" onclick="wxKc()">＋ 分类</span><span class="ki" onclick="wxKu()">＋ 导入表情</span></div><div class="kg">'+(cat.it.length?cat.it.map(function(x,i){return '<div class="kx" data-k="'+i+'">'+(x.charAt?x:'<img src="'+x.i+'">')+'</div>'}).join(''):'<div class="ke">这个分类还没有表情<br>点右上角「导入表情」添加</div>')+'</div><div class="kh">轻点发送 · 长按删除 · 长按分类名可删分类</div></div>'}
+ function skp(){var K=S.stk,cat=K.cats[K.cur];return '<div class="k8"><div class="kt">'+K.cats.map(function(x,i){return '<span class="'+(i==K.cur?'on':'')+'" data-c="'+i+'">'+esc(x.n)+'</span>'}).join('')+'<span class="kn" onclick="wxKc()">＋ 分类</span><span class="ki" onclick="wxKu()">＋ 导入表情</span></div><div class="kg">'+(cat.it.length?cat.it.map(function(x,i){return '<div class="kx" data-k="'+i+'">'+(x.charAt?'<i>'+esc(x)+'</i>':'<img src="'+x.i+'">')+'</div>'}).join(''):'<div class="ke">这个分类还没有表情<br>点右上角「导入表情」添加</div>')+'</div><div class="kh">轻点发送 · 长按删除 · 长按分类名可删分类</div></div>'}
  function r(){var v=$('i')?$('i').value:'',hs=[[0,0],[50,0],[100,0],[0,50],[100,50],[0,100],[50,100],[100,100]];
   t.innerHTML='<div class="h7"><div class="c7" onclick="wxSr()">'+ic('search')+'</div><div class="p7"><div class="i7">'+av('me','x1')+av(id,'x2',0).replace('class="av','onclick="wxHeart(\''+id+'\')" class="av')+av('me','x3')+'<span>'+esc(c.n)+(ty?' · 正在输入…':'')+'</span></div></div></div>'+
   '<div class="m7" id="ms"><div class="o7" onclick="wxStory()"><b>OPTION SELECT</b><small>CHOOSE ONE</small>'+hs.map(function(h){return '<s style="left:'+h[0]+'%;top:'+h[1]+'%"></s>'}).join('')+'</div>'+
@@ -2078,7 +2078,7 @@ window.wxOpen=function(id){var c=all().filter(function(x){return x.id==id})[0],t
    T=bt-ph-12;if(T<70){T=bt+bh+12;dn=1}if(T+ph>H-10){T=Math.max(70,H-ph-10)}}
   else{L=(W-pw)/2;T=(H-ph)/2}
   p.style.left=L+'px';p.style.top=T+'px';p.querySelector('.ar').style.left=ax+'px';if(dn)p.classList.add('dn');p.style.visibility='visible';
-  o.onclick=function(ev){var x=ev.target.closest('[data-x]');o.remove();if(x)act(x.dataset.x,i)}}
+  var t0=Date.now();o.onclick=function(ev){if(Date.now()-t0<500){ev.stopPropagation();return}var x=ev.target.closest('[data-x]');o.remove();if(x)act(x.dataset.x,i)}}
  function act(k,i){var m=ms[i];if(!m)return;
   if(k=='cp'){cpy(m.x);toast('已复制')}
   else if(k=='fw'){if(navigator.share)navigator.share({text:m.x}).catch(function(){});else{cpy(m.x);toast('已复制，可粘贴转发')}}
