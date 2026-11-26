@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#f2f2f5">
 <title>AURE</title>
-<meta name="aure-version" content="2026.11.27.1">
+<meta name="aure-version" content="2026.11.27.2">
 <style>
 :root{--glass:rgba(255,255,255,.62);--ink:#1c1c1e;--sub:#8a8a90;--red:#ff3b30;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
@@ -1946,10 +1946,17 @@ function personaForChat(c){
  var p=c&&c.id&&c.id.indexOf('pf')===0&&typeof PF!=='undefined'?PF.chars.find(function(x){return 'pf'+x.id===c.id}):null;
  return (p&&p.desc)||((c&&c.d)||'');
 }
+function aureDur(x){var m=Math.round(x/6e4);if(m<1)return '不到一分钟';if(m<60)return m+'分钟';var h=Math.floor(m/60);if(h<24)return h+'小时'+(m%60?(m%60)+'分钟':'');var d=Math.floor(h/24);return d+'天'+(h%24?(h%24)+'小时':'')}
+function timeNote(ms){var now=Date.now(),us=ms.filter(function(m){return m.me&&m.ts}),cs=ms.filter(function(m){return !m.me&&m.ts}),lu=us[us.length-1],lc=cs[cs.length-1],n='',pv=null;
+ if(lu){for(var j=ms.lastIndexOf(lu)-1;j>=0;j--)if(ms[j].ts){pv=ms[j];break}}
+ if(lu&&pv&&lu.ts-pv.ts>=18e5)n+='用户隔了'+aureDur(lu.ts-pv.ts)+'才又发来消息；';
+ if(lc)n+='你上一次回复是'+aureDur(now-lc.ts)+'前；';
+ if(lu&&now-lu.ts>=6e4)n+='用户最后一条消息是'+aureDur(now-lu.ts)+'前发的；';
+ return n?'【对话时间线】'+n+'请据此自然体现时间感（比如隔了很久会问候或感慨，刚聊过则直接接话），不要生硬报时。':''}
 function aiReply(c,ms,done){var A=apiCfg();
  if(!A.url||!A.key||!A.model){setTimeout(function(){done(null)},900);return}
  var hist=ms.filter(function(m){return m.x}).slice(-16).map(function(m){return {role:m.me?'user':'assistant',content:m.x}});
- var sys='你是「'+c.n+'」，正在聊天软件里和用户聊天。'+aurePersonaLayer(c.n,personaForChat(c),'chat');
+ var sys='你是「'+c.n+'」，正在聊天软件里和用户聊天。'+aurePersonaLayer(c.n,personaForChat(c),'chat')+timeNote(ms);
  var ac=new AbortController(),tm=setTimeout(function(){ac.abort()},25000);
  fetch(A.url.replace(/\/+$/,'')+'/chat/completions',{method:'POST',signal:ac.signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+A.key},
   body:JSON.stringify({model:A.model,temperature:A.temp==null?0.85:A.temp,messages:[{role:'system',content:sys}].concat(hist)})})
@@ -2010,8 +2017,8 @@ window.wxOpen=function(id){var c=all().filter(function(x){return x.id==id})[0],t
   t.querySelectorAll('[data-g]').forEach(function(e){var f=G[e.dataset.g][2];e.onclick=function(){f?f():toast('这里还在装修中 🔨')}});
   t.querySelectorAll('.kt [data-c]').forEach(function(e){var i=+e.dataset.c;lpress(e,function(){S.stk.cur=i;sv();r()},function(){if(i>0&&confirm('删除分类「'+S.stk.cats[i].n+'」？')){S.stk.cats.splice(i,1);S.stk.cur=0;sv();r()}})});
   t.querySelectorAll('.kx').forEach(function(e){var i=+e.dataset.k,it=S.stk.cats[S.stk.cur].it;lpress(e,function(){var s=it[i];s.charAt?push({me:1,x:s,big:1,t:hm()}):push({me:1,img:s.i,st:1,t:hm()})},function(){if(confirm('删除这个表情包？')){it.splice(i,1);sv();r()}})})}
- function push(m){ms.push(m);sv();r()}
- function reply(){if(ty)return;if(!ms.some(function(m){return m.x&&m.me})){toast('先发一条消息，再点「回复」');return}ty=1;r();aiReply(c,ms,function(x){ty=0;ms.push({x:x||REP[Math.floor(Math.random()*REP.length)],t:hm()});sv();if(t.classList.contains('on'))r()})}
+ function push(m){m.ts=Date.now();ms.push(m);sv();r()}
+ function reply(){if(ty)return;if(!ms.some(function(m){return m.x&&m.me})){toast('先发一条消息，再点「回复」');return}ty=1;r();aiReply(c,ms,function(x){ty=0;ms.push({x:x||REP[Math.floor(Math.random()*REP.length)],t:hm(),ts:Date.now()});sv();if(t.classList.contains('on'))r()})}
  t.className='th on';r();
  window.wxSk=function(){pn=pn?0:1;r()};
  window.wxKc=function(){var n=(prompt('新分类名称')||'').trim();if(n){S.stk.cats.push({n:n.slice(0,6),it:[]});S.stk.cur=S.stk.cats.length-1;sv();r()}};
@@ -2369,6 +2376,21 @@ window.addEventListener('click',function(e){var a=e.target.closest&&e.target.clo
 
 <style id="upd-css">#updT{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translateX(-50%);z-index:400;display:none;padding:10px 18px;border-radius:20px;background:rgba(40,40,44,.9);color:#fff;font:13.5px -apple-system,"PingFang SC",sans-serif;white-space:nowrap}</style>
 <div id="updT"></div>
+<script id="realtime-js">
+(function(){
+/* 现实时间感知：每次请求都把设备的当前日期、星期、时段、农历告诉 AI */
+function lunar(d){try{return new Intl.DateTimeFormat('zh-CN-u-ca-chinese',{month:'long',day:'numeric'}).format(d).replace(/\s/g,'')}catch(e){return ''}}
+window.aureNow=function(full){var d=new Date(),h=d.getHours(),p=h<5?'凌晨':h<8?'清晨':h<11?'上午':h<13?'中午':h<18?'下午':h<23?'晚上':'深夜',
+ w='日一二三四五六'[d.getDay()],tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(e){}
+ var t='【现实时间】此刻是 '+d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+w+' '+('0'+h).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+'（'+p+(d.getDay()%6===0?'，周末':'')+'）'+(lunar(d)?'，农历'+lunar(d):'')+(tz?'，时区 '+tz:'')+'。';
+ return full?t+'你和用户处在同一个现实时间里：回复必须符合此刻，比如深夜不要说“早上好”，要考虑作息、吃饭、上班上课、周末和节日；被问到时间、日期、星期时按这个回答，不要说自己不知道时间；不要机械报时，自然融入即可。':t};
+var of=window.fetch;
+window.fetch=function(u,o){try{if(o&&typeof o.body==='string'&&/\/chat\/completions\/?$/.test(String(u))){
+ var j=JSON.parse(o.body),m=j.messages;
+ if(m&&m[0]&&m[0].role==='system'&&String(m[0].content).indexOf('【现实时间】')<0){m[0].content=String(m[0].content)+'\n\n'+aureNow(/^你是「/.test(m[0].content));o=Object.assign({},o,{body:JSON.stringify(j)})}}}catch(e){}
+ return of.call(window,u,o)};
+})();
+</script>
 <script id="auto-update">
 (function(){
 /* 自动更新：打开、切回前台、每 10 分钟检查一次；发现新版本自动刷新。聊天与设置数据存在本机，不会丢。 */
