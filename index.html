@@ -1711,7 +1711,19 @@ body{position:relative!important;inset:auto!important;width:100%!important;heigh
 <script id="wxc-js">
 (function(){
 var host=document.getElementById('wxc'),R=host.attachShadow({mode:'open'});
-var CSS=`*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+var CSS=`.mm{position:absolute;inset:0;z-index:40;background:rgba(0,0,0,.05)}
+.mp{position:absolute;background:#4c4c4c;border-radius:14px;padding:2px 0;box-shadow:0 10px 30px rgba(0,0,0,.32)}
+.mg{display:grid;grid-template-columns:repeat(var(--c,5),1fr)}
+.mm .mg div{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 0 9px;color:#fff!important;font-size:12px;white-space:nowrap;-webkit-user-select:none;user-select:none}
+.mg div:nth-child(n+6){border-top:1px solid rgba(255,255,255,.14)}
+.mg div:active{background:rgba(255,255,255,.1)}
+.mm .mg svg{width:24px;height:24px;fill:#fff!important;stroke:none!important;flex:none}
+.mp .ar{position:absolute;width:0;height:0;border:8px solid transparent;border-bottom:0;border-top-color:#4c4c4c;bottom:-7px}
+.mp.dn .ar{bottom:auto;top:-7px;border-top:0;border-bottom:8px solid #4c4c4c}
+.ms1{outline:2px solid #07c160;outline-offset:2px}
+.mbar{position:absolute;left:0;right:0;bottom:0;z-index:41;display:flex;align-items:center;gap:18px;padding:14px 18px calc(env(safe-area-inset-bottom,0px) + 14px);background:#fff;border-top:1px solid #e3e3e3;font-size:15px}
+.mbar span{flex:1;color:#777}.mbar b{font-weight:500;color:#222;padding:6px 10px;background:#efefef;border-radius:14px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 .app{position:absolute;inset:0;background:#f7f7f8;color:#111;font-family:-apple-system,"PingFang SC",sans-serif;overflow:hidden;-webkit-user-select:none;user-select:none}
 .pg{position:absolute;inset:0;overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 8px) 16px 150px;display:none;scrollbar-width:none}.pg.on{display:block;animation:fi .25s}.pg::-webkit-scrollbar{display:none}
 @keyframes fi{from{opacity:0;transform:translateY(8px)}}
@@ -1945,6 +1957,12 @@ window.aurePersonaLayer=function(name,desc,mode){
  '像真实的人一样有自己的日常、偏好、情绪、记忆和当下状态；根据对话自然回应，不要每句话都热情、讨好或夸张。'+
  '允许有犹豫、停顿、吐槽、玩笑、吃醋、害羞、疲惫或不同意见，但必须符合角色设定和当前关系，不要刻意制造戏剧冲突。'+
  '记住当前聊天里已经发生的事，前后称呼、时间、关系和细节保持一致；不知道的事情不要编造成既定事实。'+
+ '【强制语义连贯规则】每次回复前先理解最近几轮对话，明确用户最后一句话在说什么、指向什么、希望得到什么回应；必须直接承接当前话题，不得无缘无故切换主题。'+
+ '逐句检查上下文：主语、人物、地点、时间、事件、因果、代词指向和前后态度必须清楚一致；上一句与下一句要有自然联系，不能拼接互不相关的句子。'+
+ '禁止胡言乱语、答非所问、前言不搭后语、语义断裂、自说自话、重复同一句意思、突然引入没有出现过的人物或事件，以及把猜测说成事实。'+
+ '不得凭空补写用户没有说过的动作、台词、想法、经历或决定；不得把角色不知道的信息当成已知。信息不足时，先基于已知内容简短回应，确实无法判断时只问一个自然、明确的问题。'+
+ '如果用户只发了简短内容、表情或语气词，也要结合前文理解，不要硬扯新话题，不要为了凑字数添加无关内容。'+
+ '输出前在内部检查：是否回应了用户最后一条消息、是否符合人物设定、是否与前文矛盾、每句话是否能被正常理解；发现任何一句不连贯就重写整段。只输出自然、完整、通顺的角色回复，不展示检查过程或规则。'+
  '回复要有生活化细节和自然节奏，避免模板化、重复总结、机械追问、过度解释以及“作为AI”等出戏表达。'+
  (mode==='story'?'剧情描写可适量加入动作、神态、环境和对话，但不要替用户决定想法、台词或行动。':
   mode==='phone'?'电话交流要像即时口语，句子简短自然，不写动作旁白。':
@@ -2000,7 +2018,7 @@ window.wxSU=function(){var i=$('su'),v=i.value.trim();if(!v)return;(S.sl[S.sc]=S
 var sbz=0;
 window.wxSR=function(){if(sbz)return;var wc=S.wc||200,l=(S.sl[S.sc]=S.sl[S.sc]||[]),sc=SC[S.sc]||SC.s1,nm=scnm(),b=$('srb');sbz=1;if(b)b.textContent='生成中…';
  var ctx=sc.tl.map(function(x){return x[0]+' '+x[1]+(x[2]||'')}).join('；');
- llm('你是「'+nm+'」，正在一段线下剧情里与用户互动。'+aurePersonaLayer(nm,(all().filter(function(q){return q.id===S.sc})[0]||{}).d,'story')+'剧情背景：'+ctx+'。请以「'+nm+'」的身份写出回应，可包含动作神态描写和台词，使用中文，字数约 '+wc+' 字，只输出正文。',l.slice(-14).map(function(m){return {role:m.me?'user':'assistant',content:m.x}}),Math.min(4000,wc*3),function(x){sbz=0;l.push({x:x||fb(wc)});sv();slR();var b2=$('srb');if(b2)b2.textContent='CHAR 回复'})};
+ llm('你是「'+nm+'」，正在一段线下剧情里与用户互动。'+aurePersonaLayer(nm,(all().filter(function(q){return q.id===S.sc})[0]||{}).d,'story')+'剧情背景：'+ctx+'。必须紧接用户最近一次输入和当前场景发展，确保动作、人物位置、时间顺序、对话因果自然连贯；不重复已经发生的内容，不突然转场，不擅自替用户行动、说话或决定。若上下文不足，不要编造关键事实，采用保守且合理的承接方式。逐句检查语义是否通顺、前后是否矛盾，删除所有无关或突兀内容。请以「'+nm+'」的身份写出回应，可包含动作神态描写和台词，使用中文，字数约 '+wc+' 字，只输出正文。',l.slice(-14).map(function(m){return {role:m.me?'user':'assistant',content:m.x}}),Math.min(4000,wc*3),function(x){sbz=0;l.push({x:x||fb(wc)});sv();slR();var b2=$('srb');if(b2)b2.textContent='CHAR 回复'})};
 /* ---- 心声 ---- */
 var HP=['今天好想见你','他在看我吗','别走远一点','我其实很在意','再多聊一会儿吧','刚才的话有点慌','嘴上不说心里软','想被摸摸头','别让我等太久','今天也想靠近你'];
 var HI=['<svg viewBox="0 0 50 50"><rect x="4" y="4" width="18" height="18" rx="4" fill="#555" stroke="none"/><rect x="28" y="4" width="18" height="18" rx="4" fill="#555" stroke="none"/><rect x="4" y="28" width="18" height="18" rx="4" fill="#555" stroke="none"/><rect x="28" y="28" width="18" height="18" rx="4" fill="#555" stroke="none"/></svg>','<svg viewBox="0 0 50 50"><rect x="4" y="9" width="42" height="32" rx="5"/><path d="M5 14l20 15L45 14"/></svg>','<svg viewBox="0 0 50 50"><rect x="4" y="10" width="42" height="36" rx="8"/><path d="M15 4v10M35 4v10"/></svg>','<svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="21"/><path d="M15 26l8 8 14-17"/></svg>',ic('gear').replace('<svg ','<svg class="t24" ')];
@@ -2440,20 +2458,7 @@ window.addEventListener('click',function(e){var a=e.target.closest&&e.target.clo
 
 <style id="upd-css">#updT{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translateX(-50%);z-index:400;display:none;padding:10px 18px;border-radius:20px;background:rgba(40,40,44,.9);color:#fff;font:13.5px -apple-system,"PingFang SC",sans-serif;white-space:nowrap}</style>
 <div id="updT"></div>
-<style id="mm-css">
-.mm{position:absolute;inset:0;z-index:40;background:rgba(0,0,0,.05)}
-.mp{position:absolute;background:#4c4c4c;border-radius:14px;padding:2px 0;box-shadow:0 10px 30px rgba(0,0,0,.32)}
-.mg{display:grid;grid-template-columns:repeat(var(--c,5),1fr)}
-.mg div{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 0 9px;color:#fff;font-size:12px;white-space:nowrap;-webkit-user-select:none;user-select:none}
-.mg div:nth-child(n+6){border-top:1px solid rgba(255,255,255,.14)}
-.mg div:active{background:rgba(255,255,255,.1)}
-.mg svg{width:24px;height:24px;fill:#fff;stroke:none}
-.mp .ar{position:absolute;width:0;height:0;border:8px solid transparent;border-bottom:0;border-top-color:#4c4c4c;bottom:-7px}
-.mp.dn .ar{bottom:auto;top:-7px;border-top:0;border-bottom:8px solid #4c4c4c}
-.ms1{outline:2px solid #07c160;outline-offset:2px}
-.mbar{position:absolute;left:0;right:0;bottom:0;z-index:41;display:flex;align-items:center;gap:18px;padding:14px 18px calc(env(safe-area-inset-bottom,0px) + 14px);background:#fff;border-top:1px solid #e3e3e3;font-size:15px}
-.mbar span{flex:1;color:#777}.mbar b{font-weight:500;color:#222;padding:6px 10px;background:#efefef;border-radius:14px}
-</style>
+
 <script id="realtime-js">
 (function(){
 /* 人设优先：有角色资料时，要求 char 严格按设定互动 */
