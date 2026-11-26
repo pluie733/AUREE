@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#f2f2f5">
 <title>AURE</title>
-<meta name="aure-version" content="2026.11.27.2">
+<meta name="aure-version" content="2026.11.27.4">
 <style>
 :root{--glass:rgba(255,255,255,.62);--ink:#1c1c1e;--sub:#8a8a90;--red:#ff3b30;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
@@ -783,8 +783,9 @@ let TK=null;
 function phAll(){phLoad();return PD.contacts.concat(PF.chars.filter(c=>c.phone).map(c=>({n:c.name,p:c.phone,ch:c.id})))}
 function pfMini(id){const c=PF.chars.find(x=>x.id===id);return c&&c.ava?'<div class="x_pav" style="'+avStyle(c.ava)+';background-size:cover;background-position:center"></div>':phAv(c?c.name:'')}
 function pfByPhone(p){const d=String(p).replace(/\D/g,'');return d?PF.chars.find(c=>c.phone&&c.phone.replace(/\D/g,'')===d):null}
-function pfWho(){const m=PF.masks.find(x=>x.id===PF.mask);return m?{name:m.name,desc:m.desc}:{name:ME.name,desc:PF.desc}}
-function phSys(T){const u=pfWho(),c=T.ch;return '你是「'+(T.n||'来电对方')+'」。'+(window.aurePersonaLayer?window.aurePersonaLayer(T.n,c&&c.desc,'phone'):'请像真实的人一样自然交流，保持人设一致。')+'你正在和用户打电话，用户用打字和你交流，称呼用户为「'+u.name+'」'+(u.desc?'（用户设定：'+u.desc+'）':'')+'。不要描写动作，不要加引号。'}
+function pfWho(cid){const m=PF.masks.find(x=>x.id===PF.mask);if(m&&(!m.chars||!m.chars.length||(cid&&m.chars.indexOf(cid)>-1)))return{name:m.name,desc:m.desc};return{name:ME.name,desc:PF.desc}}
+window.aureWho=function(id){id=id==null?'':String(id);return pfWho(id.indexOf('pf')===0?id.slice(2):null)};
+function phSys(T){const c=T.ch,u=pfWho(c&&c.id);return '你是「'+(T.n||'来电对方')+'」。'+(window.aurePersonaLayer?window.aurePersonaLayer(T.n,c&&c.desc,'phone'):'请像真实的人一样自然交流，保持人设一致。')+'你正在和用户打电话，用户用打字和你交流，称呼用户为「'+u.name+'」'+(u.desc?'（用户设定：'+u.desc+'）':'')+'。不要描写动作，不要加引号。'}
 function phMsgs(){const e=document.getElementById('dmsg');if(!e||!TK)return;e.innerHTML=TK.h.map(m=>'<div class="db'+(m.me?' me':'')+'">'+esc(m.x)+'</div>').join('')+(TK.ty?'<div class="db">…</div>':'');e.scrollTop=e.scrollHeight}
 function phKeep(){if(!TK)return;PD.talk=PD.talk||{};PD.talk[TK.p]=TK.h.slice(-30);phSave()}
 function phStart(p,n,dir,ch){phLoad();PD.recents.unshift({n:n||'',p:p,dir:dir,lab:n?'手机':'未知',day:'今天'});PD.recents=PD.recents.slice(0,60);phSave();
@@ -811,11 +812,11 @@ const PHIMG='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMDAgQD
 const SILH='<svg viewBox="0 0 132 132"><circle cx="66" cy="52" r="22" fill="#bdbdbd"/><path d="M26 124c4-28 20-40 40-40s36 12 40 40z" fill="#bdbdbd"/></svg>';
 function pfCard(){const k=PFC,o=pfRead(k);if(!o)return frame('角色',emptyHTML('不存在'));
  const kind=k==='user'?'user':k[0]==='c'?'char':'mask';
- const btn=kind==='user'?[['面具',"replicaPush('masks')"],['角色',"replicaPush('people')"],['编辑简介',"pfDesc()"]]:kind==='char'?[['拨打电话',"pfCall()"],['TA 打给我',"pfIncoming()"],['编辑人设',"pfDesc()"],['删除人设',"pfDelChar()"]]:[[PF.mask===o.id?'取消使用':'设为当前',"pfUse()"],['编辑简介',"pfDesc()"],['删除',"pfDelMask()"]];
+ const btn=kind==='user'?[['面具',"replicaPush('masks')"],['角色',"replicaPush('people')"],['编辑简介',"pfDesc()"]]:kind==='char'?[['拨打电话',"pfCall()"],['TA 打给我',"pfIncoming()"],['编辑人设',"pfDesc()"],['删除人设',"pfDelChar()"]]:[[PF.mask===o.id?'取消使用':'设为当前',"pfUse()"],['编辑简介',"pfDesc()"],['选择角色'+(o.chars&&o.chars.length?'（'+o.chars.length+'）':''),"pfPick()"],['删除',"pfDelMask()"]];
  return `<section class="cdscr"><div class="cdwin"><div class="cddots"><i onclick="replicaBack()">✕</i><i onclick="replicaBack()">–</i></div><div class="cdpanel"><div class="cdband"></div><div class="cdav" style="${o.ava?avStyle(o.ava)+';background-size:cover;background-position:center':''}" onclick="pfAva()">${o.ava?'':SILH}</div><div class="cdname" onclick="pfName()">@${esc(o.name)}</div>${kind==='mask'?'':`<div class="cdph" onclick="pfPhone()"><img class="cdpi" src="${PHIMG}">${o.phone?esc(o.phone):'点击添加电话号码'}</div>`}<div class="cdds" onclick="pfDesc()">${o.desc?esc(o.desc):'点击添加'+(kind==='char'?'人设':'简介')}</div><div class="cdbt">${btn.map(x=>`<div${/删除/.test(x[0])?' style="color:#d0382e"':''} onclick="${x[1]}">${x[0]}</div>`).join('')}</div></div></div></section>`}
 function pfRow(k,o,sub){return `<div class="settingrow" onclick="pfOpen('${k}')"><span class="av" style="width:40px;height:40px;flex:none;border-radius:50%;${o.ava?avStyle(o.ava)+';background-size:cover;background-position:center':'background:#d9d9dc'}"></span><span style="margin-left:12px;flex:1;min-width:0">${esc(o.name)}<small style="display:block;color:#999;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(sub)}</small></span><span class="chev">›</span></div>`}
 function pfPeople(){return frame('角色',`<div class="settingsgroup">我（User）</div>${pfRow('user',pfRead('user'),PF.phone||'未设置号码')}<div class="settingsgroup">Char</div>${PF.chars.map(c=>pfRow('c:'+c.id,c,c.phone||'未设置号码')).join('')||emptyHTML('还没有 Char')}<button class="primary" style="margin-top:22px" onclick="pfNew('c')"><span>＋ 创建 Char</span></button>`)}
-function pfMasks(){return frame('面具',`<div class="hint" style="text-align:left;font-weight:500;font-size:12px;margin-bottom:6px">面具是你的临时身份。选中后，通话时 Char 会用面具的名字和简介来称呼你。</div><div class="settingrow" onclick="pfNone()">不使用面具${PF.mask?'':'<span class="chev" style="color:#555">✓</span>'}</div>${PF.masks.map(m=>pfRow('m:'+m.id,m,(PF.mask===m.id?'当前使用 · ':'')+(m.desc||'无简介'))).join('')}<button class="primary" style="margin-top:22px" onclick="pfNew('m')"><span>＋ 新建面具</span></button>`)}
+function pfMasks(){return frame('面具',`<div class="hint" style="text-align:left;font-weight:500;font-size:12px;margin-bottom:6px">面具是你的临时身份。选中后，聊天和通话时 Char 会用面具的名字和简介来称呼你；点进面具可以选择它对哪些角色生效。</div><div class="settingrow" onclick="pfNone()">不使用面具${PF.mask?'':'<span class="chev" style="color:#555">✓</span>'}</div>${PF.masks.map(m=>pfRow('m:'+m.id,m,(PF.mask===m.id?'当前使用 · ':'')+(m.chars&&m.chars.length?'适用 '+m.chars.length+' 个角色':'适用全部角色')+' · '+(m.desc||'无简介'))).join('')}<button class="primary" style="margin-top:22px" onclick="pfNew('m')"><span>＋ 新建面具</span></button>`)}
 window.pfOpen=function(k){PFC=k;replicaPush('card')};
 window.pfNew=function(t){const id=Date.now().toString(36);if(t==='c')PF.chars.push({id:id,name:'新角色',ava:'',phone:'130'+String(Math.floor(Math.random()*1e8)).padStart(8,'0'),desc:''});else PF.masks.push({id:id,name:'新面具',ava:'',desc:''});pfSave();PFC=t+':'+id;replicaPush('card')};
 window.pfAva=function(){pickImg(256,true,function(d){pfWrite(PFC,'ava',d);render('card')})};
@@ -832,6 +833,13 @@ window.pfNewFromChat=function(){const id=Date.now().toString(36);PF.chars.push({
 window.pfUse=function(){const o=pfRead(PFC);PF.mask=PF.mask===o.id?null:o.id;pfSave();render('card')};
 window.pfNone=function(){PF.mask=null;pfSave();render('masks')};
 window.pfDelChar=function(){const o=pfRead(PFC);if(!o||PFC[0]!=='c')return;if(!confirm('删除角色「'+o.name+'」及其人设？删除后聊天列表里将不再显示 TA。'))return;PF.chars=PF.chars.filter(x=>x!==o);try{if(o.phone&&PD.talk){delete PD.talk[o.phone];phSave()}}catch(e){}pfSave();replicaBack();replicaToast('已删除');if(window.wxRefresh)wxRefresh()};
+window.pfPick=function(){const o=pfRead(PFC);if(!o||PFC[0]!=='m')return;if(!PF.chars.length){replicaToast('还没有角色，请先创建 Char');return}
+ const sel=new Set(o.chars||[]),d=document.createElement('div');d.className='pfpage';d.id='pfpick';
+ const draw=()=>{d.innerHTML='<div class="pfh"><i id="pkx">✕</i><b>选择角色</b><span id="pkok">保存</span></div><div class="hint" style="text-align:left;font-weight:500;font-size:12px;margin:8px 2px">勾选后，这个面具只对勾选的角色生效；一个都不勾 = 对所有角色生效。</div><div style="flex:1;overflow-y:auto">'+PF.chars.map(c=>'<div class="settingrow" data-c="'+c.id+'" style="cursor:pointer"><span style="flex:1">'+esc(c.name)+'</span>'+(sel.has(c.id)?'<span class="chev" style="color:#222">✓</span>':'<span class="chev" style="color:#ccc">○</span>')+'</div>').join('')+'</div>';
+  d.querySelector('#pkx').onclick=()=>d.remove();
+  d.querySelector('#pkok').onclick=()=>{o.chars=[...sel];pfSave();d.remove();render('card');replicaToast(o.chars.length?'已设为 '+o.chars.length+' 个角色可用':'已设为对所有角色生效')};
+  d.querySelectorAll('[data-c]').forEach(e=>e.onclick=()=>{const k=e.dataset.c;sel.has(k)?sel.delete(k):sel.add(k);draw()})};
+ draw();root.appendChild(d)};
 window.pfDelMask=function(){const o=pfRead(PFC);if(!o||!confirm('删除这个面具？'))return;PF.masks=PF.masks.filter(x=>x!==o);if(PF.mask===o.id)PF.mask=null;pfSave();replicaBack()};
 window.pfCall=function(){const c=pfRead(PFC);if(!c||!c.phone){replicaToast('请先添加电话号码');return}phDial(c.phone,c.name)};
 window.pfIncoming=function(){const c=pfRead(PFC);if(!c||!c.phone){replicaToast('请先给 TA 添加电话号码');return}if(!PF.phone){replicaToast('请先给自己添加电话号码');return}
@@ -1947,6 +1955,14 @@ function personaForChat(c){
  return (p&&p.desc)||((c&&c.d)||'');
 }
 function aureDur(x){var m=Math.round(x/6e4);if(m<1)return '不到一分钟';if(m<60)return m+'分钟';var h=Math.floor(m/60);if(h<24)return h+'小时'+(m%60?(m%60)+'分钟':'');var d=Math.floor(h/24);return d+'天'+(h%24?(h%24)+'小时':'')}
+function splitMsg(x){var out=[];String(x).replace(/\r/g,'').split(/\n+/).forEach(function(l){l=l.trim();if(!l)return;
+  if(l.length<=22){out.push(l);return}
+  var a=[];(l.match(/[^。！？!?…~～；;]+[。！？!?…~～；;]*/g)||[l]).forEach(function(p){if(p.length>22)a=a.concat(p.match(/[^，,、]+[，,、]*/g)||[p]);else a.push(p)});var cur='';
+  a.forEach(function(p){if(cur&&(cur+p).length>22){out.push(cur);cur=p}else cur+=p});if(cur)out.push(cur)});
+ out=out.map(function(s){return s.replace(/[。；;，,、]+$/,'').trim()}).filter(Boolean);
+ if(out.length>6){out=out.slice(0,5).concat([out.slice(5).join('')])}
+ return out.length?out:[String(x).trim()]}
+function userNote(c){try{var u=window.aureWho&&aureWho(c.id);if(!u||!u.name)return '';return '你正在对话的用户称为「'+u.name+'」'+(u.desc?'，用户设定：'+u.desc:'')+'。请按这个称呼和身份与TA互动。'}catch(e){return ''}}
 function timeNote(ms){var now=Date.now(),us=ms.filter(function(m){return m.me&&m.ts}),cs=ms.filter(function(m){return !m.me&&m.ts}),lu=us[us.length-1],lc=cs[cs.length-1],n='',pv=null;
  if(lu){for(var j=ms.lastIndexOf(lu)-1;j>=0;j--)if(ms[j].ts){pv=ms[j];break}}
  if(lu&&pv&&lu.ts-pv.ts>=18e5)n+='用户隔了'+aureDur(lu.ts-pv.ts)+'才又发来消息；';
@@ -1956,7 +1972,7 @@ function timeNote(ms){var now=Date.now(),us=ms.filter(function(m){return m.me&&m
 function aiReply(c,ms,done){var A=apiCfg();
  if(!A.url||!A.key||!A.model){setTimeout(function(){done(null)},900);return}
  var hist=ms.filter(function(m){return m.x}).slice(-16).map(function(m){return {role:m.me?'user':'assistant',content:m.x}});
- var sys='你是「'+c.n+'」，正在聊天软件里和用户聊天。'+aurePersonaLayer(c.n,personaForChat(c),'chat')+timeNote(ms);
+ var sys='你是「'+c.n+'」，正在聊天软件里和用户聊天。'+aurePersonaLayer(c.n,personaForChat(c),'chat')+userNote(c)+timeNote(ms)+'【发消息格式】像真人发即时消息一样，一句一句地发：每句单独占一行（用换行分隔），每句尽量不超过20个字，一次回复2到5句；绝对不要把话写成一大段，也不要用括号写动作旁白。';
  var ac=new AbortController(),tm=setTimeout(function(){ac.abort()},25000);
  fetch(A.url.replace(/\/+$/,'')+'/chat/completions',{method:'POST',signal:ac.signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+A.key},
   body:JSON.stringify({model:A.model,temperature:A.temp==null?0.85:A.temp,messages:[{role:'system',content:sys}].concat(hist)})})
@@ -2018,7 +2034,8 @@ window.wxOpen=function(id){var c=all().filter(function(x){return x.id==id})[0],t
   t.querySelectorAll('.kt [data-c]').forEach(function(e){var i=+e.dataset.c;lpress(e,function(){S.stk.cur=i;sv();r()},function(){if(i>0&&confirm('删除分类「'+S.stk.cats[i].n+'」？')){S.stk.cats.splice(i,1);S.stk.cur=0;sv();r()}})});
   t.querySelectorAll('.kx').forEach(function(e){var i=+e.dataset.k,it=S.stk.cats[S.stk.cur].it;lpress(e,function(){var s=it[i];s.charAt?push({me:1,x:s,big:1,t:hm()}):push({me:1,img:s.i,st:1,t:hm()})},function(){if(confirm('删除这个表情包？')){it.splice(i,1);sv();r()}})})}
  function push(m){m.ts=Date.now();ms.push(m);sv();r()}
- function reply(){if(ty)return;if(!ms.some(function(m){return m.x&&m.me})){toast('先发一条消息，再点「回复」');return}ty=1;r();aiReply(c,ms,function(x){ty=0;ms.push({x:x||REP[Math.floor(Math.random()*REP.length)],t:hm(),ts:Date.now()});sv();if(t.classList.contains('on'))r()})}
+ function reply(){if(ty)return;if(!ms.some(function(m){return m.x&&m.me})){toast('先发一条消息，再点「回复」');return}ty=1;r();aiReply(c,ms,function(x){var ps=x?splitMsg(x):[REP[Math.floor(Math.random()*REP.length)]],i=0;
+  (function nx(){ms.push({x:ps[i],t:hm(),ts:Date.now()});i++;sv();if(i<ps.length){ty=1;if(t.classList.contains('on'))r();setTimeout(nx,500+Math.min(1100,ps[i].length*70))}else{ty=0;if(t.classList.contains('on'))r()}})()})}
  t.className='th on';r();
  window.wxSk=function(){pn=pn?0:1;r()};
  window.wxKc=function(){var n=(prompt('新分类名称')||'').trim();if(n){S.stk.cats.push({n:n.slice(0,6),it:[]});S.stk.cur=S.stk.cats.length-1;sv();r()}};
@@ -2378,6 +2395,9 @@ window.addEventListener('click',function(e){var a=e.target.closest&&e.target.clo
 <div id="updT"></div>
 <script id="realtime-js">
 (function(){
+/* 人设优先：有角色资料时，要求 char 严格按设定互动 */
+var _apl=window.aurePersonaLayer;
+if(_apl)window.aurePersonaLayer=function(n,d,m){var r=_apl(n,d,m);return d&&String(d).trim()?'【最高优先级·必须遵守】你必须严格按下面「角色资料」里的设定行事：性格、说话方式、口头禅、经历、与用户的关系、称呼、立场和禁忌都以设定为准，任何时候都不得违背或出戏；设定没写到的地方，才按设定自然推演。'+r+'再次强调：你的每一句话都必须符合上面的角色资料。':r};
 /* 现实时间感知：每次请求都把设备的当前日期、星期、时段、农历告诉 AI */
 function lunar(d){try{return new Intl.DateTimeFormat('zh-CN-u-ca-chinese',{month:'long',day:'numeric'}).format(d).replace(/\s/g,'')}catch(e){return ''}}
 window.aureNow=function(full){var d=new Date(),h=d.getHours(),p=h<5?'凌晨':h<8?'清晨':h<11?'上午':h<13?'中午':h<18?'下午':h<23?'晚上':'深夜',
