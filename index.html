@@ -83,10 +83,13 @@ setInterval(function(){if(!ok&&!(box&&box.isConnected))check()},1500);
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#f2f2f5">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" href="icon-512.png">
+<!-- AURE真实手机主屏幕图标（iOS Safari“添加到主屏幕”使用） -->
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="manifest" href="manifest.webmanifest">
 <title>AURE</title>
-<meta name="aure-version" content="2026.11.28.1">
+<meta name="aure-version" content="2026.11.28.2">
 <style>
 :root{--glass:rgba(255,255,255,.62);--ink:#1c1c1e;--sub:#8a8a90;--red:#ff3b30;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
