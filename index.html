@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#f2f2f5">
 <title>AURE</title>
-<meta name="aure-version" content="2026.11.27.7">
+<meta name="aure-version" content="2026.11.27.8">
 <style>
 :root{--glass:rgba(255,255,255,.62);--ink:#1c1c1e;--sub:#8a8a90;--red:#ff3b30;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
@@ -1495,6 +1495,33 @@ h3{display:flex;justify-content:space-between;align-items:baseline;font-size:16p
 .me{text-align:center;padding-top:30px}.me .av{width:88px;height:88px;border-radius:50%;background:#e8e8ea;margin:0 auto 12px;display:grid;place-items:center;font-size:30px;color:#888}.me b{font-size:17px}.me p{font-size:13px;color:#999;margin:6px 0 30px}
 .hint{font-size:13px;color:#a0a0a6;text-align:center;padding:30px 0}
 </style>
+<style id="music-ui2">
+#music[data-n="now"] #mp{display:none!important}
+.av2{width:34px;height:34px;border-radius:50%;background:#eee;display:grid;place-items:center;color:#777}
+.bnr{height:150px;border-radius:8px;background:#e6e6e8;padding:22px;position:relative;margin-top:12px}.bnr em{font-style:normal;font-size:10px;background:#bbb;color:#fff;border-radius:4px;padding:1px 6px}.bnr b{display:block;font-size:26px;line-height:1.15;margin-top:14px}
+.dots{display:flex;justify-content:center;gap:6px;margin:10px 0 0}.dots i{width:5px;height:5px;border-radius:50%;background:#ddd}.dots .on{background:#888}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chips b{font-size:13px;font-weight:500;background:#f1f1f3;border-radius:6px;padding:8px 16px}.chips .on{background:#888;color:#fff}
+.pf{display:flex;gap:14px;align-items:center;margin-top:8px}.pf small,.em small,.sr small{display:block;color:#999;font-size:11.5px;margin-top:3px}.em{font-size:13px;color:#666;line-height:1.7}
+.sr{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:10px 0}.sr b{font-size:14px}.sw{flex:none;width:44px;height:26px;border-radius:13px;background:#ddd;position:relative}.sw:after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}.sw.on{background:#888}.sw.on:after{left:21px}
+.np{text-align:center;padding-top:16px}.np .cv{width:78%;max-width:300px;aspect-ratio:1;border-radius:6px;margin:0 auto 34px}.np b{display:block;font-size:20px}.np small{color:#999;font-size:13px}.pb2{height:3px;background:#e4e4e6;margin:30px 6px 26px;border-radius:2px}.pb2 i{display:block;height:100%;width:0;background:#777}
+.npc{display:flex;justify-content:space-around;align-items:center}.npc button{width:44px;height:44px;display:grid;place-items:center;font-size:20px}.npc .pp{width:64px;height:64px;border-radius:50%;background:#888;color:#fff}.npc .pp svg{width:26px;height:26px}
+#aureNotes #anClose{top:80px!important;right:12px!important}
+#music .cv{background:#e6e6e6!important}#music .cv:after{display:none}
+#music .art i.photo,#music .singer-photo{background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important}
+#music .singer-photo{width:72px!important;height:72px!important;border-radius:50%!important;flex:none;background-color:#e7e7e7!important}
+#music .music-desk{margin-left:auto;padding:7px 12px;border-radius:18px;background:#f1f1f3!important;color:#555!important;font-size:12px;font-weight:600}
+#music .mh.hm{gap:8px}
+#music[data-n="now"]{background:#a9a9a9!important;color:#fff}#music[data-n="now"] .mh .bk,#music[data-n="now"] .nt small{color:#eee}
+.np .cv{width:84%!important;max-width:330px;margin:10px auto 70px!important;background:#bcbcbc!important}.nt{display:flex;justify-content:space-between;align-items:center;padding:0 4px}.nt div{text-align:center}.nt button{font-size:20px;color:#eee;width:36px}.nt b{font-size:18px}
+.pb2{background:rgba(255,255,255,.35)!important;margin:26px 4px 6px!important}.pb2 i{background:#fff!important}.tm{display:flex;justify-content:space-between;font-size:10px;color:#eee;margin:0 4px 24px}.npc .pp{background:none!important}.npc button{color:#fff}.nl{display:flex;justify-content:space-around;color:#eee;font-size:13px;margin-top:60px}
+.pfh{display:flex;gap:14px;align-items:center;margin-top:6px}.pfh .cv{width:60px;height:60px;border-radius:4px}.pfh b{font-size:18px}.pfh small{display:block;font-size:12px;color:#999;margin-top:6px}.hb{width:44px;display:grid;place-items:center;color:#555}
+.pdc .cv{width:62%;aspect-ratio:1;border-radius:2px;margin-top:6px}
+#shIntro{position:fixed;inset:0;z-index:98;background:#fff;display:flex;flex-direction:column;justify-content:center;padding:0 26px;color:#444;font-family:-apple-system,"PingFang SC",sans-serif}
+#shIntro .si{display:flex;flex-direction:column;gap:12px}#shIntro .c{align-items:center}.lg2{font-size:54px;text-align:center}#shIntro h2,#shIntro h3{text-align:center;font-weight:600}#shIntro small{color:#999;text-align:center;font-size:13px}#shIntro .ph{height:46vh;background:#999;margin:0 -26px}
+#shIntro label{font-size:12px;color:#999;border-bottom:1px solid #eee;padding-bottom:6px}#shIntro input{display:block;width:100%;border:0;outline:0;font-size:15px;color:#333;margin-top:3px}
+#shIntro button{height:46px;border-radius:14px;border:1px solid #ccc;background:#fff;font-size:15px}#shIntro .pri2,#shIntro .d{background:#555;color:#fff;border:0}#shIntro .go{align-self:flex-end;width:46px;border-radius:50%;background:#555;color:#fff;border:0}
+#shIntro .fpi{font-size:90px;text-align:center;color:#777;margin:26px 0}#shIntro .bb{display:flex;gap:12px;margin-top:20px}#shIntro .bb button{flex:1}#shIntro p{text-align:center;font-size:13px}
+</style>
 <div id="music"><div id="ms"></div><div id="mp"></div><div class="mtab"></div><div id="msh"></div><div id="mt"></div><input type="file" id="lf" accept="audio/*" multiple hidden></div>
 <script id="music-js">
 (function(){
@@ -1516,13 +1543,16 @@ var F=function(p){return '<svg viewBox="0 0 24 24">'+p+'</svg>'};
 I.play=F('<path d="M7 4.5v15l12-7.5z" fill="currentColor"/>');I.pause=F('<path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/>');
 I.next=F('<path d="M6 5l9 7-9 7zM18 5v14" fill="currentColor"/>');I.prev=F('<path d="M18 5l-9 7 9 7zM6 5v14" fill="currentColor"/>');
 /* ---- data ---- */
-var ARTISTS=['贾斯汀·比伯','爱莉安娜·格兰德','泰勒·斯威夫特','蕾哈娜','凯蒂·佩里','Maroon 5','布鲁诺·马尔斯','Lady Gaga','碧昂丝'];
-var AL=[{id:'a1',t:'An Evening With Silk Sonic',a:'安德森·帕克',y:2021,h:225,d:'更新于2021年11月16日'},{id:'a2',t:'Seasons',a:'蔡大大',y:2022,h:25},{id:'a3',t:'宇宙超级无敌大',a:'王源',y:2022,h:285},{id:'a4',t:'称得上朋友',a:'邓佳鑫',y:2020,h:160},
-{id:'a5',t:'Shades Love',a:'贾斯汀·比伯',y:2021,h:340},{id:'a6',t:'逃避',a:'小黑熊',y:2019,h:60},{id:'p1',t:'治愈 Top 100',a:'AURE 精选',y:2026,h:150,p:1},{id:'p2',t:'放松阅读',a:'AURE 精选',y:2026,h:195,p:1},{id:'p3',t:'宁静致远',a:'AURE 精选',y:2026,h:100,p:1}];
-ARTISTS.forEach(function(n,i){AL.push({id:'r'+i,t:n+' 精选',a:n,y:2024,h:H(n)%360,ar:1})});
+var ARTISTS=['林屿','沈知遥','周予安','许知夏','陈星野','顾南乔','叶知秋','江屿白','苏晚宁'];
+/* 虚拟歌手资料照：使用公开头像 CDN，加载失败时保留首字母占位 */
+var ART_PHOTOS={'林屿':'https://i.pravatar.cc/320?img=12','沈知遥':'https://i.pravatar.cc/320?img=47','周予安':'https://i.pravatar.cc/320?img= 여성','许知夏':'https://i.pravatar.cc/320?img=44','陈星野':'https://i.pravatar.cc/320?img=14','顾南乔':'https://i.pravatar.cc/320?img=32','叶知秋':'https://i.pravatar.cc/320?img=49','江屿白':'https://i.pravatar.cc/320?img=11','苏晚宁':'https://i.pravatar.cc/320?img=45'};
+function artistPhoto(n){return ART_PHOTOS[n]||''}
+var AL=[{id:'a1',t:'雾色来信',a:'林屿',y:2024,h:225,d:'发行于2024年11月'},{id:'a2',t:'沿海公路',a:'沈知遥',y:2025,h:25},{id:'a3',t:'晚风收藏家',a:'周予安',y:2025,h:285},{id:'a4',t:'晴天以后',a:'许知夏',y:2024,h:160},
+{id:'a5',t:'慢慢靠近',a:'陈星野',y:2025,h:340},{id:'a6',t:'月光邮局',a:'顾南乔',y:2023,h:60},{id:'p1',t:'深夜治愈歌单',a:'AURE 精选',y:2026,h:150,p:1},{id:'p2',t:'阅读时光',a:'AURE 精选',y:2026,h:195,p:1},{id:'p3',t:'晴日漫游',a:'AURE 精选',y:2026,h:100,p:1}];
+ARTISTS.forEach(function(n,i){AL.push({id:'r'+i,t:n+' · 私藏精选',a:n,y:2025,h:H(n)%360,ar:1})});
 var LOC={id:'loc',t:'本地音乐',a:'我的设备',y:'',h:200,p:1,tr:[]};
-var T0=['Silk Sonic Intro','Leave the Door Open','Do It Again','Two Of Us','Piece Of Your Heart','Goodbye Stranger','Band on the Run','Dreamer'],
-POOL=['Slow Morning','Paper Lanterns','Blue Hour','Late Train','Soft Rain','Window Seat','Afterglow','Open Road','Quiet Tide','Night Bus'];
+var T0=['雾色来信','把晚风寄给你','沿着海岸线','未完成的夏天','凌晨两点半','慢慢靠近','月光邮局','晴天以后'],
+POOL=['白色日记','岛屿来信','夏末汽水','落日之后','窗边的雨','晚风收藏家','下一站晴天','旧唱片','星河漫游','城市睡眠'];
 function alb(id){return AL.filter(function(x){return x.id===id})[0]}
 function T(al){return al.tr||(al.tr=(al.id==='a1'?T0:Array.apply(0,Array(al.p?8:6)).map(function(_,i){return POOL[(i*3+AL.indexOf(al))%10]})).map(function(n,i){return{k:al.id+'-'+i,n:n,al:al,i:i}}))}
 function find(k){if(NET[k])return NET[k];var p=k.split('-'),al=alb(p[0]);return al&&T(al)[+p[1]]}
@@ -1560,12 +1590,12 @@ function start(i){var t=P.q[i];if(!t)return;P.i=i;AU.src=t.src||(URLS[t.k]=URLS[
  S.rec=[t.k].concat(S.rec.filter(function(x){return x!==t.k})).slice(0,20);save();meta(t);paint();draw(1)}
 function step(d){if(!P.q.length)return;start((P.i+d+P.q.length)%P.q.length)}
 function tog(){if(P.i<0)return;if(AU.paused)AU.play();else AU.pause()}
-AU.onplay=function(){P.on=true;paint()};AU.onpause=function(){P.on=false;paint()};AU.onended=function(){step(1)};
+var rn=function(){paint();if(stk.length&&stk[stk.length-1].n==='now')draw(1)};AU.onplay=function(){P.on=true;rn()};AU.onpause=function(){P.on=false;rn()};AU.onended=function(){step(1)};
 AU.ontimeupdate=function(){var e=$('pbi');if(e&&AU.duration)e.style.width=(AU.currentTime/AU.duration*100)+'%'};
 AU.onerror=function(){if(AU.getAttribute('src'))toast('这首歌无法播放',1)};
 function paint(){
  var t=P.q[P.i];MP.style.display=t?'flex':'none';if(!t)return;
- MP.innerHTML='<div class="pb"><i id="pbi" style="width:'+(AU.duration?AU.currentTime/AU.duration*100:0)+'%"></i></div><div class="cv" style="--h:'+t.al.h+'"></div><div class="tt"><b>'+esc(t.n)+'</b><small>'+esc(t.al.a)+'</small></div><button data-a="prev">'+I.prev+'</button><button data-a="tog">'+(P.on?I.pause:I.play)+'</button><button data-a="next">'+I.next+'</button>';
+ MP.innerHTML='<div class="pb"><i id="pbi" style="width:'+(AU.duration?AU.currentTime/AU.duration*100:0)+'%"></i></div><div class="cv" style="--h:'+t.al.h+'" data-a="go:now"></div><div class="tt" data-a="go:now"><b>'+esc(t.n)+'</b><small>'+esc(t.al.a)+'</small></div><button data-a="prev">'+I.prev+'</button><button data-a="tog">'+(P.on?I.pause:I.play)+'</button><button data-a="next">'+I.next+'</button>';
 }
 /* ---- UI helpers ---- */
 function cv(h,c){return '<div class="cv '+(c||'')+'" style="--h:'+h+'"></div>'}
@@ -1573,7 +1603,7 @@ function card(al,l){return '<div class="card '+(l?'l':'')+'" data-a="go:album:'+
 function hs(a,l){return '<div class="hs">'+a.map(function(x){return card(x,l)}).join('')+'</div>'}
 function row(t,i){var pl=P.q[P.i]&&P.q[P.i].k===t.k;return '<div class="tr '+(pl?'pl':'')+'" data-a="play:'+t.k+'"><span class="nm">'+(i==null?'':i+1)+'</span>'+cv(t.al.h)+'<div class="tt"><b>'+esc(t.n)+'</b><small>'+esc(t.al.a)+'</small></div><i class="mo" data-a="sheet:'+t.k+'">⋮</i></div>'}
 function head(t,mo){return '<div class="mh"><span class="bk" data-a="back">'+I.back+'</span>'+t+(mo?'<span class="mo" data-a="sheet:al-'+mo+'">⋮</span>':'')+'</div>'}
-function arts(sel,list){return list.map(function(n){var h=H(n)%360;return '<div class="art" data-a="'+(sel?'art':'go:search')+':'+esc(n)+'"><i class="'+(sel&&S.art.indexOf(n)>-1?'on':'')+'" style="--h:'+h+'">'+esc(n[0])+'</i>'+esc(n)+'</div>'}).join('')}
+function arts(sel,list){return list.map(function(n){var h=H(n)%360,ph=artistPhoto(n);return '<div class="art" data-a="'+(sel?'art':'go:artist')+':'+esc(n)+'"><i class="'+(sel&&S.art.indexOf(n)>-1?'on':'')+(ph?' photo':'')+'" style="--h:'+h+';'+(ph?'background-image:url(\''+ph+'\')':'')+'">'+(ph?'':' '+esc(n[0]))+'</i>'+esc(n)+'</div>'}).join('')}
 function toast(m,top){MT.innerHTML='<div><i>✓</i>'+esc(m)+'</div>';MT.className='show'+(top?' top':'');clearTimeout(toast.t);toast.t=setTimeout(function(){MT.className=''},1800)}
 /* ---- screens ---- */
 var SC={
@@ -1581,23 +1611,19 @@ login:function(){return head('')+'<div class="lg"><div class="logo">AURE</div><h
 reg:function(){return head('注册')+'<div class="lg" style="padding-top:18px"><h1>创建账号</h1><p>注册后即可收藏歌曲、记录播放</p><label class="fd">'+I.me+'<input id="ra" placeholder="账号或Email（至少2位）" autocapitalize="off"></label><label class="fd">'+I.lock+'<input id="rp" type="password" placeholder="设置密码（至少4位）"></label><label class="fd">'+I.lock+'<input id="rp2" type="password" placeholder="再输入一次密码"></label><button class="pri" data-a="reg" style="margin-top:14px">注册</button><p class="sm">已有账号？<b class="lk" data-a="back">去登录</b></p></div>'},
 forgot:function(){return head('找回密码')+'<div class="lg" style="padding-top:18px"><h1>重置密码</h1><p>输入账号并设置新密码（本机演示，无需验证）</p><label class="fd">'+I.me+'<input id="fa" placeholder="输入您的账号或Email" autocapitalize="off"></label><label class="fd">'+I.lock+'<input id="fp" type="password" placeholder="新密码（至少4位）"></label><label class="fd">'+I.lock+'<input id="fp2" type="password" placeholder="再输入一次新密码"></label><button class="pri" data-a="reset" style="margin-top:14px">重置密码</button></div>'},
 pick:function(){return '<div class="pk"><h1>欢迎回来</h1><p>选择3位或更多您最喜欢的歌手</p><label class="sb">'+I.search+'<input id="as" placeholder="输入您喜欢的歌手"></label><div class="ag">'+arts(1,ARTISTS)+'</div></div><div class="fix"><button class="pri off" id="nx" data-a="done">下一步</button></div>'},
-home:function(){
- var rec=S.rec.slice(0,8).map(find).filter(Boolean),ar=S.art.concat(ARTISTS.filter(function(a){return S.art.indexOf(a)<0})).slice(0,8);
- return '<div class="mh hm"><span class="bk" data-a="close">'+I.back+'</span>AURE Music<span class="av" data-a="tab:me">'+esc((S.user||'A')[0].toUpperCase())+'</span></div><div class="sb" data-a="go:search">'+I.search+'艺术家、歌曲、专辑</div>'
- +'<h3>热门播放列表</h3>'+hs([alb('a5'),alb('a6'),alb('a3')],1)
- +'<h3>推荐新专辑<a data-a="go:all">查看全部</a></h3>'+hs(AL.slice(0,4))
- +'<h3>特色歌单</h3>'+hs(AL.filter(function(x){return x.p}))
- +'<h3>最近播放<a data-a="go:recent">查看全部</a></h3>'+(rec.length?'<div class="hs">'+rec.map(function(t){return '<div class="card" data-a="play:'+t.k+'">'+cv(t.al.h)+'<b>'+esc(t.n)+'</b><small>'+esc(t.al.a)+'</small></div>'}).join('')+'</div>':'<div class="hint" style="padding:6px 0">点开任意专辑，听过的歌会出现在这里</div>')
- +'<h3>推荐歌手</h3><div class="hs">'+arts(0,ar)+'</div>'},
-discover:function(){return '<div class="mh">发现</div><div class="gd">'+AL.map(function(a){return card(a)}).join('')+'</div>'},
+home:function(){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0 4px"><div><div style="font-size:19px;font-weight:800">AURE 音乐铺</div><small style="font-size:11px;color:#999">在这里找到你最喜欢的歌曲</small></div><span class="av2" data-a="go:recent">◷</span></div><div class="bnr" data-a="play:'+T(AL[0])[0].k+'"><em>New</em><b>Today&#39;s<br>Hits</b></div><div class="dots"><i></i><i class="on"></i><i></i></div><h3>新歌速递<a data-a="go:all">查看全部</a></h3>'+hs(AL.slice(4,8))+'<h3>推荐新专辑<a data-a="go:all">查看全部</a></h3>'+hs(AL.slice(0,4))},
+discover:function(){var g=['民谣','流行音乐','摇滚乐','R&amp;B','迪斯科','雷鬼'],pc=['社会文化','新闻与政治','儿童和家庭'],ch=function(l,on){return '<div class="chips">'+l.map(function(x,i){return '<b class="'+(on&&i==1?'on':'')+'" data-a="go:search:'+x+'">'+x+'</b>'}).join('')+'</div>'};return '<div class="mh hm" style="padding-left:0">发现</div><div class="sb" data-a="go:search">'+I.search+'艺术家、歌曲、播客</div><h3>音乐类型<a data-a="go:all">查看更多</a></h3>'+ch(g,1)+'<h3>热门播客<a>查看更多</a></h3>'+ch(pc).replace(/go:search/g,'go:pod')+'<h3>你的私荐歌单</h3>'+hs(AL.filter(function(x){return x.p}),1)},
+now:function(){var t=P.q[P.i];if(!t)return head('')+'<div class="empty"><b>还没有在播放的歌曲</b></div>';var d=AU.duration||0,f=function(x){x=Math.floor(x||0);return Math.floor(x/60)+':'+('0'+x%60).slice(-2)};return head('')+'<div class="np"><div class="cv"></div><div class="nt"><button data-a="fav:'+t.k+'">♡</button><div><b>'+esc(t.n)+'</b><small>'+esc(t.al.a)+'</small></div><button data-a="next">✕</button></div><div class="pb2"><i id="pbi"></i></div><div class="tm"><span>'+f(AU.currentTime)+'</span><span>-'+f(d-AU.currentTime)+'</span></div><div class="npc"><button data-a="shuffle:'+t.al.id+'">'+I.shuf+'</button><button data-a="prev">'+I.prev+'</button><button class="pp" data-a="tog">'+(P.on?I.pause:I.play)+'</button><button data-a="next">'+I.next+'</button><button data-a="recent">⟲</button></div><div class="nl"><span>歌词</span><span data-a="recent">列表</span></div></div>'},
+artist:function(n){var as=AL.filter(function(x){return x.a===n}),ts=[];as.forEach(function(x){ts=ts.concat(T(x))});if(!ts.length){as=AL.slice(0,2);ts=T(as[0])}ts=ts.slice(0,4);var aph=artistPhoto(n);return head('')+'<div class="pfh"><div class="cv singer-photo" style="--h:0;'+(aph?'background-image:url(\''+aph+'\')':'')+'"></div><div><b>'+esc(n)+'</b><small>独立音乐人 · 单曲与专辑</small></div></div><div class="pr" style="align-items:center"><button style="background:#b8b8b8;color:#fff" data-a="play:'+ts[0].k+'">播放全部</button><span class="hb" data-a="favA:'+as[0].id+'">'+I.heart+'</span></div><h3>单曲<a data-a="go:all">查看全部</a></h3>'+ts.map(function(t){return row(t)}).join('')+'<h3>专辑<a data-a="go:all">查看全部</a></h3>'+as.map(function(x){return '<div class="tr" data-a="go:album:'+x.id+'">'+cv(0)+'<div class="tt"><b>'+esc(x.t)+'</b><small>'+(x.y||2023)+'-11-23</small></div><i class="mo">⋮</i></div>'}).join('')},
+pod:function(){var ts=T(alb('p1')),es=['学会自我克制，做自己情绪的主任','把度量放大些，就不会生气了'];return head('')+'<div class="pdc"><div class="cv" style="--h:0"></div></div><h2 style="font-size:20px;margin:24px 0 4px">情绪是把刀</h2><small style="color:#aaa">有心君</small><p style="font-size:12px;color:#888;line-height:1.6;margin:8px 0">生活中，常有一些不如意的事情发生。说大不大说小不小，让人如鲠在喉，吐不…</p><h3>全部播放</h3>'+es.map(function(e,i){return '<div class="tr" style="height:80px;align-items:flex-start;padding-top:8px" data-a="play:'+ts[i].k+'">'+cv(0)+'<div class="tt"><b style="white-space:normal;font-size:13px">'+e+'</b><small>示例文字说明他和雨之间总有一个故事</small><small>06-30 · 5分钟</small></div></div>'}).join('')},
 all:function(){return head('全部专辑')+'<div class="gd">'+AL.map(function(a){return card(a)}).join('')+'</div>'},
 favs:function(){var ts=S.fav.map(find).filter(Boolean),as=S.favA.map(alb).filter(Boolean);
  return '<div class="mh">收藏</div>'+(as.length?'<h3>专辑</h3>'+hs(as):'')+(ts.length?'<h3>歌曲</h3>'+ts.map(function(t){return row(t)}).join(''):'')+(ts.length||as.length?'':'<div class="empty"><b>还没有收藏</b>在专辑页点「收藏」，或在歌曲菜单里收藏歌曲</div>')},
-me:function(){return '<div class="mh">我的</div><div class="me"><div class="av">'+esc((S.user||'A')[0].toUpperCase())+'</div><b>'+esc(S.user)+'</b><p>已选 '+S.art.length+' 位喜欢的歌手 · 收藏 '+(S.fav.length+S.favA.length)+' 项</p><button class="pri" data-a="addloc" style="margin-bottom:12px;background:#f1f1f3;color:#555!important">添加本地音乐</button><button class="pri" data-a="reartists" style="margin-bottom:12px;background:#f1f1f3;color:#555!important">重新选择歌手</button><button class="pri" data-a="logout">退出登录</button></div>'},
-recent:function(){var ts=S.rec.map(find).filter(Boolean);return head('最近播放')+(ts.length?ts.map(function(t){return row(t)}).join(''):'<div class="empty">'+cv(0)+'<b>您最近没有听过歌曲哦</b>这里找到历史上听过的歌曲</div>')},
+me:function(){var st=S.set=S.set||{off:0,mix:1,pod:0,auto:1},tg=function(k,t,d){return '<div class="sr"><div><b>'+t+'</b><small>'+d+'</small></div><i class="sw '+(st[k]?'on':'')+'" data-a="set:'+k+'"></i></div>'};return '<div class="mh hm" style="padding-left:0"><span>我的</span><button class="music-desk" data-a="close">⌂ 返回桌面</button></div><div class="pf"><div class="logo" style="margin:0;width:64px;height:64px">AURE</div><div><b>AURE Music</b><small>个人主页 · 许知遥</small></div></div><h3>账户</h3><div class="em"><small>Email</small>zhixuyao@example.com</div><h3>播放设置</h3>'+tg('off','离线模式','没有网络时，仅播放已下载的歌曲')+tg('mix','自动混音','让播放列表中的歌曲平滑衔接')+tg('pod','显示无法播放的播客','显示暂时无法播放的内容')+tg('auto','自动播放','歌曲结束后继续播放相似歌曲')+'<button class="pri" style="margin-top:22px" data-a="addloc">添加本地音乐</button>'},
+recent:function(){var ts=S.rec.map(find).filter(Boolean);return head('最近播放')+(ts.length?ts.map(function(t,i){return (i==0?'<h3>今日</h3>':i==3?'<h3>昨日</h3>':i==6?'<h3>上周</h3>':'')+row(t)}).join(''):'<div class="empty">'+cv(0)+'<b>您最近没有听过歌曲哦</b>这里找到历史上听过的歌曲</div>')},
 search:function(a){return head('')+'<label class="sb" style="margin-top:-38px;margin-left:30px">'+I.search+'<input id="mq" placeholder="艺术家、歌曲、专辑" value="'+esc(a||'')+'"></label><div id="sr"></div>'},
 album:function(id){var al=alb(id),ts=T(al),f=S.favA.indexOf(id)>-1;
- return head('',id)+'<div class="ab">'+cv(al.h)+'<h2>'+esc(al.t)+'</h2><p>'+esc(al.a)+'</p><p style="font-size:11px">'+(al.p?'歌单':al.y)+'</p></div><div class="pr"><button data-a="play:'+ts[0].k+'">'+I.play+'播放</button><button data-a="shuffle:'+id+'">'+I.shuf+'随机</button></div>'
+ return head('',id)+'<div class="ab">'+cv(al.h)+'<h2>'+esc(al.t)+'</h2><p data-a="go:artist:'+esc(al.a)+'">'+esc(al.a)+'</p><p style="font-size:11px">'+(al.p?'歌单':al.y)+'</p></div><div class="pr"><button data-a="play:'+ts[0].k+'">'+I.play+'播放</button><button data-a="shuffle:'+id+'">'+I.shuf+'随机</button></div>'
  +'<div class="ac"><div class="'+(f?'on':'')+'" data-a="favA:'+id+'">'+I.heart+'收藏</div><div data-a="toast:'+esc(al.t)+' · 共 '+ts.length+' 首">'+I.info+'信息</div><div data-a="toast:已加入下载队列（演示）">'+I.dl+'下载</div><div data-a="share:'+id+'">'+I.share+'分享</div></div><div class="tl">'+ts.map(function(t,i){return row(t,i)}).join('')+'</div>'}
 };
 var nt;
@@ -1621,16 +1647,16 @@ function drawSR(){
 var stk=[],TABS=['home','discover','favs','me'];
 function draw(keep){
  var c=stk[stk.length-1],y=MS.scrollTop,tabbed=TABS.indexOf(c.n)>-1;
- MS.innerHTML=SC[c.n](c.a);MS.className=tabbed?'tabs':'';R.dataset.t=tabbed?1:0;MS.scrollTop=keep?y:0;
+ MS.innerHTML=SC[c.n](c.a);MS.className=tabbed?'tabs':'';R.dataset.t=tabbed?1:0;R.dataset.n=c.n;MS.scrollTop=keep?y:0;
  TAB.innerHTML=[['home','home','首页'],['discover','disc','发现'],['favs','heart','收藏'],['me','me','我的']].map(function(t){return '<div class="'+(c.n===t[0]?'on':'')+'" data-a="tab:'+t[0]+'">'+I[t[1]]+t[2]+'</div>'}).join('');
  if(c.n==='search')drawSR();
 }
 function go(n,a){stk.push({n:n,a:a});draw()}
 function back(){if(stk.length>1){stk.pop();draw()}else close()}
 function root(n){stk=[{n:n}];draw()}
-function open(){stk=[];R.classList.add('open');root(S.user?(S.art.length>=3?'home':'pick'):'login');paint();try{history.pushState({m:1},'')}catch(e){}}
+function open(){stk=[];R.classList.add('open');S.user=S.user||'许知遥';root('home');paint();try{history.pushState({m:1},'')}catch(e){}}
 function close(){R.classList.remove('open');closeSh()}
-root.addEventListener('change',function(e){if(e.target&&e.target.id==='tkavatarfile'&&e.target.files&&e.target.files[0]){var f=e.target.files[0];if(!f.type.match(/^image\//))return pop('请选择图片文件');if(f.size>4*1024*1024)return pop('头像图片请小于4MB');var rd=new FileReader();rd.onload=function(){D.avatar=rd.result;save();draw();pop('头像已更新')};rd.readAsDataURL(f)}});window.addEventListener('popstate',function(){if(!R.classList.contains('open'))return;if(MSH.classList.contains('open')){closeSh()}else if(stk.length>1)stk.pop(),draw();else{close();return}try{history.pushState({m:1},'')}catch(e){}});
+document.addEventListener('change',function(e){if(e.target&&e.target.id==='tkavatarfile'&&e.target.files&&e.target.files[0]){var f=e.target.files[0];if(!f.type.match(/^image\//))return pop('请选择图片文件');if(f.size>4*1024*1024)return pop('头像图片请小于4MB');var rd=new FileReader();rd.onload=function(){D.avatar=rd.result;save();draw();pop('头像已更新')};rd.readAsDataURL(f)}});window.addEventListener('popstate',function(){if(!R.classList.contains('open'))return;if(MSH.classList.contains('open')){closeSh()}else if(stk.length>1)stk.pop(),draw();else{close();return}try{history.pushState({m:1},'')}catch(e){}});
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('.app[data-n="AURE Music"]');if(!a||document.documentElement.classList.contains('edit'))return;e.stopPropagation();e.preventDefault();open()},true);
 /* ---- sheet ---- */
 function closeSh(){MSH.className=''}
@@ -1658,7 +1684,7 @@ R.addEventListener('click',function(e){
  case'favA':{var j=S.favA.indexOf(x);j>-1?S.favA.splice(j,1):S.favA.push(x);save();toast(j>-1?'已取消收藏':'已添加到收藏');draw(1);break}
  case'recent':closeSh();go('recent');break;
  case'share':{var al=alb(x);if(navigator.share)navigator.share({title:al.t,text:al.a+' - '+al.t}).catch(function(){});else toast('已复制分享信息（演示）');break}
- case'eye':{var pw=$('pw');pw.type=pw.type==='password'?'text':'password';break}
+ case'set':S.set[x]=S.set[x]?0:1;save();draw(1);break;case'eye':{var pw=$('pw');pw.type=pw.type==='password'?'text':'password';break}
  case'login':{var u=$('em').value.trim(),w=$('pw').value;if(!u||!w){toast('请输入账号和密码',1);break}if(!has(u)){toast('账号不存在，请先注册',1);break}if(ACC[u]!==w){toast('密码不对，可点「忘记密码」重置',1);break}S.user=u;S.last=$('rmb').checked?u:'';save();root(S.art.length>=3?'home':'pick');break}
  case'reg':{var u2=$('ra').value.trim(),w1=$('rp').value,w2=$('rp2').value;if(u2.length<2){toast('账号至少2位',1);break}if(has(u2)){toast('该账号已注册，请直接登录',1);break}if(w1.length<4){toast('密码至少4位',1);break}if(w1!==w2){toast('两次输入的密码不一致',1);break}ACC[u2]=w1;saveAcc();S.user=u2;S.last=u2;S.art=[];save();root('pick');break}
  case'reset':{var u3=$('fa').value.trim(),n1=$('fp').value,n2=$('fp2').value;if(!has(u3)){toast('账号不存在，请先注册',1);break}if(n1.length<4){toast('新密码至少4位',1);break}if(n1!==n2){toast('两次输入的密码不一致',1);break}ACC[u3]=n1;saveAcc();S.last=u3;save();root('login');toast('密码已重置，请登录',1);break}
@@ -2183,7 +2209,7 @@ var AREAS=['北京市 北京市 朝阳区','上海市 上海市 浦东新区','�
 var ST='<svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z"/></svg>';
 function mk(x,i){return {n:x[0],p:x[1],img:'',e:0,sold:180+i*41}}
 var D;try{D=JSON.parse(localStorage.getItem(K)||'null')}catch(e){}
-if(!D)D={title:'AURE商店',user:{n:'用户名称',pts:100,ava:''},addr:{n:'林小满',t:'13800001234',a:AREAS[3],d:'文三路 88 号 云栖小区 2 栋 1102',def:1},items:POOL.slice(0,8).map(mk),cart:[],orders:[],end:Date.now()+(3*864e5+8*36e5+32*6e4+52e3)};
+if(!D)D={title:'互联网商城',user:{n:'用户名称',pts:100,ava:''},addr:{n:'林小满',t:'13800001234',a:AREAS[3],d:'文三路 88 号 云栖小区 2 栋 1102',def:1},items:POOL.slice(0,8).map(mk),cart:[],orders:[],end:Date.now()+(3*864e5+8*36e5+32*6e4+52e3)};
 if(D.end<Date.now())D.end=Date.now()+3*864e5;
 function save(){try{localStorage.setItem(K,JSON.stringify(D))}catch(e){}}
 function syncTakeoutBank(){try{var latest=JSON.parse(localStorage.getItem(K)||'null');if(latest&&typeof latest.bankBalance==='number'){D.bankBalance=latest.bankBalance;D.bankTransactions=Array.isArray(latest.bankTransactions)?latest.bankTransactions:[]}}catch(e){}}
@@ -2264,7 +2290,7 @@ R.addEventListener('click',function(e){var a=e.target.closest('[data-a]');if(!a)
  save();draw()});
 function open(){V.s=[];V.tab=0;V.ed=0;draw();R.classList.add('on');try{history.pushState({shop:1},'')}catch(e){}}
 window.shopClose=exit;
-root.addEventListener('change',function(e){if(e.target&&e.target.id==='tkavatarfile'&&e.target.files&&e.target.files[0]){var f=e.target.files[0];if(!f.type.match(/^image\//))return pop('请选择图片文件');if(f.size>4*1024*1024)return pop('头像图片请小于4MB');var rd=new FileReader();rd.onload=function(){D.avatar=rd.result;save();draw();pop('头像已更新')};rd.readAsDataURL(f)}});window.addEventListener('popstate',function(){if(!R.classList.contains('on'))return;if(V.s.length){V.s.pop();draw();try{history.pushState({shop:1},'')}catch(e){}}else exit()});
+document.addEventListener('change',function(e){if(e.target&&e.target.id==='tkavatarfile'&&e.target.files&&e.target.files[0]){var f=e.target.files[0];if(!f.type.match(/^image\//))return pop('请选择图片文件');if(f.size>4*1024*1024)return pop('头像图片请小于4MB');var rd=new FileReader();rd.onload=function(){D.avatar=rd.result;save();draw();pop('头像已更新')};rd.readAsDataURL(f)}});window.addEventListener('popstate',function(){if(!R.classList.contains('on'))return;if(V.s.length){V.s.pop();draw();try{history.pushState({shop:1},'')}catch(e){}}else exit()});
 window.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-shop]');if(!a||document.documentElement.classList.contains('edit'))return;e.stopImmediatePropagation();e.preventDefault();open()},true);
 })();
 
@@ -2500,7 +2526,7 @@ window.fetch=function(u,o){try{if(D.g&&o&&typeof o.body==='string'&&/\/chat\/com
  return of.call(window,u,o)};
 function open(){V.b=null;V.f=0;draw();R.classList.add('on');try{history.pushState({wb:1},'')}catch(e){}}
 function close(){R.classList.remove('on')}
-root.addEventListener('change',function(e){if(e.target&&e.target.id==='tkavatarfile'&&e.target.files&&e.target.files[0]){var f=e.target.files[0];if(!f.type.match(/^image\//))return pop('请选择图片文件');if(f.size>4*1024*1024)return pop('头像图片请小于4MB');var rd=new FileReader();rd.onload=function(){D.avatar=rd.result;save();draw();pop('头像已更新')};rd.readAsDataURL(f)}});window.addEventListener('popstate',function(){if(!R.classList.contains('on'))return;var o=R.querySelector('.wbs');if(o)o.remove();else if(V.b){V.b=null;V.f=0;draw()}else{close();return}try{history.pushState({wb:1},'')}catch(e){}});
+document.addEventListener('change',function(e){if(e.target&&e.target.id==='tkavatarfile'&&e.target.files&&e.target.files[0]){var f=e.target.files[0];if(!f.type.match(/^image\//))return pop('请选择图片文件');if(f.size>4*1024*1024)return pop('头像图片请小于4MB');var rd=new FileReader();rd.onload=function(){D.avatar=rd.result;save();draw();pop('头像已更新')};rd.readAsDataURL(f)}});window.addEventListener('popstate',function(){if(!R.classList.contains('on'))return;var o=R.querySelector('.wbs');if(o)o.remove();else if(V.b){V.b=null;V.f=0;draw()}else{close();return}try{history.pushState({wb:1},'')}catch(e){}});
 window.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-wb]');if(!a||document.documentElement.classList.contains('edit'))return;e.stopImmediatePropagation();e.preventDefault();open()},true);
 })();
 </script>
@@ -2982,12 +3008,47 @@ window.aureBooksOpen=open;window.aureBooksClose=close;
 }
 </style>
 
+<script id="shop-intro">
+(function(){var K='aure_shop_intro',o,n=0,pg=[
+'<div class="si c"><div class="lg2">🛍</div><h2>互联网商城</h2><small>电子商务商店</small></div>',
+'<div class="si"><div class="ph"></div><h3>您收藏的好物，正在降价。</h3><small>会游泳的小鱼儿邀请您进入“互联网商城”</small><button class="go" data-n="1">→</button></div>',
+'<div class="si"><div class="lg2" style="font-size:40px">🛍</div><h3>创建你的帐户</h3><label>姓名<input value="会游泳的小燕子"></label><label>邮箱<input value="aure.shop@example.com"></label><label>密码<input type="password" value="12345678"></label><label>确认密码<input type="password" value="12345678"></label><button class="pri2" data-n="1">注册</button><p>已经有一个帐户? <u data-n="1">登录</u></p></div>',
+'<div class="si"><h3>设置指纹</h3><small>添加指纹，使您的帐户更安全。</small><div class="fpi">☝</div><small>请将您的手指放在指纹扫描仪上开始。</small><div class="bb"><button data-n="1">跳过</button><button class="d" data-n="1">继续</button></div></div>'];
+function show(){o.innerHTML=pg[n];if(n==0)setTimeout(function(){n=1;show()},1200)}
+document.addEventListener('click',function(e){var t=e.target;if(t.closest&&t.closest('#shIntro')){if(t.closest('[data-n]')){n++;if(n>=pg.length){o.remove();try{localStorage.setItem(K,1)}catch(x){}}else show()}return}
+ if(!t.closest||!t.closest('[data-shop]')||document.documentElement.classList.contains('edit'))return;try{if(localStorage.getItem(K))return}catch(x){}
+ if(document.getElementById('shIntro'))return;o=document.createElement('div');o.id='shIntro';document.body.appendChild(o);n=0;show()});
+})();
+</script>
+
+<style id="aure-music-worldbook-polish">
+/* AURE Music：按参考图统一为克制的黑白唱片界面 */
+#music{z-index:9900!important;background:#fff}
+#music #ms{padding-top:calc(env(safe-area-inset-top,0px) + 8px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 92px)}
+#music .bnr{background:#e7e7e7;border-radius:2px;min-height:150px}
+#music .card .cv,#music .tr .cv,#music .pfh .cv,#music .ab .cv,#music .pdc .cv{background:#dedede!important;border-radius:2px}
+#music .mh{color:#171717}
+#music .np{min-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;justify-content:flex-start;padding:22px 8px calc(env(safe-area-inset-bottom,0px) + 20px)}
+#music .np .cv{width:min(78vw,330px)!important;aspect-ratio:1;margin:12px auto 26px!important;background:#bcbcbc!important}
+#music .nt{padding:0 8px}
+#music .pb2{margin-top:28px!important}
+#music .npc{margin-top:12px}
+#music .nl{margin-top:auto;padding:28px 0 4px}
+#music .mtab{padding-bottom:env(safe-area-inset-bottom,0px)}
+#music .mtab>div{min-height:54px}
+#music input{font-size:16px}
+#wb{z-index:9901!important}
+#wb .wbw{max-width:520px;margin:0 auto}
+#wb .wbl{overscroll-behavior:contain}
+#wb .wbr{min-height:66px}
+#wb .wbr h4{font-size:17px}
+#wb .wbp{padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(min-width:520px){
+ #music{width:420px;left:50%;right:auto;transform:translateX(-50%)}
+ #wb{padding-left:0;padding-right:0}
+ #wb .wbw{width:420px}
+}
+</style>
+
 </body>
 </html>
-
-
-/* AURE Notes：将“桌面”返回按钮下移，避开 iPhone 灵动岛/状态栏 */
-#aureNotes #anClose{
-  top:70px !important;
-  right:12px !important;
-}
