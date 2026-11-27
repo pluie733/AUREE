@@ -2,6 +2,111 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<script id="aure-license">(function(){
+var PUB={"kty": "EC", "crv": "P-256", "x": "J8Kq8JP3N5k079jqW-KA36eyz_xtToo-hfFEiC2usH4", "y": "q_MfgI043Phhga-CESYwkdAqHjF8PzcZkEVz2C_8UJk"};
+var D=document,R=D.documentElement,ok=false,ui=null;
+var st=D.createElement('style');
+st.textContent='html.aure-lock body{visibility:hidden!important;pointer-events:none!important}'
++'#aureLic{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:24px;background:#fafafa;color:#171719;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif;-webkit-font-smoothing:antialiased;visibility:visible!important}'
++'#aureLic *{box-sizing:border-box}#aureLic .c{width:100%;max-width:360px}'
++'#aureLic h1{margin:0;font-size:34px;font-weight:500;letter-spacing:.42em;padding-left:.42em;text-align:center}'
++'#aureLic .s{margin:14px 0 34px;text-align:center;font-size:10px;letter-spacing:.38em;color:#929297}'
++'#aureLic label{display:block;font-size:10px;letter-spacing:.2em;color:#929297;margin-bottom:8px}'
++'#aureLic .m{display:flex;gap:8px;margin-bottom:22px}'
++'#aureLic .m div{flex:1;padding:13px 14px;border:1px solid rgba(0,0,0,.1);border-radius:12px;background:#fff;font:600 15px ui-monospace,Menlo,monospace;letter-spacing:.08em;user-select:all;-webkit-user-select:all}'
++'#aureLic button{border:0;border-radius:12px;font-size:14px;cursor:pointer;touch-action:manipulation}'
++'#aureLic .cp{padding:0 16px;background:#fff;border:1px solid rgba(0,0,0,.1);color:#171719}'
++'#aureLic textarea{width:100%;height:92px;resize:none;padding:13px 14px;border:1px solid rgba(0,0,0,.1);border-radius:12px;background:#fff;font:14px ui-monospace,Menlo,monospace;color:#171719;outline:0;word-break:break-all}'
++'#aureLic textarea:focus{border-color:#171719}'
++'#aureLic .go{width:100%;margin-top:14px;padding:15px;background:#171719;color:#fff;letter-spacing:.3em;padding-left:.3em}'
++'#aureLic .go:disabled{opacity:.5}'
++'#aureLic .e{min-height:20px;margin-top:12px;text-align:center;font-size:13px;color:#c0392b}'
++'#aureLic .h{margin-top:18px;text-align:center;font-size:11px;line-height:1.8;color:#a0a0a5}';
+R.appendChild(st);R.classList.add('aure-lock');
+var e32='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function genId(){var a=new Uint8Array(16),s='';crypto.getRandomValues(a);for(var i=0;i<16;i++)s+=e32[a[i]%32];return s}
+function fmt(s){return s.replace(/(.{4})(?=.)/g,'$1-')}
+var K='aure_mid',L='aure_lic';
+function idb(){return new Promise(function(res){try{var q=indexedDB.open('aure_lic',1);q.onupgradeneeded=function(){q.result.createObjectStore('k')};q.onsuccess=function(){res(q.result)};q.onerror=function(){res(null)}}catch(x){res(null)}})}
+async function kvGet(k){var v=null;try{v=localStorage.getItem(k)}catch(x){}
+if(!v){var m=D.cookie.match(new RegExp('(?:^|; )'+k+'=([^;]*)'));if(m)v=decodeURIComponent(m[1])}
+if(!v){var d=await idb();if(d)v=await new Promise(function(r){try{var g=d.transaction('k').objectStore('k').get(k);g.onsuccess=function(){r(g.result||null)};g.onerror=function(){r(null)}}catch(x){r(null)}})}
+return v}
+async function kvSet(k,v){try{localStorage.setItem(k,v)}catch(x){}
+try{D.cookie=k+'='+encodeURIComponent(v)+';max-age=315360000;path=/;SameSite=Lax'}catch(x){}
+var d=await idb();if(d)try{d.transaction('k','readwrite').objectStore('k').put(v,k)}catch(x){}}
+function b64u(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';var b=atob(s),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
+async function verify(id,code){
+var p=String(code||'').replace(/\s/g,'').split('.');
+if(p.length!==2||!/^\d{8}$/.test(p[0]))return'激活码格式不正确';
+if(!(window.crypto&&crypto.subtle))return'当前环境不支持校验（需 HTTPS 访问）';
+try{var t=new Date(),today=t.getFullYear()*10000+(t.getMonth()+1)*100+t.getDate();
+if(p[0]!=='00000000'&&+p[0]<today)return'激活码已过期';
+var key=await crypto.subtle.importKey('jwk',PUB,{name:'ECDSA',namedCurve:'P-256'},false,['verify']);
+var good=await crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},key,b64u(p[1]),new TextEncoder().encode('AURE1|'+id+'|'+p[0]));
+return good?'':'激活码与本机不匹配'}catch(x){return'激活码无效'}}
+function unlock(){ok=true;R.classList.remove('aure-lock');if(ui&&ui.parentNode)ui.parentNode.removeChild(ui);ui=null}
+function show(id){
+ui=D.createElement('div');ui.id='aureLic';
+ui.innerHTML='<div class="c"><h1>AURE</h1><div class="s">设备授权 · 一机一码</div><label>本机机器码</label><div class="m"><div id="aMid"></div><button class="cp" id="aCp">复制</button></div><label>激活码</label><textarea id="aCode" placeholder="粘贴管理员提供的激活码" autocapitalize="off" autocomplete="off" spellcheck="false"></textarea><button class="go" id="aGo">激 活</button><div class="e" id="aErr"></div><div class="h">将机器码发送给管理员获取激活码<br>激活码仅对本机有效，无法在其他设备使用</div></div>';
+R.appendChild(ui);
+D.getElementById('aMid').textContent=fmt(id);
+D.getElementById('aCp').onclick=function(){var t=fmt(id),b=this;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='已复制'},function(){var r=D.createRange();r.selectNodeContents(D.getElementById('aMid'));var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='请长按复制'})};
+D.getElementById('aGo').onclick=async function(){var b=this,er=D.getElementById('aErr'),c=D.getElementById('aCode').value;b.disabled=true;er.textContent='';
+var m=await verify(id,c);if(!m){await kvSet(L,c.replace(/\s/g,''));unlock()}else{er.textContent=m;b.disabled=false}}}
+new MutationObserver(function(){if(!ok&&ui&&!R.contains(ui))R.appendChild(ui);if(!ok)R.classList.add('aure-lock')}).observe(R,{childList:true,attributes:true,attributeFilter:['class']});
+(async function(){
+var id=await kvGet(K);if(!id||!/^[A-Z2-9]{16}$/.test(id)){id=genId()}await kvSet(K,id);
+var lic=await kvGet(L);
+if(lic&&!(await verify(id,lic)))unlock();else show(id)})();
+})();
+</script>
+<style id="aureSplashCss">
+#aureSplash{position:fixed;inset:0;z-index:2147483000;overflow:hidden;isolation:isolate;color:#171719;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue","PingFang SC",sans-serif;-webkit-font-smoothing:antialiased;background:radial-gradient(ellipse at 50% 48%,#fff 0%,#fff 45%,#fafafa 100%)}
+#aureSplash,#aureSplash *,#aureSplash :before,#aureSplash :after{box-sizing:border-box}
+/* 极淡的纸感与建筑式网格 */
+#aureSplash:before{content:"";position:absolute;inset:0;opacity:.22;background-image:linear-gradient(rgba(0,0,0,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.025) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse at center,#000 0%,transparent 75%)}
+.sp-noise{position:absolute;inset:0;pointer-events:none;opacity:.12;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.2'/%3E%3C/svg%3E")}
+.sp-topline{position:absolute;top:calc(26px + env(safe-area-inset-top));left:7.5%;right:7.5%;display:flex;justify-content:space-between;align-items:center;font-size:9px;letter-spacing:.24em;color:#a0a0a4;opacity:0;animation:spl-fade .8s .3s forwards}
+.sp-topline .sp-b{font-weight:600;color:#55555a}
+.sp-hero{position:absolute;left:0;right:0;top:47%;transform:translateY(-50%);display:flex;align-items:center;flex-direction:column}
+.sp-emblem{position:relative;width:min(72vw,310px);aspect-ratio:1;display:grid;place-items:center;opacity:0;transform:scale(.88);animation:spl-emblemIn 1.45s cubic-bezier(.16,.8,.2,1) .15s forwards}
+.sp-halo{position:absolute;border:1px solid rgba(30,30,35,.10);border-radius:50%;inset:5%;animation:spl-turn 32s linear infinite}
+.sp-halo:before,.sp-halo:after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(30,30,35,.09)}
+.sp-halo:before{inset:10%}.sp-halo:after{inset:22%;border-style:dashed;opacity:.65}
+.sp-halo.sp-two{inset:0;border-color:rgba(30,30,35,.055);transform:rotateX(68deg) rotate(-22deg);animation:spl-turnReverse 24s linear infinite}
+.sp-halo.sp-three{inset:14%;border-color:rgba(30,30,35,.08);transform:rotateX(68deg) rotate(38deg);animation:spl-turn 19s linear infinite}
+.sp-orbit-dot{position:absolute;width:5px;height:5px;border-radius:50%;background:#777;top:8%;left:50%;box-shadow:0 0 12px rgba(0,0,0,.18)}
+.sp-orbit-dot.sp-d2{top:auto;left:auto;right:11%;bottom:26%;width:3px;height:3px;background:#b4b4b8}
+.sp-core{position:relative;width:43%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 34% 27%,#fff 0%,#fff 37%,#f7f7f8 68%,#ececef 100%);box-shadow:0 24px 65px rgba(0,0,0,.075),inset 0 1px 1px #fff,inset 0 -1px 2px rgba(0,0,0,.06);animation:spl-float 5s ease-in-out infinite}
+.sp-core:before{content:"";position:absolute;inset:8%;border-radius:50%;border:1px solid rgba(0,0,0,.055)}
+#aureSplash .sp-core svg{width:57%;height:57%;overflow:visible}
+.sp-draw{stroke-dasharray:420;stroke-dashoffset:420;animation:spl-draw 1.7s cubic-bezier(.6,0,.2,1) .75s forwards}
+.sp-wordmark{margin-top:23px;font-size:clamp(34px,8vw,47px);font-weight:500;letter-spacing:.42em;padding-left:.42em;line-height:1;opacity:0;transform:translateY(12px);animation:spl-wordIn 1s cubic-bezier(.2,.8,.2,1) 1.05s forwards}
+.sp-subtitle{margin-top:17px;font-size:9px;font-weight:500;letter-spacing:.42em;padding-left:.42em;color:#929297;opacity:0;animation:spl-fade 1s 1.55s forwards}
+.sp-rule{margin-top:29px;width:0;height:1px;background:linear-gradient(90deg,transparent,#9b9ba0,transparent);animation:spl-ruleIn 1.2s 1.75s ease forwards}
+.sp-caption{margin-top:12px;font-size:9px;letter-spacing:.22em;color:#b0b0b4;opacity:0;animation:spl-fade .8s 2s forwards}
+.sp-footer{position:absolute;left:7.5%;right:7.5%;bottom:calc(25px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;align-items:flex-end;opacity:0;animation:spl-fade .8s 1.7s forwards}
+.sp-footer .sp-left{font-size:9px;line-height:1.8;letter-spacing:.16em;color:#a0a0a5}
+.sp-footer .sp-right{text-align:right;font-size:9px;letter-spacing:.15em;color:#a0a0a5}
+.sp-progress{position:absolute;z-index:12;left:7.5%;right:7.5%;bottom:calc(65px + env(safe-area-inset-bottom,0px));height:24px;display:flex;align-items:center;cursor:pointer;padding:0;touch-action:manipulation}
+.sp-progress:before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.10);transform:translateY(-50%)}
+.sp-progress .sp-bar{position:relative;z-index:1;display:block;width:0;height:1px;background:#777;animation:spl-progress 3.5s cubic-bezier(.45,0,.2,1) .25s forwards}
+.sp-progress:active{opacity:.65}
+.sp-fadeout{animation:spl-leave .65s ease forwards}
+@keyframes spl-fade{to{opacity:1}}
+@keyframes spl-emblemIn{to{opacity:1;transform:scale(1)}}
+@keyframes spl-draw{to{stroke-dashoffset:0}}
+@keyframes spl-wordIn{to{opacity:1;transform:translateY(0)}}
+@keyframes spl-turn{to{transform:rotate(360deg)}}
+@keyframes spl-turnReverse{to{transform:rotate(-360deg)}}
+@keyframes spl-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes spl-ruleIn{to{width:54px}}
+@keyframes spl-progress{to{width:100%}}
+@keyframes spl-leave{to{opacity:0;transform:scale(1.018)}}
+@media(min-width:700px){.sp-hero{top:48%}.sp-emblem{width:290px}.sp-topline,.sp-footer{left:9%;right:9%}.sp-progress{left:9%;right:9%}}
+@media(prefers-reduced-motion:reduce){#aureSplash,#aureSplash *,#aureSplash :before,#aureSplash :after{animation-duration:.01ms!important;animation-delay:0ms!important;animation-iteration-count:1!important}}
+</style>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -268,6 +373,41 @@ body{background:transparent!important}
 </style>
 </head>
 <body>
+<!-- AURE 开屏动画 -->
+<div id="aureSplash" role="status" aria-label="AURE 正在启动">
+ <div class="sp-noise"></div>
+ <div class="sp-topline"><span class="sp-b">AURE</span><span>AN EXPERIENCE IN QUIET ELEGANCE</span></div>
+ <div class="sp-hero">
+  <div class="sp-emblem" aria-hidden="true">
+   <div class="sp-halo"><span class="sp-orbit-dot"></span></div><div class="sp-halo sp-two"><span class="sp-orbit-dot sp-d2"></span></div><div class="sp-halo sp-three"></div>
+   <div class="sp-core">
+    <svg viewBox="0 0 120 120" fill="none">
+     <path class="sp-draw" d="M17 91 51.8 22.5c3.4-6.7 13-6.7 16.4 0L103 91" stroke="#222226" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+     <path class="sp-draw" d="M34 68.5h52" stroke="#88888e" stroke-width="2.1" stroke-linecap="round"/>
+     <path class="sp-draw" d="M60 23v67" stroke="#d0d0d4" stroke-width=".8" stroke-linecap="round"/>
+    </svg>
+   </div>
+  </div>
+  <div class="sp-wordmark">AURE</div>
+  <div class="sp-subtitle">A QUIETER WAY TO CONNECT</div>
+  <div class="sp-rule"></div>
+  <div class="sp-caption">DESIGNED FOR YOUR EVERYDAY</div>
+ </div>
+ <div class="sp-progress" id="aureSplashSkip" role="button" tabindex="0" aria-label="点击横线跳过开屏动画"><span class="sp-bar"></span></div>
+ <div class="sp-footer"><div class="sp-left">AURE STUDIO<br>PERSONAL DIGITAL SPACE</div><div class="sp-right">EST. 2026<br>VERSION 01.00</div></div>
+</div>
+<script>
+(function(){
+ var el=document.getElementById('aureSplash');if(!el)return;
+ var css=document.getElementById('aureSplashCss'),skip=document.getElementById('aureSplashSkip'),leaving=false;
+ function done(){if(el.parentNode)el.parentNode.removeChild(el);if(css&&css.parentNode)css.parentNode.removeChild(css)}
+ function enter(){if(leaving)return;leaving=true;el.classList.add('sp-fadeout');setTimeout(done,650)}
+ skip.addEventListener('click',enter);
+ skip.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();enter()}});
+ setTimeout(enter,4300);
+})();
+</script>
+<!-- /开屏动画 -->
 <div id="bg"></div>
 
 <div id="sbar"><span id="clock">00:26</span>
