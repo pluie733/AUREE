@@ -1054,11 +1054,11 @@ const PHIMG='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMDAgQD
 const SILH='<svg viewBox="0 0 132 132"><circle cx="66" cy="52" r="22" fill="#bdbdbd"/><path d="M26 124c4-28 20-40 40-40s36 12 40 40z" fill="#bdbdbd"/></svg>';
 function pfCard(){const k=PFC,o=pfRead(k);if(!o)return frame('角色',emptyHTML('不存在'));
  const kind=k==='user'?'user':k[0]==='c'?'char':'mask';
- const btn=kind==='user'?[['面具',"replicaPush('masks')"],['角色',"replicaPush('people')"],['编辑简介',"pfDesc()"]]:kind==='char'?[['拨打电话',"pfCall()"],['TA 打给我',"pfIncoming()"],['编辑人设',"pfDesc()"],['删除人设',"pfDelChar()"]]:[[PF.mask===o.id?'取消使用':'设为当前',"pfUse()"],['编辑简介',"pfDesc()"],['选择角色'+(o.chars&&o.chars.length?'（'+o.chars.length+'）':''),"pfPick()"],['删除',"pfDelMask()"]];
+ const btn=kind==='user'?[['面具',"replicaPush('masks')"],['角色',"replicaPush('people')"],['编辑简介',"pfDesc()"],['导入文件',"pfImpCard()"]]:kind==='char'?[['拨打电话',"pfCall()"],['TA 打给我',"pfIncoming()"],['编辑人设',"pfDesc()"],['导入文件',"pfImpCard()"],['删除人设',"pfDelChar()"]]:[[PF.mask===o.id?'取消使用':'设为当前',"pfUse()"],['编辑简介',"pfDesc()"],['导入文件',"pfImpCard()"],['选择角色'+(o.chars&&o.chars.length?'（'+o.chars.length+'）':''),"pfPick()"],['删除',"pfDelMask()"]];
  return `<section class="cdscr"><div class="cdwin"><div class="cddots"><i onclick="replicaBack()">✕</i><i onclick="replicaBack()">–</i></div><div class="cdpanel"><div class="cdband"></div><div class="cdav" style="${o.ava?avStyle(o.ava)+';background-size:cover;background-position:center':''}" onclick="pfAva()">${o.ava?'':SILH}</div><div class="cdname" onclick="pfName()">@${esc(o.name)}</div><div class="cdgd">${['男','女'].map(g=>`<span class="${o.gender===g?'on':''}" onclick="pfGender('${g}')">${g==='男'?'♂ ':'♀ '}${g}</span>`).join('')}</div>${kind==='mask'?'':`<div class="cdph" onclick="pfPhone()"><img class="cdpi" src="${PHIMG}">${o.phone?esc(o.phone):'点击添加电话号码'}</div>`}<div class="cdds" onclick="pfDesc()">${o.desc?esc(o.desc):'点击添加'+(kind==='char'?'人设':'简介')}</div><div class="cdbt">${btn.map(x=>`<div${/删除/.test(x[0])?' style="color:#d0382e"':''} onclick="${x[1]}">${x[0]}</div>`).join('')}</div></div></div></section>`}
 function pfRow(k,o,sub){return `<div class="settingrow" onclick="pfOpen('${k}')"><span class="av" style="width:40px;height:40px;flex:none;border-radius:50%;${o.ava?avStyle(o.ava)+';background-size:cover;background-position:center':'background:#d9d9dc'}"></span><span style="margin-left:12px;flex:1;min-width:0">${esc(o.name)}<small style="display:block;color:#999;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(sub)}</small></span><span class="chev">›</span></div>`}
-function pfPeople(){return frame('角色',`<div class="settingsgroup">我（User）</div>${pfRow('user',pfRead('user'),PF.phone||'未设置号码')}<div class="settingsgroup">Char</div>${PF.chars.map(c=>pfRow('c:'+c.id,c,c.phone||'未设置号码')).join('')||emptyHTML('还没有 Char')}<button class="primary" style="margin-top:22px" onclick="pfNew('c')"><span>＋ 创建 Char</span></button>`)}
-function pfMasks(){return frame('面具',`<div class="hint" style="text-align:left;font-weight:500;font-size:12px;margin-bottom:6px">面具是你的临时身份。选中后，聊天和通话时 Char 会用面具的名字和简介来称呼你；点进面具可以选择它对哪些角色生效。</div><div class="settingrow" onclick="pfNone()">不使用面具${PF.mask?'':'<span class="chev" style="color:#555">✓</span>'}</div>${PF.masks.map(m=>pfRow('m:'+m.id,m,(PF.mask===m.id?'当前使用 · ':'')+(m.chars&&m.chars.length?'适用 '+m.chars.length+' 个角色':'适用全部角色')+' · '+(m.desc||'无简介'))).join('')}<button class="primary" style="margin-top:22px" onclick="pfNew('m')"><span>＋ 新建面具</span></button>`)}
+function pfPeople(){return frame('角色',`<div class="settingsgroup">我（User）</div>${pfRow('user',pfRead('user'),PF.phone||'未设置号码')}<div class="settingsgroup">Char</div>${PF.chars.map(c=>pfRow('c:'+c.id,c,c.phone||'未设置号码')).join('')||emptyHTML('还没有 Char')}<button class="primary" style="margin-top:22px" onclick="pfNew('c')"><span>＋ 创建 Char</span></button><button class="primary" style="margin-top:10px" onclick="pfImportChars()"><span>⇪ 导入 Char（docx / json / txt）</span></button>`)}
+function pfMasks(){return frame('面具',`<div class="hint" style="text-align:left;font-weight:500;font-size:12px;margin-bottom:6px">面具是你的临时身份。选中后，聊天和通话时 Char 会用面具的名字和简介来称呼你；点进面具可以选择它对哪些角色生效。</div><div class="settingrow" onclick="pfNone()">不使用面具${PF.mask?'':'<span class="chev" style="color:#555">✓</span>'}</div>${PF.masks.map(m=>pfRow('m:'+m.id,m,(PF.mask===m.id?'当前使用 · ':'')+(m.chars&&m.chars.length?'适用 '+m.chars.length+' 个角色':'适用全部角色')+' · '+(m.desc||'无简介'))).join('')}<button class="primary" style="margin-top:22px" onclick="pfNew('m')"><span>＋ 新建面具</span></button><button class="primary" style="margin-top:10px" onclick="pfImportMasks()"><span>⇪ 导入面具（docx / json / txt）</span></button>`)}
 window.pfOpen=function(k){PFC=k;replicaPush('card')};
 window.pfNew=function(t){const id=Date.now().toString(36);if(t==='c')PF.chars.push({id:id,name:'新角色',ava:'',phone:'130'+String(Math.floor(Math.random()*1e8)).padStart(8,'0'),desc:''});else PF.masks.push({id:id,name:'新面具',ava:'',desc:''});pfSave();PFC=t+':'+id;replicaPush('card')};
 window.pfGender=function(g){const o=pfRead(PFC);if(!o)return;pfWrite(PFC,'gender',o.gender===g?'':g);render('card')};
@@ -1066,9 +1066,44 @@ window.pfAva=function(){pickImg(256,true,function(d){pfWrite(PFC,'ava',d);render
 window.pfName=function(){const o=pfRead(PFC),v=prompt('名字',o.name);if(v&&v.trim()){pfWrite(PFC,'name',v.trim());render('card')}};
 window.pfPhone=function(){const o=pfRead(PFC),v=prompt('电话号码',o.phone||'');if(v!==null){pfWrite(PFC,'phone',v.replace(/[^\d+\s-]/g,'').trim().slice(0,20));render('card')}};
 window.pfDesc=function(){const o=pfRead(PFC),ch=PFC[0]==='c';const d=document.createElement('div');d.className='pfpage';d.id='pfpage';
- d.innerHTML='<div class="pfh"><i onclick="pfDescX()">✕</i><b>'+(ch?'人物设定':'个人简介')+'</b><span onclick="pfDescOk()">保存</span></div><textarea id="pfta" placeholder="'+(ch?'写下人物的具体设定：性格、说话方式、经历、和你的关系……':'写点关于自己的介绍……')+'"></textarea>';root.appendChild(d);const t=document.getElementById('pfta');t.value=o.desc||'';t.focus()};
+ d.innerHTML='<div class="pfh"><i onclick="pfDescX()">✕</i><b>'+(ch?'人物设定':'个人简介')+'</b><span onclick="pfDescOk()">保存</span></div><div onclick="pfImpText()" style="padding:8px 2px;font-size:13px;color:#2f6fdb;cursor:pointer">⇪ 从文件导入（docx / json / txt）</div><textarea id="pfta" placeholder="'+(ch?'写下人物的具体设定：性格、说话方式、经历、和你的关系……':'写点关于自己的介绍……')+'"></textarea>';root.appendChild(d);const t=document.getElementById('pfta');t.value=o.desc||'';t.focus()};
 window.pfDescX=function(){const t=document.getElementById('pfta'),o=pfRead(PFC);if(t&&t.value.trim()!==(o.desc||'').trim()&&!confirm('放弃未保存的修改？'))return;const d=document.getElementById('pfpage');if(d)d.remove()};
 window.pfDescOk=function(){const t=document.getElementById('pfta');if(t)pfWrite(PFC,'desc',t.value.trim());const d=document.getElementById('pfpage');if(d)d.remove();render('card')};
+
+/* ===== 导入 user / char / 面具：docx、json、txt、md、csv ===== */
+async function pfZipText(buf,want){const u=new Uint8Array(buf),dv=new DataView(buf);let e=-1;for(let i=u.length-22;i>=Math.max(0,u.length-70000);i--){if(dv.getUint32(i,true)===0x06054b50){e=i;break}}if(e<0)throw new Error('zip');let n=dv.getUint16(e+10,true),p=dv.getUint32(e+16,true);
+ for(let k=0;k<n;k++){if(dv.getUint32(p,true)!==0x02014b50)break;const m=dv.getUint16(p+10,true),cs=dv.getUint32(p+20,true),nl=dv.getUint16(p+28,true),el=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true),lo=dv.getUint32(p+42,true),nm=new TextDecoder().decode(u.subarray(p+46,p+46+nl));
+  if(nm===want){const ln=dv.getUint16(lo+26,true),le=dv.getUint16(lo+28,true),st=lo+30+ln+le,raw=u.subarray(st,st+cs);if(m===0)return new TextDecoder().decode(raw);if(typeof DecompressionStream==='undefined')throw new Error('nods');const ds=new DecompressionStream('deflate-raw'),w=ds.writable.getWriter();w.write(raw);w.close();return new TextDecoder().decode(await new Response(ds.readable).arrayBuffer())}
+  p+=46+nl+el+cl}
+ throw new Error('nofile')}
+function pfDecode(buf){let t=new TextDecoder('utf-8').decode(buf);if((t.match(/\uFFFD/g)||[]).length>3){try{t=new TextDecoder('gbk').decode(buf)}catch(e){}}return t.replace(/^\uFEFF/,'')}
+async function pfFileText(f){const nm=(f.name||'').toLowerCase(),buf=await f.arrayBuffer();
+ if(/\.docx$/.test(nm)){const xml=await pfZipText(buf,'word/document.xml'),doc=new DOMParser().parseFromString(xml,'application/xml'),ps=doc.getElementsByTagName('w:p'),out=[];for(let i=0;i<ps.length;i++){let line='';const w=ps[i].getElementsByTagName('*');for(let j=0;j<w.length;j++){const q=w[j].nodeName;if(q==='w:t')line+=w[j].textContent;else if(q==='w:tab')line+='\t';else if(q==='w:br')line+='\n'}out.push(line)}return out.join('\n').replace(/\n{3,}/g,'\n\n').trim()}
+ return pfDecode(buf).trim()}
+window.aureFileText=pfFileText;
+function pfPickGender(v){v=String(v||'').trim().toLowerCase();return /^(男|male|m|man|boy|♂)/.test(v)?'男':/^(女|female|f|woman|girl|♀)/.test(v)?'女':''}
+function pfFromObj(o,fn){if(!o||typeof o!=='object')return null;if(o.data&&typeof o.data==='object'&&(o.spec||o.data.name||o.data.description))o=o.data;
+ const g=(ks)=>{for(const k of ks){const v=o[k];if(typeof v==='string'&&v.trim())return v.trim()}return ''};
+ const name=g(['name','char_name','nickname','名称','名字','姓名','角色名','昵称'])||fn,gender=pfPickGender(g(['gender','sex','性别'])),phone=g(['phone','电话','号码']),ava=g(['ava','avatar','image','头像']);
+ const main=g(['desc','description','persona','人设','设定','profile','角色设定','人物设定','prompt','system_prompt']),parts=[];if(main)parts.push(main);
+ const ex=[['性格',['personality','性格']],['场景',['scenario','场景','背景']],['简介',['intro','简介','summary']],['开场白',['first_mes','first','开场白','greeting']],['对话示例',['mes_example','示例对话','对话示例']]];
+ ex.forEach(([lb,ks])=>{const v=g(ks);if(v)parts.push((main||parts.length?lb+'：':'')+v)});
+ let desc=parts.join('\n\n');
+ if(!desc){const skip=/^(name|id|ava|avatar|image|phone|gender|sex|名称|名字|姓名|头像|性别|电话)$/i,ls=[];Object.keys(o).forEach(k=>{if(skip.test(k))return;const v=o[k];if(typeof v==='string'&&v.trim())ls.push(k+'：'+v.trim());else if(Array.isArray(v)&&v.length&&v.every(x=>typeof x==='string'))ls.push(k+'：'+v.join('、'))});desc=ls.join('\n')}
+ if(!desc)desc=JSON.stringify(o,null,2);
+ return{name:name.slice(0,30),gender:gender,phone:phone,ava:/^data:image\//.test(ava)?ava:'',desc:desc}}
+function pfFromJson(j,fn){let arr=[];if(Array.isArray(j))arr=j;else if(j&&Array.isArray(j.chars))arr=j.chars;else if(j&&Array.isArray(j.characters))arr=j.characters;else if(j&&Array.isArray(j.masks))arr=j.masks;else arr=[j];return arr.map((x,i)=>pfFromObj(typeof x==='string'?{desc:x}:x,fn+(arr.length>1?(i+1):''))).filter(Boolean)}
+function pfFromText(t,fn){const nm=t.match(/^\s*(?:姓名|名字|名称|角色名|昵称|name)\s*[:：]\s*(.+)$/im),gd=t.match(/(?:性别|gender)\s*[:：]\s*([^\s,，;；]+)/i);return[{name:((nm&&nm[1].trim())||fn).slice(0,30),gender:gd?pfPickGender(gd[1]):'',phone:'',ava:'',desc:t}]}
+function pfParse(f,text){const fn=(f.name||'导入').replace(/\.[^.]+$/,'');if(/\.json$/i.test(f.name||'')){try{return pfFromJson(JSON.parse(text),fn)}catch(e){}}return pfFromText(text,fn)}
+function pfPickFiles(multi,cb){const inp=document.createElement('input');inp.type='file';inp.accept='.docx,.json,.txt,.md,.csv,text/plain,application/json';inp.multiple=!!multi;inp.style.display='none';document.body.appendChild(inp);
+ inp.onchange=async()=>{const fs=[].slice.call(inp.files||[]);inp.remove();if(!fs.length)return;let all=[],bad=0;for(const f of fs){try{const t=await pfFileText(f);if(!t){bad++;continue}all=all.concat(pfParse(f,t))}catch(e){bad++}}
+  if(!all.length){replicaToast(bad?'无法读取文件，请换成 txt / json / docx':'文件里没有内容');return}cb(all,bad)};
+ inp.click()}
+function pfNewPhone(){return '130'+String(Math.floor(Math.random()*1e8)).padStart(8,'0')}
+window.pfImportChars=function(){pfPickFiles(true,(L,bad)=>{L.forEach((p,i)=>{PF.chars.push({id:Date.now().toString(36)+i,name:p.name||'新角色',ava:p.ava||'',phone:p.phone||pfNewPhone(),gender:p.gender||'',desc:p.desc||''})});pfSave();render('people');if(window.wxRefresh)try{wxRefresh()}catch(e){}replicaToast('已导入 '+L.length+' 个 Char'+(bad?'（'+bad+' 个失败）':''))})};
+window.pfImportMasks=function(){pfPickFiles(true,(L,bad)=>{L.forEach((p,i)=>{PF.masks.push({id:Date.now().toString(36)+i,name:p.name||'新面具',ava:p.ava||'',gender:p.gender||'',desc:p.desc||''})});pfSave();render('masks');replicaToast('已导入 '+L.length+' 个面具'+(bad?'（'+bad+' 个失败）':''))})};
+window.pfImpCard=function(){const o=pfRead(PFC);if(!o)return;pfPickFiles(false,L=>{const p=L[0];if(o.desc&&!confirm('导入会覆盖当前'+(PFC[0]==='c'?'人设':'简介')+'，继续？'))return;if(p.name&&PFC==='user'?p.name!==ME.name&&!/^导入/.test(p.name):p.name)pfWrite(PFC,'name',p.name);if(p.gender)pfWrite(PFC,'gender',p.gender);if(p.ava)pfWrite(PFC,'ava',p.ava);pfWrite(PFC,'desc',p.desc);render('card');if(window.wxRefresh)try{wxRefresh()}catch(e){}replicaToast('已导入')})};
+window.pfImpText=function(){const t=document.getElementById('pfta');if(!t)return;pfPickFiles(false,L=>{const d=L[0].desc;if(t.value.trim()){if(confirm('覆盖当前内容？（取消 = 追加到末尾）'))t.value=d;else t.value=t.value.replace(/\s+$/,'')+'\n\n'+d}else t.value=d;replicaToast('已导入，记得点保存')})};
 /* 从聊天里打开资料卡 */
 function pfRaise(){root.style.zIndex=90;if(!pfRaise.o){pfRaise.o=new MutationObserver(()=>{if(!root.classList.contains('open')){root.style.zIndex='';if(window.wxRefresh)wxRefresh()}});pfRaise.o.observe(root,{attributes:true,attributeFilter:['class']})}}
 window.pfFromChat=function(k){PFC=k;pfRaise();openReplica('card')};
@@ -2003,12 +2038,12 @@ body{position:relative!important;inset:auto!important;width:100%!important;heigh
 </style>
 <script>
 (function(){
-  function fit(){window.scrollTo(0,0);var vv=window.visualViewport,ih=Math.round((vv&&vv.height)||window.innerHeight),ios=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),h=ios?Math.max(ih,(screen.height>screen.width?screen.height:screen.width)):ih;document.body.style.height=h+'px';document.documentElement.style.setProperty('--vh',ih+'px')}
-  fit();['resize','orientationchange','pageshow'].forEach(function(e){addEventListener(e,function(){setTimeout(fit,60)})});if(window.visualViewport)visualViewport.addEventListener('resize',function(){setTimeout(fit,60)});
+  function fit(){window.scrollTo(0,0);var vv=window.visualViewport,ih=Math.round((vv&&vv.height)||window.innerHeight),ios=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),h=ios?Math.max(ih,(screen.height>screen.width?screen.height:screen.width)):ih;document.body.style.height=h+'px';document.documentElement.style.setProperty('--vh',ih+'px');document.documentElement.style.setProperty('--vt',Math.round((vv&&vv.offsetTop)||0)+'px')}
+  fit();['resize','orientationchange','pageshow'].forEach(function(e){addEventListener(e,function(){setTimeout(fit,60)})});if(window.visualViewport){visualViewport.addEventListener('resize',function(){fit();setTimeout(fit,60)});visualViewport.addEventListener('scroll',fit)}document.addEventListener('focusin',function(){fit();setTimeout(fit,120);setTimeout(fit,350)},true);document.addEventListener('focusout',function(){setTimeout(fit,120);setTimeout(fit,350)},true);
 })();
 </script>
 <style id="wxc-host">
-#wxc{position:fixed;inset:0;height:var(--vh,100%);z-index:80;display:none}
+#wxc{position:fixed;left:0;right:0;top:var(--vt,0px);bottom:auto;height:var(--vh,100%);z-index:80;display:none}
 #wxc.open{display:block}
 @media(min-width:500px){#wxc{left:50%;right:auto;width:420px;transform:translateX(-50%)}}
 </style>
@@ -2020,7 +2055,7 @@ var CSS=`.mm{position:absolute;inset:0;z-index:40;background:rgba(0,0,0,.05)}
 .mp{position:absolute;background:#4c4c4c;border-radius:14px;padding:2px 0;box-shadow:0 10px 30px rgba(0,0,0,.32)}
 .mg{display:grid;grid-template-columns:repeat(var(--c,5),1fr)}
 .mm .mg div{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 0 9px;color:#fff!important;font-size:12px;white-space:nowrap;-webkit-user-select:none;user-select:none}
-.mg div.rb{border-top:1px solid rgba(255,255,255,.14)}
+.mg div.mrb{border-top:1px solid rgba(255,255,255,.14)}
 .mg div:active{background:rgba(255,255,255,.1)}
 .mm .mg svg{width:24px;height:24px;fill:#fff!important;stroke:none!important;flex:none}
 .mp .ar{position:absolute;width:0;height:0;border:8px solid transparent;border-bottom:0;border-top-color:#4c4c4c;bottom:-7px}
@@ -2443,7 +2478,7 @@ window.wxOpen=function(id){var c=all().filter(function(x){return x.id==id})[0],t
  function msMenu(i){var m=ms[i];if(!m)return;var tx=!!m.x&&!m.st,rr=!m.me&&!m.sys&&!ty&&ms.slice(i+1).every(function(q){return !q.me}),
   it=[['复制',tx,'cp'],['转发',tx,'fw'],['收藏',!m.sys,'fv'],['删除',1,'dl'],['多选',1,'ml'],['重回',rr,'rr'],['引用',tx,'qt'],['提醒',tx,'rm'],['转文字',!!m.v&&!!m.x,'vt'],['连续朗读',tx,'rd'],['翻译',tx,'tr'],['搜一搜',tx,'sr']].filter(function(x){return x[1]}),
   o=document.createElement('div'),cols=it.length>10?6:Math.min(5,it.length);o.className='mm';
-  o.innerHTML='<div class="mp" style="visibility:hidden"><div class="mg" style="--c:'+cols+'">'+it.map(function(x,j){return '<div'+(j>=cols?' class="rb"':'')+' data-x="'+x[2]+'"><svg viewBox="0 0 24 24" fill="#fff">'+MP[x[2]]+'</svg>'+x[0]+'</div>'}).join('')+'</div><i class="ar"></i></div>';
+  o.innerHTML='<div class="mp" style="visibility:hidden"><div class="mg" style="--c:'+cols+'">'+it.map(function(x,j){return '<div'+(j>=cols?' class="mrb"':'')+' data-x="'+x[2]+'"><svg viewBox="0 0 24 24" fill="#fff">'+MP[x[2]]+'</svg>'+x[0]+'</div>'}).join('')+'</div><i class="ar"></i></div>';
   t.appendChild(o);
   var p=o.firstChild,e=t.querySelector('[data-mi="'+i+'"]'),tr=t.getBoundingClientRect(),sc=(tr.width/t.offsetWidth)||1,W=t.offsetWidth,H=t.offsetHeight,pw=Math.min(W-20,cols*82);
   p.style.width=pw+'px';var ph=p.offsetHeight,L,T,ax=pw/2,dn=0;
@@ -2894,7 +2929,7 @@ function bk(){return D.books.filter(function(b){return b.id===V.b})[0]}
 function pad(n){return('0'+n).slice(-2)}
 function hint(p){var c=D.cfg[p];return(c.m==='always'?'每次对话都读取':'最近 '+c.d+' 条消息里出现触发词才读取')+(c.x>0?'，每条最多 '+c.x+' 字':'，读取全文')}
 var ART='<svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid slice"><rect width="400" height="150" fill="#8b8b8b"/><polygon points="0,0 190,0 110,64 0,48" fill="#383838"/><polygon points="0,48 110,64 70,150 0,150" fill="#2a2a2a"/><polygon points="190,0 290,0 250,70 150,70" fill="#b8b8b8"/><polygon points="290,0 400,0 400,60 300,80" fill="#e4e4e4"/><polygon points="110,64 250,70 215,112 90,150" fill="#d0d0d0"/><polygon points="250,70 400,150 220,150 215,112" fill="#161616"/><polygon points="300,80 400,60 400,150" fill="#6b6b6b" opacity=".8"/><polygon points="70,150 215,112 220,150" fill="#505050"/></svg>';
-var ICP='<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',ICS='<svg viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/><circle cx="9" cy="8" r="2.4" fill="#e9e9e9"/><circle cx="15" cy="16" r="2.4" fill="#e9e9e9"/></svg>';
+var ICP='<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',ICI='<svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19h14"/></svg>',ICS='<svg viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/><circle cx="9" cy="8" r="2.4" fill="#e9e9e9"/><circle cx="15" cy="16" r="2.4" fill="#e9e9e9"/></svg>';
 function row(n,on,t,s,m,a,tg){return'<div class="wbr" data-a="'+a+'"><div class="wbn'+(on?' on':'')+'" data-a="'+tg+'">'+n+'</div><div class="m"><h4>'+esc(t)+'</h4><p>'+esc(s)+'</p></div><em>'+esc(m)+'</em></div>'}
 function addressPage(){head.innerHTML=header('我的地址',true);body.innerHTML='<div class="tk-form"><b>收货地址</b><input id="tkaddr-edit" placeholder="请输入详细收货地址" value="'+esc(D.address)+'"><input id="tkname-edit" placeholder="收货人姓名" value="'+esc(D.name)+'"><input id="tkphone-edit" placeholder="联系电话" value="'+esc(D.phone)+'"></div><button class="tk-check" style="width:100%" data-tk="saveaddress">保存地址</button>'}
 function paymentPage(){head.innerHTML=header('支付方式',true);var opts=['微信支付','支付宝','银行卡'];body.innerHTML='<div class="tk-section">选择默认支付方式</div>'+opts.map(function(x){return '<div class="tk-menu" data-tk="pay|'+x+'"><span>▤　'+x+'</span><b>'+(D.payment===x?'◉':'○')+'</b></div>'}).join('')+'<p class="tk-meta" style="padding:15px 8px">当前仅保存支付方式偏好；实际扣款需接入对应支付平台。</p>'}
@@ -2909,7 +2944,7 @@ function draw(){var b=bk(),L,on,tot,ch='';
  R.innerHTML='<div class="wbw"><div class="wbt"><b class="bk" data-a="'+(b?'back':'close')+'">&#8249;</b><i data-a="close"></i><i></i><i></i><u data-a="close"></u></div>'
  +'<div class="wbb"'+(b?' data-a="be"':'')+'>'+ART+'<b>'+esc(b?b.n:'世界书')+'</b><small>'+(b?'WORLD BOOK · 点击编辑':(window.aureCurrentChatId?'WORLD BOOK · 当前聊天角色绑定':'WORLD BOOK · 全局与角色专属'))+'</small></div>'+ch
  +'<div class="wbl">'+(L.length?L.join(''):'<div class="wbe">还没有内容，点下方 ＋ 添加</div>')+'</div>'
- +'<div class="wbp"><div class="wbg"><i style="width:'+(tot?Math.round(on/tot*100):0)+'%"></i></div><div class="wbq" data-a="add">'+ICP+'</div><div class="wbq" data-a="cfg">'+ICS+'</div><s></s><span>'+on+' / '+tot+' 启用</span></div></div>'}
+ +'<div class="wbp"><div class="wbg"><i style="width:'+(tot?Math.round(on/tot*100):0)+'%"></i></div><div class="wbq" data-a="add">'+ICP+'</div><div class="wbq" data-a="cfg">'+ICS+'</div><div class="wbq" data-a="imp" title="导入文件">'+ICI+'</div><s></s><span>'+on+' / '+tot+' 启用</span></div></div>'}
 function sh(h,fn){var o=R.querySelector('.wbs');if(o)o.remove();o=document.createElement('div');o.className='wbs';o.innerHTML='<div>'+h+'</div>';R.appendChild(o);
  o.addEventListener('click',function(e){var s=e.target.closest('[data-s]');if(e.target===o)return o.remove();if(s&&fn(s.dataset.s,o)===0)o.remove()});return o}
 function esheet(e0){var nw=!e0,T=e0?JSON.parse(JSON.stringify(e0)):{id:'e'+Date.now(),t:'',k:'',c:'',p:V.f?V.f-1:0,on:1},b=bk();
@@ -2935,12 +2970,59 @@ function csheet(){var h='<h4>读取设置</h4><div class="pl"><b data-s="g" clas
  h+='<div class="hn">前：放在角色设定之前，权重最高，适合世界观和硬规则。<br>中：紧跟角色设定，对话涉及时才补充细节。<br>后：贴在最新消息旁，最容易被注意到，适合语气、当下状态等轻量提醒。</div><div class="bt"><button class="pri" data-s="no">完成</button></div>';
  var o=sh(h,function(s){if(s==='no'){sv();return 0}if(s==='g'){D.g=D.g?0:1;sv();csheet();return}var a=s.split('|');if(a[0]==='m'){D.cfg[+a[1]].m=a[2];sv();csheet()}});
  o.addEventListener('input',function(e){var t=e.target;if(!t.dataset.i)return;var v=parseInt(t.value,10);if(isNaN(v)||v<0)return;D.cfg[+t.dataset.i][t.dataset.k]=t.dataset.k==='d'?Math.max(1,Math.min(30,v)):v;sv()})}
+/* ===== 世界书导入：docx / json / txt / md / csv ===== */
+var wbSeq=0;
+function wbId(){return 'e'+Date.now().toString(36)+(wbSeq++)}
+function wbKeys(v){if(Array.isArray(v))return v.map(function(x){return String(x).trim()}).filter(Boolean).join(',');return String(v==null?'':v).trim()}
+function wbEntry(x){if(typeof x==='string')x={c:x};if(!x||typeof x!=='object')return null;
+ var c=String(x.c||x.content||x.text||x.内容||x.设定||'').trim();if(!c)return null;
+ var k=wbKeys(x.k!=null?x.k:x.keys!=null?x.keys:x.key!=null?x.key:x.keywords!=null?x.keywords:x.触发词!=null?x.触发词:x.关键词);
+ var k2=wbKeys(x.keysecondary||x.secondary_keys);if(k&&k2)k+=','+k2;
+ if(x.constant===true)k='';
+ var t=String(x.t||x.title||x.name||x.comment||x.标题||x.名称||'').trim()||c.replace(/\s+/g,' ').slice(0,12);
+ var p=(typeof x.p==='number'&&x.p>=0&&x.p<=2)?x.p:(k?1:0);
+ var on=x.on!=null?(x.on?1:0):(x.disable===true||x.enabled===false)?0:1;
+ return{id:wbId(),t:t.slice(0,20),k:k,c:c,p:p,on:on}}
+function wbEntries(v){var a=[];if(Array.isArray(v))a=v;else if(v&&typeof v==='object')a=Object.keys(v).map(function(k){var e=v[k];return(e&&typeof e==='object')?e:{t:k,c:e}});
+ return a.map(wbEntry).filter(Boolean)}
+function wbFromJson(j,fn){var books=[];
+ function mk(n,es){if(es.length)books.push({id:'b'+Date.now().toString(36)+(wbSeq++),n:String(n||fn).slice(0,16),on:1,es:es,scope:'global',chars:[]})}
+ if(j&&Array.isArray(j.books))j.books.forEach(function(b,i){mk(b.n||b.name,wbEntries(b.es||b.entries))});
+ else if(j&&j.character_book)mk(j.character_book.name||(j.data&&j.data.name),wbEntries(j.character_book.entries));
+ else if(j&&j.data&&j.data.character_book)mk(j.data.character_book.name||j.data.name,wbEntries(j.data.character_book.entries));
+ else if(Array.isArray(j))mk(fn,wbEntries(j));
+ else if(j&&(j.entries||j.es))mk(j.n||j.name,wbEntries(j.entries||j.es));
+ else if(j&&typeof j==='object'){var es=wbEntries(j);mk(fn,es.length?es:wbEntries([j]))}
+ return books}
+function wbFromText(t,fn){t=String(t||'').replace(/\r/g,'').trim();if(!t)return[];
+ var lines=t.split('\n'),ne=lines.filter(function(l){return l.trim()}),pipe=ne.filter(function(l){return(l.match(/[｜|]/g)||[]).length>=2}).length;
+ var es=[];
+ if(ne.length&&pipe>=ne.length*0.5){ne.forEach(function(l){var p=l.split(/[｜|]/);if(p.length>=3)es.push(wbEntry({t:p[0],k:p[1],c:p.slice(2).join('｜')}));else es.push(wbEntry({t:p[0],c:p[1]||p[0]}))})}
+ else{var H=/^\s*(?:#{1,6}\s+(.+)|【([^】]{1,24})】\s*(.*)|(?:标题|条目|title)\s*[:：]\s*(.+))$/i,cur=null,pre=[];
+  lines.forEach(function(l){var m=l.match(H);if(m){cur={t:(m[1]||m[2]||m[4]||'').trim(),b:m[3]?[m[3]]:[]};es.push(cur)}else if(cur)cur.b.push(l);else pre.push(l)});
+  if(!es.length)es=[{t:fn,b:lines}];
+  else if(pre.join('').trim())es.unshift({t:fn,b:pre});
+  es=es.map(function(e){var k='',body=[];e.b.forEach(function(l){var m=l.match(/^\s*(?:触发词|关键词|关键字|keys?|keywords?|trigger)\s*[:：]\s*(.*)$/i);if(m)k=m[1].trim();else body.push(l)});
+   return wbEntry({t:e.t,k:k,c:body.join('\n').trim()})})}
+ es=es.filter(Boolean);return es.length?[{id:'b'+Date.now().toString(36)+(wbSeq++),n:fn.slice(0,16),on:1,es:es,scope:'global',chars:[]}]:[]}
+function wbReadFile(f){if(window.aureFileText)return window.aureFileText(f);return f.text()}
+function wbImport(){var inp=document.createElement('input');inp.type='file';inp.accept='.docx,.json,.txt,.md,.csv,text/plain,application/json';inp.multiple=true;inp.style.display='none';document.body.appendChild(inp);
+ inp.onchange=async function(){var fs=[].slice.call(inp.files||[]);inp.remove();if(!fs.length)return;var books=[],bad=0;
+  for(var i=0;i<fs.length;i++){var f=fs[i];try{var t=await wbReadFile(f),fn=(f.name||'导入世界书').replace(/\.[^.]+$/,''),r=null;
+    if(/\.json$/i.test(f.name||'')){try{r=wbFromJson(JSON.parse(t),fn)}catch(e){r=null}}
+    if(!r)r=wbFromText(t,fn);if(r.length)books=books.concat(r);else bad++}catch(e){bad++}}
+  if(!books.length){toast(bad?'无法读取文件，请换成 txt / json / docx':'文件里没有内容');return}
+  var b=bk(),n=0;
+  if(b){books.forEach(function(x){x.es.forEach(function(e){b.es.push(e);n++})});toast('已导入 '+n+' 条设定'+(bad?'（'+bad+' 个失败）':''))}
+  else{books.forEach(function(x){D.books.push(x);n+=x.es.length});toast('已导入 '+books.length+' 本世界书，共 '+n+' 条设定'+(bad?'（'+bad+' 个失败）':''))}
+  sv();draw()};
+ inp.click()}
 R.addEventListener('click',function(e){var el=e.target.closest('[data-a]');if(!el||e.target.closest('.wbs'))return;var p=el.dataset.a.split('|'),k=p[0],b=bk();
  if(k==='close')return close();if(k==='back'){V.b=null;V.f=0}
  else if(k==='bk'){V.b=p[1];V.f=0}else if(k==='f')V.f=+p[1];
  else if(k==='tg'){e.stopPropagation();if(p[1]==='b'){var x=D.books.filter(function(y){return y.id===p[2]})[0];x.on=x.on?0:1}else{var q=b.es.filter(function(y){return y.id===p[2]})[0];q.on=q.on?0:1}sv()}
  else if(k==='e')return esheet(b.es.filter(function(y){return y.id===p[1]})[0]);
- else if(k==='add')return b?esheet():bsheet();else if(k==='be')return bsheet(b);else if(k==='cfg')return csheet();
+ else if(k==='add')return b?esheet():bsheet();else if(k==='be')return bsheet(b);else if(k==='cfg')return csheet();else if(k==='imp')return wbImport();
  draw()});
 /* 读取：拦截聊天请求，按 前 / 中 / 后 三个位置注入 */
 function recent(m,d){return m.filter(function(x){return x.role!=='system'}).slice(-d).map(function(x){return String(x.content)}).join('\n').toLowerCase()}
