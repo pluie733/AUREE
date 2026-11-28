@@ -2003,12 +2003,12 @@ body{position:relative!important;inset:auto!important;width:100%!important;heigh
 </style>
 <script>
 (function(){
-  function fit(){window.scrollTo(0,0);var h=Math.max(window.innerHeight,(screen.height>screen.width?screen.height:screen.width));document.body.style.height=h+'px'}
-  fit();['resize','orientationchange','pageshow'].forEach(function(e){addEventListener(e,function(){setTimeout(fit,60)})});
+  function fit(){window.scrollTo(0,0);var vv=window.visualViewport,ih=Math.round((vv&&vv.height)||window.innerHeight),ios=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),h=ios?Math.max(ih,(screen.height>screen.width?screen.height:screen.width)):ih;document.body.style.height=h+'px';document.documentElement.style.setProperty('--vh',ih+'px')}
+  fit();['resize','orientationchange','pageshow'].forEach(function(e){addEventListener(e,function(){setTimeout(fit,60)})});if(window.visualViewport)visualViewport.addEventListener('resize',function(){setTimeout(fit,60)});
 })();
 </script>
 <style id="wxc-host">
-#wxc{position:fixed;inset:0;z-index:80;display:none}
+#wxc{position:fixed;inset:0;height:var(--vh,100%);z-index:80;display:none}
 #wxc.open{display:block}
 @media(min-width:500px){#wxc{left:50%;right:auto;width:420px;transform:translateX(-50%)}}
 </style>
@@ -2020,7 +2020,7 @@ var CSS=`.mm{position:absolute;inset:0;z-index:40;background:rgba(0,0,0,.05)}
 .mp{position:absolute;background:#4c4c4c;border-radius:14px;padding:2px 0;box-shadow:0 10px 30px rgba(0,0,0,.32)}
 .mg{display:grid;grid-template-columns:repeat(var(--c,5),1fr)}
 .mm .mg div{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 0 9px;color:#fff!important;font-size:12px;white-space:nowrap;-webkit-user-select:none;user-select:none}
-.mg div:nth-child(n+6){border-top:1px solid rgba(255,255,255,.14)}
+.mg div.rb{border-top:1px solid rgba(255,255,255,.14)}
 .mg div:active{background:rgba(255,255,255,.1)}
 .mm .mg svg{width:24px;height:24px;fill:#fff!important;stroke:none!important;flex:none}
 .mp .ar{position:absolute;width:0;height:0;border:8px solid transparent;border-bottom:0;border-top-color:#4c4c4c;bottom:-7px}
@@ -2125,8 +2125,8 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 .tm{align-self:center;font-size:22u;color:#b0b0b4;margin:-16u 0 26u}
 .r7{display:flex;align-items:flex-start;gap:12u;padding:24u 64u 0 71u;flex:none}.mw{position:relative;flex:none}.mw small,.f7 small{position:absolute;top:calc(100% + 8u);font-size:22u;color:#444;white-space:nowrap}.mw small{left:50%;transform:translateX(-50%)}
 .f7{position:relative;flex:1;height:62u;border-radius:31u;border:1px solid #d3d3d6;background:#ececed;display:flex;align-items:center;padding:0 22u;gap:8u;min-width:0}.f7 input{flex:1;min-width:0;border:0;outline:0;background:none;font-size:30u;font-family:inherit;-webkit-user-select:text;user-select:text}.f7 .e{display:grid;place-items:center;color:#222;cursor:pointer}.f7 .e svg{width:34u;height:34u}.f7 small.a{left:12u}.f7 small.z{right:20u}
-.g7{flex:none;display:grid;grid-template-columns:repeat(6,1fr);row-gap:25u;padding:50u 37u calc(env(safe-area-inset-bottom,0px) + 22u)}.g7 div{display:flex;flex-direction:column;align-items:center;gap:12u;font-size:22u;color:#333;cursor:pointer}.g7 svg{width:36u;height:36u;color:#222}
-.k8{flex:none;height:40%;min-height:420u;padding:12u 40u calc(env(safe-area-inset-bottom,0px) + 10u) 48u;display:flex;flex-direction:column}
+.g7{flex:none;display:grid;grid-template-columns:repeat(6,1fr);row-gap:25u;padding:50u 37u max(calc(env(safe-area-inset-bottom,0px) + 22u),30px)}.g7 div{display:flex;flex-direction:column;align-items:center;gap:12u;font-size:22u;color:#333;cursor:pointer}.g7 svg{width:36u;height:36u;color:#222}
+.k8{flex:none;height:40%;min-height:420u;padding:12u 40u max(calc(env(safe-area-inset-bottom,0px) + 10u),24px) 48u;display:flex;flex-direction:column}
 .kt{display:flex;align-items:center;gap:12u;overflow-x:auto;padding-bottom:14u;scrollbar-width:none;flex:none}.kt::-webkit-scrollbar{display:none}.kt span{flex:none;padding:8u 22u;border-radius:24u;background:#ececed;font-size:22u;white-space:nowrap}.kt span.on{background:#404040;color:#fff}.kt span.kn{background:none;border:1px dashed #aaa;color:#777}.kt span.ki{margin-left:auto;background:#404040;border:0;color:#fff}
 .kg{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:repeat(5,1fr);gap:10u;align-content:start;scrollbar-width:none;padding-bottom:6u}.kg::-webkit-scrollbar{display:none}
 .kg>div{position:relative;height:0;padding:0 0 100%;border-radius:20u;background:#efeff0;overflow:hidden}.kg>div:active{background:#dcdcde}.kg>div>i{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:56u;line-height:1}.kg>div>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:8u;box-sizing:border-box;pointer-events:none}
@@ -2425,7 +2425,7 @@ window.wxOpen=function(id){var c=all().filter(function(x){return x.id==id})[0],t
   '<div class="ln l1"></div><div class="ln l2"></div><div class="ln l3"></div><div class="ln l4"></div><div class="sp8"></div>'+
   (ms.length?'':(c.p?'<div class="k7">'+esc(c.p)+'</div>':''))+ms.map(function(m,i){return (i==0||m.t!=ms[i-1].t?'<div class="tm">'+m.t+'</div>':'')+mk(bb(m,i),i)}).join('')+'</div>'+
   '<div class="r7"><div class="mw"><div class="c7 l" onclick="wxV()">'+ic('mic')+'</div><small>语音</small></div><div class="f7"><div class="e" onclick="wxSk()">'+ic('smile')+'</div><input id="i" placeholder="'+(rq?'回复：'+esc(rq.slice(0,12)):'')+'"><div class="e" onclick="wxRe()">'+ic('reply')+'</div><small class="a">表情包</small><small class="z">回复</small></div><div class="c7 s'+(tb?' on':'')+'" onclick="wxSend()">'+ic('send')+'</div></div>'+(pn||tb?'<div class="ln l5"></div>':'')+
-  (pn?skp():!tb?'<div style="flex:none;height:calc(env(safe-area-inset-bottom,0px) + 14px)"></div>':'<div class="g7">'+G.map(function(x,i){return '<div data-g="'+i+'">'+ic(x[0])+x[1]+'</div>'}).join('')+'</div>');
+  (pn?skp():!tb?'<div style="flex:none;height:max(calc(env(safe-area-inset-bottom,0px) + 14px),38px)"></div>':'<div class="g7">'+G.map(function(x,i){return '<div data-g="'+i+'">'+ic(x[0])+x[1]+'</div>'}).join('')+'</div>');
   $('i').value=v;var m=$('ms');if(!hl)m.scrollTop=m.scrollHeight;else{var h=m.querySelector('.hl');if(h)h.scrollIntoView({block:'center'})}$('i').onkeydown=function(e){if(e.key=='Enter'&&$('i').value.trim())wxSend()};
   msBind();
   if(!t.dataset.wxPollBound){t.dataset.wxPollBound='1';t.addEventListener('click',function(ev){var pick=ev.target.closest('[data-poll-select]'),submit=ev.target.closest('[data-poll-submit]');if(pick){ev.preventDefault();ev.stopPropagation();window.wxPollToggle(Number(pick.dataset.pollMessage),Number(pick.dataset.pollSelect));return}if(submit){ev.preventDefault();ev.stopPropagation();window.wxVote(Number(submit.dataset.pollSubmit));return}} ,true)}
@@ -2434,16 +2434,16 @@ window.wxOpen=function(id){var c=all().filter(function(x){return x.id==id})[0],t
   t.querySelectorAll('.kx').forEach(function(e){var i=+e.dataset.k,it=S.stk.cats[S.stk.cur].it;lpress(e,function(){var s=it[i];s.charAt?push({me:1,x:s,big:1,t:hm()}):push({me:1,img:s.i,st:1,t:hm()})},function(){if(confirm('删除这个表情包？')){it.splice(i,1);sv();r()}})})}
  function push(m){if(rq&&m.x)m.q=rq;rq='';m.ts=Date.now();ms.push(m);sv();try{if(window.aureMemory&&m.x){var gc=all().filter(function(x){return x.id===cT})[0],label=gc&&gc.g?'微信群聊：'+gc.n:'微信聊天';window.aureMemory.add(label,hvNm(cT),((m.me?'我：':(m.sender||hvNm(cT))+'：')+String(m.x)).slice(0,700),gc&&gc.g?'group':'chat')}}catch(e){}r()}
  var sel=null,MP={cp:'<path d="M8 3h9a2 2 0 0 1 2 2v11h-2V5H8zM5 7h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"/>',fw:'<path d="M14 5l7 6-7 6v-4c-5 0-8 1.5-10 5 .5-5 3.5-9 10-9z"/>',fv:'<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12L3 7M12 12v10" stroke="#4c4c4c" stroke-width="1.6" fill="none"/>',dl:'<path d="M9 3h6l1 2h4v2H4V5h4zM6 9h12l-1 11a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z"/>',ml:'<path d="M3 5h10v2H3zM3 11h10v2H3zM3 17h6v2H3zM21 7l-6 8-3-3 1.5-1.5 1.5 1.5 4.5-6z"/>',qt:'<circle cx="12" cy="12" r="10"/><path d="M8 9h3v3.5a2 2 0 0 1-2 2H8zM13 9h3v3.5a2 2 0 0 1-2 2h-1z" fill="#4c4c4c"/>',rm:'<path d="M12 2a6 6 0 0 0-6 6v4l-2 3v1h16v-1l-2-3V8a6 6 0 0 0-6-6zM10 19a2 2 0 0 0 4 0z"/>',rd:'<path d="M3 9h3l4-3v12l-4-3H3z"/><path d="M14 8a5 5 0 0 1 0 8M17 5.5a9 9 0 0 1 0 13" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>',tr:'<path d="M3 3h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M11 9h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H11a1 1 0 0 1-1-1V10a1 1 0 0 1 1-1z" fill="#fff" stroke="#4c4c4c" stroke-width="1.5"/>',sr:'<path d="M12 2v6M12 16v6M2 12h6M16 12h6M5 5l4 4M15 15l4 4M19 5l-4 4M9 15l-4 4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" fill="none"/>'};
- MP.vt=MP.tr;function mk(h,i){return h.replace('<div class="','<div data-mi="'+i+'" class="'+(sel&&sel[i]?'ms1 ':''))}
+ MP.vt=MP.tr;MP.rr='<path d="M20 12a8 8 0 1 1-2.8-6.1" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><path d="M21 3v7h-7z"/>';function mk(h,i){return h.replace('<div class="','<div data-mi="'+i+'" class="'+(sel&&sel[i]?'ms1 ':''))}
  function cpy(x){try{navigator.clipboard.writeText(x)}catch(e){var a=document.createElement('textarea');a.value=x;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e2){}a.remove()}}
  function msBind(){t.querySelectorAll('[data-mi]').forEach(function(e){var i=+e.dataset.mi;e.oncontextmenu=function(ev){ev.preventDefault()};lpress(e,function(){if(sel){sel[i]=!sel[i];r()}else{var mm=ms[i];if(mm&&mm.v&&mm.x){mm.vs=!mm.vs;sv();r()}}},function(){if(!sel)msMenu(i)})});
   if(!sel)return;var ks=function(){return Object.keys(sel).filter(function(k){return sel[k]}).map(Number).sort(function(a,b){return a-b})},b=document.createElement('div');b.className='mbar';b.innerHTML='<span>已选 '+ks().length+' 条</span><b data-x="cp">复制</b><b data-x="dl">删除</b><b data-x="no">取消</b>';t.appendChild(b);
   b.onclick=function(e){var x=e.target.dataset.x;if(!x)return;var k=ks();if(x=='no'){sel=null;r();return}if(!k.length){toast('请先选择消息');return}
    if(x=='cp'){cpy(k.map(function(i){return ms[i].x||''}).filter(Boolean).join('\n'));toast('已复制')}else{k.reverse().forEach(function(i){ms.splice(i,1)});sv();toast('已删除')}sel=null;r()}}
- function msMenu(i){var m=ms[i];if(!m)return;var tx=!!m.x&&!m.st,
-  it=[['复制',tx,'cp'],['转发',tx,'fw'],['收藏',!m.sys,'fv'],['删除',1,'dl'],['多选',1,'ml'],['引用',tx,'qt'],['提醒',tx,'rm'],['转文字',!!m.v&&!!m.x,'vt'],['连续朗读',tx,'rd'],['翻译',tx,'tr'],['搜一搜',tx,'sr']].filter(function(x){return x[1]}),
-  o=document.createElement('div'),cols=Math.min(5,it.length);o.className='mm';
-  o.innerHTML='<div class="mp" style="visibility:hidden"><div class="mg" style="--c:'+cols+'">'+it.map(function(x){return '<div data-x="'+x[2]+'"><svg viewBox="0 0 24 24" fill="#fff">'+MP[x[2]]+'</svg>'+x[0]+'</div>'}).join('')+'</div><i class="ar"></i></div>';
+ function msMenu(i){var m=ms[i];if(!m)return;var tx=!!m.x&&!m.st,rr=!m.me&&!m.sys&&!ty&&ms.slice(i+1).every(function(q){return !q.me}),
+  it=[['复制',tx,'cp'],['转发',tx,'fw'],['收藏',!m.sys,'fv'],['删除',1,'dl'],['多选',1,'ml'],['重回',rr,'rr'],['引用',tx,'qt'],['提醒',tx,'rm'],['转文字',!!m.v&&!!m.x,'vt'],['连续朗读',tx,'rd'],['翻译',tx,'tr'],['搜一搜',tx,'sr']].filter(function(x){return x[1]}),
+  o=document.createElement('div'),cols=it.length>10?6:Math.min(5,it.length);o.className='mm';
+  o.innerHTML='<div class="mp" style="visibility:hidden"><div class="mg" style="--c:'+cols+'">'+it.map(function(x,j){return '<div'+(j>=cols?' class="rb"':'')+' data-x="'+x[2]+'"><svg viewBox="0 0 24 24" fill="#fff">'+MP[x[2]]+'</svg>'+x[0]+'</div>'}).join('')+'</div><i class="ar"></i></div>';
   t.appendChild(o);
   var p=o.firstChild,e=t.querySelector('[data-mi="'+i+'"]'),tr=t.getBoundingClientRect(),sc=(tr.width/t.offsetWidth)||1,W=t.offsetWidth,H=t.offsetHeight,pw=Math.min(W-20,cols*82);
   p.style.width=pw+'px';var ph=p.offsetHeight,L,T,ax=pw/2,dn=0;
@@ -2465,6 +2465,10 @@ window.wxOpen=function(id){var c=all().filter(function(x){return x.id==id})[0],t
   else if(k=='rd'){var sy=window.speechSynthesis;if(!sy){toast('当前浏览器不支持朗读');return}if(sy.speaking){sy.cancel();toast('已停止朗读');return}
    ms.slice(i).filter(function(q){return q.x&&!q.st}).forEach(function(q){var u=new SpeechSynthesisUtterance(q.x);u.lang='zh-CN';sy.speak(u)});toast('开始连续朗读，再点一次停止')}
   else if(k=='tr'){toast('翻译中…');llm('你是翻译器。如果给你的文字是中文就翻译成英文，否则翻译成简体中文。只输出译文，不要任何解释。',[{role:'user',content:m.x}],500,function(x){m.tr=x||'（翻译失败，请检查 API）';sv();r()})}
+  else if(k=='rr'){if(ty){toast('正在回复中…');return}var s0=i,e0=i;while(s0>0&&!ms[s0-1].me)s0--;while(e0<ms.length-1&&!ms[e0+1].me)e0++;while(s0<i&&ms[s0].sys)s0++;
+   if(e0!==ms.length-1){toast('只能重回最新一轮回复');return}
+   if(!ms.slice(0,s0).some(function(q){return q.me&&q.x})){toast('没有可回复的消息');return}
+   ms.splice(s0,e0-s0+1);sv();r();toast('重新生成中…');reply()}
   else if(k=='sr'){window.open('https://www.baidu.com/s?wd='+encodeURIComponent(m.x.slice(0,60)),'_blank')}}
  function norm(x){return String(x).replace(/[\s，。！？!?,.~～…、"“”]/g,'')}
  function bg2(n){var o={};for(var i=0;i<n.length-1;i++)o[n.substr(i,2)]=1;return o}
@@ -3332,6 +3336,10 @@ window.addEventListener('popstate',function(){if(root.classList.contains('on'))c
 #aureBooks .ab-task small{font-size:9px;color:#999}
 #aureBooks .ab-stat{background:#f1f1f1;padding:14px;margin:10px 0;display:flex;align-items:center;justify-content:space-between}
 #aureBooks .ab-stat b{font-size:24px;font-weight:500}
+#aureBooks .ab-avatar{width:96px;height:96px;flex:0 0 96px;border-radius:50%;background:#d6d6d6;margin:18px auto;display:flex;align-items:center;justify-content:center;font-size:30px;color:#888;overflow:hidden}
+#aureBooks .ab-avatar img{width:100%;height:100%;max-width:100%;object-fit:cover;display:block}
+#aureBooks .ab-content{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+#aureBooks .ab-bottom{bottom:calc(10px + env(safe-area-inset-bottom,0px))}
 #aureBooks .ab-profile-card{box-sizing:border-box;background:#f1f1f1;padding:22px 16px 20px;border-radius:7px;text-align:center;margin:5px 0 12px;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
 #aureBooks .ab-profile-card .ab-avatar{width:76px;height:76px;flex:0 0 76px;border-radius:50%;background:#d6d6d6;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:25px;color:#888;overflow:hidden}
 #aureBooks .ab-profile-card .ab-avatar img{width:100%;height:100%;object-fit:cover;display:block}
@@ -3434,7 +3442,7 @@ function close(){root.classList.remove('open')}
 function act(a){let [k,v]=a.split('|');if(k==='close'){close();return}if(k==='tab'){tab=v;go(v);return}if(k==='back'){if(['detail','all','category'].includes(view))go('home');else if(['reader','listen','editbook'].includes(view))go('detail');else if(view==='editprofile'||view==='subscribe')go('profile');else go('home');return}if(k==='detail'){selected=book(v);go('detail');return}if(k==='bookmark'){state.bookmarks=state.bookmarks.includes(v)?state.bookmarks.filter(x=>x!==v):state.bookmarks.concat(v);save();draw();return}if(k==='all'){go('all');return}if(k==='category'){go('category');return}if(k==='filter'){query=v;go('home');return}if(k==='new'){go('all');return}if(k==='subscribe'){go('subscribe');return}if(k==='editprofile'){go('editprofile');return}if(k==='editbook'){go('editbook');return}if(k==='avatar'){document.getElementById('abAvatarFile').click();return}if(k==='saveprofile'){state.profile.name=document.getElementById('abName').value||'读书人';state.profile.email=document.getElementById('abEmail').value;state.profile.age=document.getElementById('abAge').value;state.profile.goal=document.getElementById('abGoal').value;save();go('profile');return}if(k==='savebook'){selected.title=document.getElementById('abBookTitle').value;selected.author=document.getElementById('abBookAuthor').value;selected.category=document.getElementById('abBookCategory').value;selected.chapters=+document.getElementById('abBookChapters').value||1;selected.minutes=+document.getElementById('abBookMinutes').value||1;selected.summary=document.getElementById('abBookSummary').value;save();go('detail');return}if(k==='read'){go('reader');return}if(k==='listen'){go('listen');return}if(k==='play'){playing=!playing;draw();return}if(k==='complete'){if(!state.completed.includes(selected.id))state.completed.push(selected.id);selected.progress=Math.min(100,(selected.progress||0)+10);state.minutes+=20;save();go('activity');return}if(k==='login'){state.profile.name=document.getElementById('abLoginName').value||state.profile.name;state.profile.email=document.getElementById('abLoginEmail').value||state.profile.email;state.logged=true;save();go('home');return}if(k==='buy'){state.sub='专业版';save();alert('已开通虚拟演示会员');go('profile');return}if(k==='password'||k==='help'||k==='privacy'||k==='contact'){alert('这是 AURE Books 演示页面，相关信息可在个人资料中编辑。');return}if(k==='logout'){state.logged=false;save();go('login');return}}
 root.addEventListener('click',e=>{let a=e.target.closest('[data-ab]');if(!a)return;e.preventDefault();e.stopPropagation();act(a.dataset.ab)},true);
 root.addEventListener('input',e=>{if(e.target.id==='abSearch'){query=e.target.value;let pos=e.target.selectionStart;home();let x=document.getElementById('abSearch');x.focus();x.setSelectionRange(pos,pos)}});
-root.addEventListener('change',e=>{if(e.target.id==='abAvatarFile'&&e.target.files&&e.target.files[0]){let f=e.target.files[0],r=new FileReader();r.onload=()=>{state.profile.avatar=r.result;save();draw()};r.readAsDataURL(f)}});
+root.addEventListener('change',e=>{if(e.target.id==='abAvatarFile'&&e.target.files&&e.target.files[0]){let f=e.target.files[0],r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(im.width,im.height),c=document.createElement('canvas');c.width=c.height=256;c.getContext('2d').drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,256,256);state.profile.avatar=c.toDataURL('image/jpeg',.85);save();draw()};im.onerror=()=>{state.profile.avatar=r.result;save();draw()};im.src=r.result};r.readAsDataURL(f)}});
 window.addEventListener('click',e=>{let a=e.target.closest&&e.target.closest('.app[data-n="AURE Books"]');if(!a||document.documentElement.classList.contains('edit'))return;e.preventDefault();e.stopImmediatePropagation();open()},true);
 window.addEventListener('popstate',()=>{if(root.classList.contains('open'))close()});
 window.aureBooksOpen=open;window.aureBooksClose=close;
